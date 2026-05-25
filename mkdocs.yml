@@ -11,40 +11,60 @@ copyright: Copyright &copy; 2026 O. Shams Solari and F. Pourbabaee.
 
 theme:
   name: material
-  features:
-    - navigation.tabs
-    - navigation.sections
-    - navigation.expand
-    - navigation.top
-    - navigation.tracking
-    - navigation.indexes
-    - toc.follow
-    - search.highlight
-    - search.suggest
-    - content.code.copy
-    - content.code.annotate
-    - content.tabs.link
+  language: en
+  font:
+    text: Inter
+    code: JetBrains Mono
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo
-      accent: deep purple
+      # saim indigo per docs/report/saim.cls and BayesBreak
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-sunny
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: indigo
-      accent: deep purple
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-night
         name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.indexes
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+    - search.suggest
+    - search.highlight
+    - search.share
+    - toc.follow
+    - announce.dismiss
   icon:
     repo: fontawesome/brands/github
-    edit: material/pencil
+    edit: material/file-edit-outline
 
 extra_css:
   - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/osolari/FactorTail
+      name: FactorTail on GitHub
+  generator: false
+  saim:
+    primary: "#32127A"
+    accent:  "#5B36B7"
+    bg_soft: "#D6CFE4"
 
 markdown_extensions:
   - admonition

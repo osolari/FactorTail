@@ -9,7 +9,11 @@ from factortail.diagnostics.dependence import (
     chi_diagnostic,
     pairwise_dependence_table,
 )
-from factortail.diagnostics.spectral import empirical_spectral_measure
+from factortail.diagnostics.spectral import (
+    bootstrap_bands,
+    empirical_spectral_measure,
+    spectral_constant_estimate,
+)
 from factortail.diagnostics.tail_index import (
     hill_estimator,
     pickands_estimator,
@@ -17,10 +21,12 @@ from factortail.diagnostics.tail_index import (
 )
 
 __all__ = [
+    "bootstrap_bands",
     "chi_diagnostic",
     "empirical_spectral_measure",
     "hill_estimator",
     "pairwise_dependence_table",
     "pickands_estimator",
     "pot_gpd_estimator",
+    "spectral_constant_estimate",
 ]

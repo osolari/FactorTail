@@ -17,7 +17,7 @@ from factortail.cdmc.base import CdMCResult, sample_ci
 from factortail.cdmc.independent import _T_values
 from factortail.utils.timing import runtime_seconds
 
-__all__ = ["block_cdmc"]
+__all__ = ["block_cdmc", "fit_block_tail"]
 
 BlockSampler = Callable[[int, np.random.Generator], NDArray[np.float64]]
 BlockTail = Callable[[float, int], float]
@@ -72,3 +72,73 @@ def block_cdmc(
         ci_high=hi,
         extra={"estimator": "block_cdmc", "n_blocks": K},
     )
+
+
+def fit_block_tail(
+    block_model,
+    *,
+    method: str = "auto",
+    n_ref: int = 200_000,
+    rng: np.random.Generator | None = None,
+    seed: int | None = None,
+) -> BlockTail:
+    r"""Construct a ``block_tail(t, k)`` callable for ``block_cdmc``.
+
+    Parameters
+    ----------
+    block_model:
+        Must expose ``.blocks: list``. Each block ``b`` may either
+        (i) expose ``latent_constants()`` (a common-shock block) and a tail
+        index ``b.shock.alpha`` for a closed-form Pareto tail, or
+        (ii) be sampled via ``b.sample(size, rng).sum(axis=1)`` for a
+        high-budget nested-MC reference.
+    method:
+        ``"auto"`` (default) picks closed-form when available else nested MC;
+        ``"closed_form"`` requires every block to expose
+        ``latent_constants()``;
+        ``"nested_mc"`` always uses nested MC.
+    n_ref:
+        Sample size for the nested-MC reference per block.
+    """
+    if not hasattr(block_model, "blocks"):
+        raise TypeError("block_model must expose a `.blocks` attribute")
+    blocks = block_model.blocks
+    if rng is None:
+        rng = np.random.default_rng(seed)
+
+    closed: list[tuple[float, float] | None] = []
+    for b in blocks:
+        if method in ("closed_form", "auto") and hasattr(b, "latent_constants"):
+            const = b.latent_constants()["correct_latent_constant"]
+            alpha = float(b.shock.alpha)
+            closed.append((alpha, float(const)))
+        else:
+            closed.append(None)
+    if method == "closed_form" and any(c is None for c in closed):
+        raise ValueError("`closed_form` requested but not every block exposes latent_constants()")
+
+    # For blocks without closed form, precompute a high-budget empirical
+    # survival on a log-spaced grid for fast interpolation.
+    empirical: list[tuple[NDArray[np.float64], NDArray[np.float64]] | None] = []
+    for k, b in enumerate(blocks):
+        if closed[k] is not None and method != "nested_mc":
+            empirical.append(None)
+            continue
+        Y_ref = b.sample(n_ref, rng).sum(axis=1)
+        sorted_Y = np.sort(Y_ref)
+        # Survival function values at sorted points
+        ranks = np.arange(n_ref, 0, -1) / n_ref
+        empirical.append((sorted_Y, ranks))
+
+    def block_tail(t: float, k: int) -> float:
+        if closed[k] is not None and method != "nested_mc":
+            alpha, c = closed[k]
+            return float(c * max(t, 1e-300) ** (-alpha))
+        sorted_Y, ranks = empirical[k]
+        # Linearly interpolate the empirical survival.
+        idx = int(np.searchsorted(sorted_Y, t, side="left"))
+        if idx >= len(sorted_Y):
+            return 1.0 / n_ref  # below floor
+        return float(ranks[idx])
+
+    return block_tail

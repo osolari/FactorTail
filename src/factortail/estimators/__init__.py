@@ -7,5 +7,12 @@
 
 from factortail.cdmc.base import bernstein_ci, sample_ci
 from factortail.estimators.control_variate import ControlVariateResult, control_variate
+from factortail.estimators.spectral_cv import spectral_control_variate
 
-__all__ = ["ControlVariateResult", "bernstein_ci", "control_variate", "sample_ci"]
+__all__ = [
+    "ControlVariateResult",
+    "bernstein_ci",
+    "control_variate",
+    "sample_ci",
+    "spectral_control_variate",
+]
