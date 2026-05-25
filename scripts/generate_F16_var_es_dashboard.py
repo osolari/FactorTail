@@ -45,9 +45,12 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
     csv_path = write_csv(
         df, results_dir / f"{SCHEMA_NAME}.csv", schema_name=SCHEMA_NAME, config=config
     )
-    # Figure: one panel per level
-    fig, axes = plt.subplots(len(rc.levels), 1, figsize=(7.5, 3.0 * len(rc.levels)), sharex=True)
-    if len(rc.levels) == 1:
+    # Figure: one panel per level, generous vertical space per panel.
+    n_panels = len(rc.levels)
+    fig, axes = plt.subplots(
+        n_panels, 1, figsize=(10.0, 3.5 * n_panels), sharex=True, constrained_layout=True
+    )
+    if n_panels == 1:
         axes = [axes]
     for ax, level in zip(axes, rc.levels, strict=True):
         sub = df[df["level"] == level]
@@ -59,7 +62,7 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
             es=sub["es"].to_numpy(),
             hits=sub["hit"].to_numpy(),
         )
-        ax.set_title(f"VaR/ES at level {level}")
+        ax.set_title(f"VaR / ES at confidence level {level:.3f}")
     fig_paths = save_figure(fig, results_dir / "F16_var_es_dashboard")
     plt.close(fig)
     return [csv_path, *fig_paths]

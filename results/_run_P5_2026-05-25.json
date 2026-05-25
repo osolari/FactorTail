@@ -1,0 +1,13 @@
+{
+  "config_hash": "0a205123cdeec27b91324c0dd8680f686585e1a039194abddd164bf8b155abb4",
+  "csvs": [
+    "F13_hidden_cones.csv",
+    "T_sim_results_dependent.csv"
+  ],
+  "git_hash": "660f0ec",
+  "notes": "",
+  "priority": "P5",
+  "run_id": "P5_2026-05-25",
+  "seed": 20260524,
+  "timestamp": "2026-05-25T18:58:54+00:00"
+}

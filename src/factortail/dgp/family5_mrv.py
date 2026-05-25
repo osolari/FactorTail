@@ -41,7 +41,10 @@ class RadialAngularMRV:
 
     @classmethod
     def from_spec(cls, spec: dict) -> RadialAngularMRV:
-        return cls(**spec)
+        """Build from a config dict. Extra keys (e.g. ``exposure``) are ignored."""
+        valid = {"alpha", "angular_kind", "angular_params", "radial_scale", "dim"}
+        clean = {k: v for k, v in spec.items() if k in valid}
+        return cls(**clean)
 
     def sample_angles(self, size: int, rng: np.random.Generator) -> NDArray[np.float64]:
         if self.angular_kind == "axis":

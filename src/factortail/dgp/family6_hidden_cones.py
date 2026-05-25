@@ -55,7 +55,19 @@ class HiddenConeMixture:
 
     @classmethod
     def from_spec(cls, spec: dict) -> HiddenConeMixture:
-        return cls(**spec)
+        """Build from a config dict. Extra keys (e.g. ``name``) are ignored."""
+        valid = {
+            "alpha",
+            "alpha_hidden",
+            "hidden_prob",
+            "dim",
+            "pair_indices",
+            "pair_weights",
+        }
+        clean = {k: v for k, v in spec.items() if k in valid}
+        if "pair_indices" in clean:
+            clean["pair_indices"] = [tuple(p) for p in clean["pair_indices"]]
+        return cls(**clean)
 
     def sample(self, size: int, rng: np.random.Generator) -> NDArray[np.float64]:
         X = np.zeros((size, self.dim))

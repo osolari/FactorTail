@@ -94,6 +94,11 @@ class ParetoTail(_Tail):
         u = rng.random(size=size)
         return self.scale * u ** (-1.0 / self.alpha)
 
+    def mean(self) -> float:
+        if self.alpha <= 1.0:
+            return float("inf")
+        return self.scale * self.alpha / (self.alpha - 1.0)
+
 
 class LomaxTail(_Tail):
     """Lomax (shifted Pareto): ``P(X > x) = (1 + x/scale)^{-alpha}`` for ``x >= 0``.
@@ -169,6 +174,14 @@ class BurrTail(_Tail):
         inv = u ** (-1.0 / self.d) - 1.0
         return self.scale * inv ** (1.0 / self.k)
 
+    def mean(self) -> float:
+        from math import gamma
+
+        if self.alpha <= 1.0:
+            return float("inf")
+        # Burr XII closed-form mean: scale * Gamma(1 + 1/k) * Gamma(d - 1/k) / Gamma(d)
+        return self.scale * gamma(1 + 1 / self.k) * gamma(self.d - 1 / self.k) / gamma(self.d)
+
 
 class StudentTTail(_Tail):
     """Student-t right tail with degrees of freedom ``alpha`` (so tail index = nu).
@@ -205,6 +218,13 @@ class StudentTTail(_Tail):
 
     def rvs(self, size: int, rng: np.random.Generator) -> NDArray[np.float64]:
         return self.scale * rng.standard_t(df=self.alpha, size=size)
+
+    def mean(self) -> float:
+        # Student-t with alpha=nu has zero mean when nu > 1; undefined for
+        # nu <= 1.
+        if self.alpha <= 1.0:
+            return float("inf")
+        return 0.0
 
 
 _FACTORY = {

@@ -1,0 +1,14 @@
+{
+  "config_hash": "c500e0df6c8319f72304853d5c15e05269d3a5c7d894eef3cdc91a55f87c83a9",
+  "csvs": [
+    "F1_tail_equivalence.csv",
+    "F8_second_order.csv",
+    "T_sim_results_independent.csv"
+  ],
+  "git_hash": "660f0ec",
+  "notes": "",
+  "priority": "P1",
+  "run_id": "P1_2026-05-25",
+  "seed": 20260524,
+  "timestamp": "2026-05-25T18:58:54+00:00"
+}

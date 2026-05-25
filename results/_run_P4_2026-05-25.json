@@ -1,0 +1,13 @@
+{
+  "config_hash": "1135513b28a009790e72f00a34d29835805c658fe4c9f51fa15b074d49c452ca",
+  "csvs": [
+    "F12_spectral_simplex.csv",
+    "T_sim_results_dependent.csv"
+  ],
+  "git_hash": "660f0ec",
+  "notes": "",
+  "priority": "P4",
+  "run_id": "P4_2026-05-25",
+  "seed": 20260524,
+  "timestamp": "2026-05-25T18:58:54+00:00"
+}

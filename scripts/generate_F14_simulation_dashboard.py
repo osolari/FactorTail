@@ -34,7 +34,9 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
     threshold = float(config.get("threshold", 10.0))
     n = int(config.get("n", 20_000))
     rows = []
-    # Family I
+    # Family I — rel_error here is the *estimator* SE (we don't have a
+    # high-precision external reference; the CdMC is unbiased so SE is the
+    # right metric for variance reduction).
     if "family1" in config:
         dgp1 = IndependentINID.from_specs(config["family1"]["marginals"])
         res = independent_cdmc(dgp1.marginals, x=threshold, n=n, rng=spawner.rng(1))
@@ -44,7 +46,7 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
                 family="Family I",
                 estimator="independent_cdmc",
                 threshold=threshold,
-                rel_error=abs(res.mu_hat - fo) / max(fo, 1e-300),
+                rel_error=res.rel_sd,
                 wnre=float(np.sqrt(res.variance * res.runtime_seconds) / max(res.mu_hat, 1e-300)),
                 runtime=res.runtime_seconds,
                 bias=(res.mu_hat - fo),
@@ -70,7 +72,7 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
                 estimator="latent_shock_cdmc",
                 threshold=threshold,
                 rel_error=res.rel_sd,
-                wnre=res.rel_sd,
+                wnre=float(np.sqrt(res.variance * res.runtime_seconds) / max(res.mu_hat, 1e-300)),
                 runtime=res.runtime_seconds,
                 bias=0.0,
                 coverage=1.0,
@@ -94,7 +96,7 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
                 estimator="spectral_cdmc",
                 threshold=threshold,
                 rel_error=res.rel_sd,
-                wnre=res.rel_sd,
+                wnre=float(np.sqrt(res.variance * res.runtime_seconds) / max(res.mu_hat, 1e-300)),
                 runtime=res.runtime_seconds,
                 bias=0.0,
                 coverage=1.0,

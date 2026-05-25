@@ -1,0 +1,4 @@
+family,design,estimator,x,mu_hat,ref_mu,rel_error,wnre,runtime_seconds,status,run_id,config_hash,git_hash,code_version,run_timestamp
+Family II,family2_latent,latent_shock_cdmc,10.0,0.21452364506119137,,,0.007932657661492835,0.00046508299419656396,complete,T_sim_dep_default,1eb22f05da86b719ecad77eb42251ed5c5784b8acaaeb4f672a3cb356bcbe757,660f0ec,0.1.0,2026-05-25T18:36:26+00:00
+Family V,family5_dirichlet,spectral_cdmc,10.0,0.009999999999999997,,,3.211100505027612e-18,8.554203668609262e-05,complete,T_sim_dep_default,1eb22f05da86b719ecad77eb42251ed5c5784b8acaaeb4f672a3cb356bcbe757,660f0ec,0.1.0,2026-05-25T18:36:26+00:00
+Family VI,family6_hidden,empirical,10.0,0.00822,0.00822,0.0,0.0,0.0,complete,T_sim_dep_default,1eb22f05da86b719ecad77eb42251ed5c5784b8acaaeb4f672a3cb356bcbe757,660f0ec,0.1.0,2026-05-25T18:36:26+00:00

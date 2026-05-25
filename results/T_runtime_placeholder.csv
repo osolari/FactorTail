@@ -1,0 +1,4 @@
+model,estimator,phase,n_replications,tail_evaluations,runtime_seconds,variance,work_normalized_variance,status,run_id,config_hash,git_hash,code_version,run_timestamp
+FF,independent,production,5000,15000,0.0003328329767100513,0.0005421424716722878,1.804428926476322e-07,complete,T_runtime_default,da276a3737185b2d9ef98ea30015c86a33791871409d8e0bcdc1c253f1bb3aa6,660f0ec,0.1.0,2026-05-25T18:36:55+00:00
+FF,latent_shock,production,5000,10000,0.0003942909534089267,0.0066803180304631895,2.6339889653061747e-06,complete,T_runtime_default,da276a3737185b2d9ef98ea30015c86a33791871409d8e0bcdc1c253f1bb3aa6,660f0ec,0.1.0,2026-05-25T18:36:55+00:00
+FF,spectral,production,5000,5000,8.158397395163774e-05,1.2369351525701678e-35,1.0091408526714963e-39,complete,T_runtime_default,da276a3737185b2d9ef98ea30015c86a33791871409d8e0bcdc1c253f1bb3aa6,660f0ec,0.1.0,2026-05-25T18:36:55+00:00

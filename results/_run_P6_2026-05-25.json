@@ -1,0 +1,20 @@
+{
+  "config_hash": "b6dc4c5d084d347618083eee2c3aefb85a31f88567ed7f07b0403c358c906ff0",
+  "csvs": [
+    "F15_tail_dependence_heatmap.csv",
+    "F16_var_es_dashboard.csv",
+    "F17_spectral_by_period.csv",
+    "F18_hill_plots.csv",
+    "T_data_panels.csv",
+    "T_tail_index_placeholder.csv",
+    "T_dependence_diagnostic_placeholder.csv",
+    "T_var_es_backtest_placeholder.csv",
+    "T_crisis_attribution_placeholder.csv"
+  ],
+  "git_hash": "660f0ec",
+  "notes": "",
+  "priority": "P6",
+  "run_id": "P6_2026-05-25",
+  "seed": 18,
+  "timestamp": "2026-05-25T18:58:54+00:00"
+}

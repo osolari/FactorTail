@@ -121,22 +121,28 @@ def run_rolling_var_es(
         # Realized next-step loss for backtest.
         realized_factors = factors.iloc[t].to_numpy()
         realized_loss = float(alpha_intercept + loadings @ realized_factors)
+        loss_scale = float(window_losses.abs().max())
         for level in config.levels:
             try:
                 var = invert_survival(
                     survival,
                     target=1.0 - level,
-                    lower=max(window_losses.abs().max() * 0.5, 1e-4),
-                    upper=window_losses.abs().max() * 50.0,
+                    lower=max(loss_scale * 0.5, 1e-4),
+                    upper=max(loss_scale * 50.0, 1e-2),
                 )
-            except RuntimeError:
+            except (RuntimeError, ValueError):
                 var = float("nan")
             # ES via numerical tail integration.
             try:
                 from factortail.utils.root_finding import expected_shortfall_from_tail
 
-                es = expected_shortfall_from_tail(survival, var_level=level)
-            except RuntimeError:
+                if np.isfinite(var):
+                    es = expected_shortfall_from_tail(
+                        survival, var_level=level, var=var, upper=max(loss_scale * 200.0, 1.0)
+                    )
+                else:
+                    es = float("nan")
+            except (RuntimeError, ValueError):
                 es = float("nan")
             hit = int(realized_loss > var) if np.isfinite(var) else 0
             rows.append(

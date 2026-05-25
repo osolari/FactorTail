@@ -1,0 +1,13 @@
+{
+  "config_hash": "021bf83b3099c20c5392416978cbc33acbf265fc20c7211e621b05761de4faa7",
+  "csvs": [
+    "F11_common_shock_geometry.csv",
+    "T_sim_results_dependent.csv"
+  ],
+  "git_hash": "660f0ec",
+  "notes": "",
+  "priority": "P2",
+  "run_id": "P2_2026-05-25",
+  "seed": 20260524,
+  "timestamp": "2026-05-25T18:58:54+00:00"
+}

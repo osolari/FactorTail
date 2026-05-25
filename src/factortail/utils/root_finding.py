@@ -64,18 +64,36 @@ def expected_shortfall_from_tail(
     survival: Callable[[float], float],
     *,
     var_level: float,
-    n_grid: int = 64,
+    var: float | None = None,
+    lower: float = 1e-6,
     upper: float | None = None,
+    n_grid: int = 64,
 ) -> float:
     r"""Compute :math:`\mathrm{ES}_\tau = \frac{1}{1-\tau}\int_\tau^1 \mathrm{VaR}_u\,du`
     by integrating the tail survival from the VaR level outward.
 
-    Uses the identity :math:`\mathrm{ES}_\tau = \mathrm{VaR}_\tau + \frac{1}{1-\tau}\int_{\mathrm{VaR}_\tau}^\infty \overline F(x)\,dx`.
+    Uses the identity
+    :math:`\mathrm{ES}_\tau = \mathrm{VaR}_\tau + \frac{1}{1-\tau}\int_{\mathrm{VaR}_\tau}^\infty \overline F(x)\,dx`.
+
+    Parameters
+    ----------
+    survival:
+        Strictly monotone non-increasing survival function.
+    var_level:
+        Confidence level :math:`\tau \in (0, 1)`.
+    var:
+        Optional pre-computed VaR; saves a redundant root-find when the
+        caller already inverted the survival curve.
+    lower, upper:
+        Bracketing range for the internal root-find when ``var`` is not
+        supplied. ``lower`` should be small relative to the loss scale.
     """
-    var = invert_survival(survival, target=1.0 - var_level, lower=1.0, upper=upper or 1e6)
+    if var is None:
+        upper_root = upper if upper is not None else max(lower * 1e6, 1e6)
+        var = invert_survival(survival, target=1.0 - var_level, lower=lower, upper=upper_root)
     if upper is None:
-        upper = var * 1000.0
+        upper = max(var * 1000.0, var + 1.0)
     xs = np.geomspace(var, upper, n_grid)
     sf = np.array([survival(x) for x in xs])
     tail_integral = float(np.trapezoid(sf, xs))
-    return var + tail_integral / (1.0 - var_level)
+    return float(var) + tail_integral / (1.0 - var_level)

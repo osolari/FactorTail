@@ -31,11 +31,14 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
         rng_seed=int(config.get("seed", 17)),
     )
     df = panel.data.drop(columns=["RF"], errors="ignore")
-    # Pad columns to 5 dims (the schema is fixed at five thetas).
+    # Real factor names (used in the plot). Pad to 5 columns afterwards just
+    # to satisfy the schema's fixed five-theta layout.
+    real_names = list(df.columns)
     while df.shape[1] < 5:
         df[f"_pad_{df.shape[1]}"] = 0.0
     df = df.iloc[:, :5]
     column_names = list(df.columns)
+    n_real = len(real_names)
     periods = config.get(
         "periods",
         [
@@ -51,7 +54,9 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
     rows = []
     for period in periods:
         sub = df.loc[period["start"] : period["end"]].to_numpy()
-        spec = empirical_spectral_measure(sub, k=max(int(0.05 * len(sub)), 10), norm="l1")
+        # Loss-direction angles: use absolute values so the spectral mass
+        # lives on the positive orthant of the unit simplex.
+        spec = empirical_spectral_measure(np.abs(sub), k=max(int(0.05 * len(sub)), 10), norm="l1")
         angles = spec["angles"]
         avg = angles.mean(axis=0)
         rows.append(
@@ -74,18 +79,19 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
     csv_path = write_csv(
         out, results_dir / f"{SCHEMA_NAME}.csv", schema_name=SCHEMA_NAME, config=config
     )
-    fig, ax = plt.subplots(figsize=(6.5, 3.6))
-    width = 0.18
-    x = np.arange(len(column_names))
+    # Plot only the real factor columns (drop padding placeholders).
+    fig, ax = plt.subplots(figsize=(7.5, 4.0))
+    width = 0.8 / max(len(out), 1)
+    x = np.arange(n_real)
     for i, row in out.iterrows():
         ax.bar(
-            x + (i - len(out) / 2) * width,
-            [row[f"theta_{k+1}"] for k in range(5)],
+            x + (i - (len(out) - 1) / 2) * width,
+            [row[f"theta_{k+1}"] for k in range(n_real)],
             width=width,
             label=row["period"],
         )
     ax.set_xticks(x)
-    ax.set_xticklabels(column_names)
+    ax.set_xticklabels(real_names)
     ax.set_ylabel("angular mass")
     ax.set_title("Rolling empirical spectral measure")
     ax.legend()

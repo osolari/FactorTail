@@ -1,0 +1,12 @@
+{
+  "config_hash": "77b5cabc97ff89ab6b01fd51460e28b49afc0301b8dfbc5bb74c6410610bcf20",
+  "csvs": [
+    "T_sim_results_dependent.csv"
+  ],
+  "git_hash": "660f0ec",
+  "notes": "",
+  "priority": "P3",
+  "run_id": "P3_2026-05-25",
+  "seed": 2,
+  "timestamp": "2026-05-25T18:58:54+00:00"
+}

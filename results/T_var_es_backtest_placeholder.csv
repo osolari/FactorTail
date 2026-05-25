@@ -1,0 +1,2 @@
+portfolio,model,level,expected_hits,observed_hits,kupiec_p,christoffersen_p,dq_p,es_score,comparative_loss,status,run_id,config_hash,git_hash,code_version,run_timestamp
+Mkt-RF,FF,0.99,10.990000000000009,0,2.6007501030544944e-06,1.0,0.05019149726405536,-1.0,-6.85725024303659e-05,complete,T_var_es_backtest_default,9e3b783d78de0164cdcff5e30c8650a66b0ccc6165edd1f27c1afe1117cbfc8f,660f0ec,0.1.0,2026-05-25T18:36:54+00:00
