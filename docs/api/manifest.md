@@ -1,3 +1,0 @@
-# `factortail.manifest`
-
-::: factortail.manifest

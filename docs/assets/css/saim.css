@@ -1,6 +1,7 @@
-/* saim indigo theming — matches BayesBreak / docs/report/saim.cls.
+/* saim indigo theming — overrides Material's custom palette slots so the
+   site picks up the same colour the manuscript uses in docs/report/saim.cls.
    #32127A: saim indigo (primary).
-   #5B36B7: lighter accent for hover/active states.
+   #5B36B7: a lighter accent for hover/active states.
    #D6CFE4: soft background tint used in callouts.
 */
 
@@ -49,7 +50,7 @@
 .saim-hero img.saim-hero-logo {
   height: 42px;
   margin-bottom: 0.5rem;
-  filter: brightness(0) invert(1);
+  filter: brightness(0) invert(1); /* white silhouette of the logo */
 }
 .saim-hero h1, .saim-hero p {
   color: #ffffff !important;
@@ -73,7 +74,7 @@
   background: rgba(255,255,255,0.18);
 }
 
-/* Soft callout used for citation/contract blocks. */
+/* Soft callout used for the citation block. */
 .saim-cite {
   background: var(--saim-soft);
   border-left: 4px solid var(--saim-indigo);
@@ -88,15 +89,13 @@
 .saim-cite p { margin: 0.25rem 0; }
 .saim-cite code { background: rgba(0, 0, 0, 0.05); }
 
-/* Tighter table heading bands. */
+/* Tighter headings in landing tables. */
 .md-typeset table:not([class]) th { background: var(--saim-soft); }
 [data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
   background: rgba(91, 54, 183, 0.18);
 }
 
-/* Brand inline code and headings. */
-.md-typeset code { border-radius: 3px; }
-.md-typeset h1 {
-  font-weight: 600;
-  letter-spacing: -0.01em;
+/* Brand the inline code colour. */
+.md-typeset code {
+  border-radius: 3px;
 }

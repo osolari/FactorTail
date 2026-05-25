@@ -24,7 +24,10 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
+# Root-only: setuptools' MANIFEST file. The unqualified pattern would
+# also clobber our package directory src/factortail/manifest/ on
+# case-insensitive filesystems.
+/MANIFEST
 
 # PyInstaller
 #   Usually these files are written by a python script from a template

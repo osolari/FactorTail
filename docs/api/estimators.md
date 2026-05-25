@@ -1,3 +1,0 @@
-# `factortail.estimators`
-
-::: factortail.estimators

@@ -1,24 +1,35 @@
 site_name: FactorTail
 site_description: >-
-  Sharp tail asymptotics and efficient rare-event simulation for independent
-  and dependent regularly-varying factor models.
-site_url: https://osolari.github.io/FactorTail/
+  Sharp tail asymptotics and efficient rare-event simulation for
+  independent and dependent regularly-varying factor models — exact
+  conditional Monte Carlo identities, MRV / HRV diagnostics, and a
+  rolling VaR/ES pipeline.
+site_author: Omid Shams Solari
 repo_url: https://github.com/osolari/FactorTail
 repo_name: osolari/FactorTail
 edit_uri: edit/main/docs/
 
-copyright: Copyright &copy; 2026 O. Shams Solari and F. Pourbabaee.
+docs_dir: docs
+site_dir: site
+
+# Files in docs/report/ are the manuscript source tree (sections, tables,
+# bibliography). Excluded from nav warnings but kept in the build so
+# cross-links resolve.
+not_in_nav: |
+  report/**
 
 theme:
   name: material
   language: en
+  logo: assets/saim_logo.png
+  favicon: assets/favicon.ico
   font:
     text: Inter
     code: JetBrains Mono
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      # saim indigo per docs/report/saim.cls and BayesBreak
+      # saim indigo per docs/report/saim.cls
       primary: custom
       accent: custom
       toggle:
@@ -52,8 +63,75 @@ theme:
     repo: fontawesome/brands/github
     edit: material/file-edit-outline
 
+nav:
+  - Home: index.md
+  - Getting started:
+      - Quickstart: quickstart.md
+      - Installation: installation.md
+      - Concepts: concepts.md
+  - User guide:
+      - Estimator families: models.md
+      - Data and DGPs: datasets.md
+      - Diagnostics: diagnostics.md
+      - Reproducibility: reproducibility.md
+      - Results: results.md
+      - Plotting: plotting.md
+      - CLI: cli.md
+  - Reference:
+      - API: api.md
+      - Math notes: math.md
+      - Manuscript: report.md
+      - Architecture: architecture.md
+      - Contributing: contributing.md
+      - Changelog: changelog.md
+
+markdown_extensions:
+  - admonition
+  - footnotes
+  - attr_list
+  - md_in_html
+  - tables
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+  - pymdownx.inlinehilite
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.arithmatex:
+      generic: true
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_root_heading: true
+            show_source: true
+            show_signature_annotations: true
+            members_order: source
+            docstring_style: numpy
+            heading_level: 3
+          paths:
+            - src
+
 extra_css:
-  - stylesheets/extra.css
+  - assets/css/saim.css
+
+extra_javascript:
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 extra:
   social:
@@ -65,88 +143,3 @@ extra:
     primary: "#32127A"
     accent:  "#5B36B7"
     bg_soft: "#D6CFE4"
-
-markdown_extensions:
-  - admonition
-  - attr_list
-  - def_list
-  - footnotes
-  - md_in_html
-  - tables
-  - toc:
-      permalink: true
-  - pymdownx.arithmatex:
-      generic: true
-  - pymdownx.details
-  - pymdownx.highlight:
-      anchor_linenums: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets:
-      check_paths: true
-  - pymdownx.superfences
-  - pymdownx.tabbed:
-      alternate_style: true
-  - pymdownx.tasklist:
-      custom_checkbox: true
-
-extra_javascript:
-  - https://polyfill.io/v3/polyfill.min.js?features=es6
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-
-plugins:
-  - search
-  - mkdocstrings:
-      handlers:
-        python:
-          paths: [src]
-          options:
-            docstring_style: numpy
-            show_root_heading: true
-            show_source: true
-            members_order: source
-            merge_init_into_class: true
-            show_signature_annotations: true
-            separate_signature: true
-            line_length: 88
-            filters: ["!^_"]
-
-# Exclude the manuscript LaTeX source (kept in docs/report/) from the site
-exclude_docs: |
-  report/*
-  report/**/*
-  !report/index.md
-
-not_in_nav: |
-  report/*
-
-nav:
-  - Home: index.md
-  - Getting started:
-      - Installation: install.md
-      - Quickstart: quickstart.md
-      - CLI reference: cli.md
-  - Theory:
-      - Map to manuscript: theory/manuscript_map.md
-      - Algorithms: theory/algorithms.md
-      - Regular variation: theory/regular_variation.md
-      - Hidden regular variation: theory/hidden_regular_variation.md
-  - Experiments:
-      - Manifest: experiments/manifest.md
-      - Reproducibility contract: experiments/reproducibility.md
-      - Replacement rules: experiments/replacement.md
-  - Real data: realdata.md
-  - Plotting: plotting.md
-  - Architecture: architecture.md
-  - Contributing: contributing.md
-  - Changelog: changelog.md
-  - API reference:
-      - factortail.cdmc: api/cdmc.md
-      - factortail.hrv: api/hrv.md
-      - factortail.estimators: api/estimators.md
-      - factortail.diagnostics: api/diagnostics.md
-      - factortail.dgp: api/dgp.md
-      - factortail.io: api/io.md
-      - factortail.manifest: api/manifest.md
-      - factortail.plotting: api/plotting.md
-      - factortail.real_data: api/real_data.md
-      - factortail.utils: api/utils.md
