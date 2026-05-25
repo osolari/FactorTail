@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "factortail"
 version = "0.1.0"
-description = "Sharp tail asymptotics and efficient rare-event simulation for independent and dependent regularly-varying factor models."
+description = "Conditional Monte Carlo for multivariate heavy tails: latent shocks, spectral measures, hidden cones."
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}

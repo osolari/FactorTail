@@ -6,8 +6,8 @@ as a TeX-Live-compatible LaTeX project.
 
 ## Title
 
-*Sharp Tail Asymptotics and Efficient Rare-Event Simulation for
-Independent and Dependent Regularly-Varying Factor Models*
+*Conditional Monte Carlo for Multivariate Heavy Tails:
+Latent Shocks, Spectral Measures, Hidden Cones*
 
 ## Authors
 

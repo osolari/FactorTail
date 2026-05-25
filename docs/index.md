@@ -26,14 +26,14 @@ hide:
 companion manuscript and the library together (see
 [`CITATION.cff`](https://github.com/osolari/FactorTail/blob/main/CITATION.cff)):
 
-> O. Shams Solari and F. Pourbabaee (2026). *Sharp Tail Asymptotics and
-> Efficient Rare-Event Simulation for Independent and Dependent
-> Regularly-Varying Factor Models.* sAIm Labs.
+> O. Shams Solari and F. Pourbabaee (2026). *Conditional Monte Carlo for
+> Multivariate Heavy Tails: Latent Shocks, Spectral Measures, Hidden
+> Cones.* sAIm Labs.
 
 ```bibtex
 @article{solari2026factortail,
-  title   = {Sharp Tail Asymptotics and Efficient Rare-Event Simulation
-             for Independent and Dependent Regularly-Varying Factor Models},
+  title   = {Conditional Monte Carlo for Multivariate Heavy Tails:
+             Latent Shocks, Spectral Measures, Hidden Cones},
   author  = {Shams Solari, Omid and Pourbabaee, Farzad},
   year    = {2026},
   url     = {https://github.com/osolari/FactorTail},

@@ -1,8 +1,8 @@
-"""FactorTail: rare-event simulation and tail asymptotics for factor models.
+"""FactorTail: conditional Monte Carlo for multivariate heavy tails.
 
-This package is the reference implementation of the manuscript "Sharp Tail
-Asymptotics and Efficient Rare-Event Simulation for Independent and Dependent
-Regularly-Varying Factor Models" by O. Shams Solari and F. Pourbabaee.
+This package is the reference implementation of the manuscript "Conditional
+Monte Carlo for Multivariate Heavy Tails: Latent Shocks, Spectral Measures,
+Hidden Cones" by O. Shams Solari and F. Pourbabaee.
 
 Module map (manuscript section -> module):
 

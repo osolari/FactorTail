@@ -11,11 +11,10 @@ authors:
     family-names: Pourbabaee
 repository-code: "https://github.com/osolari/FactorTail"
 abstract: >-
-  Reference implementation of sharp tail asymptotics and efficient
-  rare-event simulation for independent and dependent regularly-varying
-  factor models, including conditional Monte Carlo estimators,
-  multivariate and hidden regular variation diagnostics, and rolling
-  VaR/ES forecasting.
+  Reference implementation of conditional Monte Carlo estimators for
+  multivariate heavy tails — exact sum-tail identities under arbitrary
+  dependence, latent-shock and spectral specializations, hidden-cone
+  diagnostics, and rolling VaR/ES forecasting.
 keywords:
   - rare-event simulation
   - conditional Monte Carlo
@@ -28,8 +27,8 @@ date-released: "2026-05-24"
 preferred-citation:
   type: article
   title: >-
-    Sharp Tail Asymptotics and Efficient Rare-Event Simulation for
-    Independent and Dependent Regularly-Varying Factor Models
+    Conditional Monte Carlo for Multivariate Heavy Tails:
+    Latent Shocks, Spectral Measures, Hidden Cones
   authors:
     - given-names: O.
       family-names: Shams Solari

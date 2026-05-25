@@ -1,9 +1,9 @@
 site_name: FactorTail
 site_description: >-
-  Sharp tail asymptotics and efficient rare-event simulation for
-  independent and dependent regularly-varying factor models — exact
-  conditional Monte Carlo identities, MRV / HRV diagnostics, and a
-  rolling VaR/ES pipeline.
+  Conditional Monte Carlo for multivariate heavy tails — exact sum-tail
+  identities under arbitrary dependence, latent-shock and spectral
+  specializations, hidden-cone diagnostics, and a rolling VaR/ES
+  pipeline.
 site_author: Omid Shams Solari
 repo_url: https://github.com/osolari/FactorTail
 repo_name: osolari/FactorTail

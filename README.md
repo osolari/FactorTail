@@ -5,10 +5,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 
-Sharp tail asymptotics and efficient rare-event simulation for
-**independent and dependent regularly-varying factor models** — the
-reference implementation of the manuscript by O. Shams Solari and
-F. Pourbabaee.
+Reference implementation of **"Conditional Monte Carlo for Multivariate
+Heavy Tails: Latent Shocks, Spectral Measures, Hidden Cones"** by
+O. Shams Solari and F. Pourbabaee.
 
 `FactorTail` mirrors the manuscript section-by-section: every theorem in
 §§3–7 has an algorithmic counterpart in `factortail.cdmc.*`, every data
