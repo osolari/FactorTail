@@ -3,11 +3,9 @@ name: Docs
 on:
   push:
     branches: [main]
-    paths:
-      - "docs/**"
-      - "src/factortail/**"
-      - "mkdocs.yml"
-      - ".github/workflows/docs.yml"
+  pull_request:
+    branches: [main]
+    types: [closed]
   workflow_dispatch:
 
 permissions:
@@ -17,6 +15,11 @@ jobs:
   build-and-deploy:
     name: Build mkdocs site and deploy to gh-pages
     runs-on: ubuntu-latest
+    # On pull_request, only deploy when the PR is actually merged to main.
+    if: >
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     concurrency:
       group: gh-pages
       cancel-in-progress: false
@@ -46,5 +49,4 @@ jobs:
         run: mkdocs build --strict
 
       - name: Deploy to gh-pages branch
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: mkdocs gh-deploy --force --no-history --remote-branch gh-pages
