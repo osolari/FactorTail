@@ -1,0 +1,6 @@
+run_id: F18_default
+seed: 18
+panel: FF3_daily
+offline: true
+n_synthetic: 5000
+script: scripts/generate_F18_hill_plots.py

@@ -1,0 +1,3 @@
+# `factortail.dgp`
+
+::: factortail.dgp

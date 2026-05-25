@@ -1,0 +1,14 @@
+run_id: F11_default
+seed: 20260524
+design: common_shock_positive
+script: scripts/generate_F11_common_shock_geometry.py
+common_shock:
+  loadings: [1.0, 0.8, 0.6, 0.4]
+  shock: {type: pareto, alpha: 2.0, scale: 1.0}
+  idiosyncratic:
+    - {type: pareto, alpha: 2.0, scale: 0.5}
+    - {type: pareto, alpha: 2.0, scale: 0.5}
+    - {type: pareto, alpha: 2.0, scale: 0.5}
+    - {type: pareto, alpha: 2.0, scale: 0.5}
+x_grid: [5.0, 10.0, 20.0, 40.0, 80.0]
+n: 100000

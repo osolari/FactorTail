@@ -1,0 +1,6 @@
+run_id: F17_default
+seed: 17
+panel: FF3_daily
+offline: true
+n_synthetic: 5000
+script: scripts/generate_F17_spectral_by_period.py

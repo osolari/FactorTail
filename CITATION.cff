@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+title: FactorTail
+message: >-
+  If you use this software, please cite both the library and the
+  accompanying manuscript.
+type: software
+authors:
+  - given-names: O.
+    family-names: Shams Solari
+  - given-names: F.
+    family-names: Pourbabaee
+repository-code: "https://github.com/osolari/FactorTail"
+abstract: >-
+  Reference implementation of sharp tail asymptotics and efficient
+  rare-event simulation for independent and dependent regularly-varying
+  factor models, including conditional Monte Carlo estimators,
+  multivariate and hidden regular variation diagnostics, and rolling
+  VaR/ES forecasting.
+keywords:
+  - rare-event simulation
+  - conditional Monte Carlo
+  - regular variation
+  - factor models
+  - tail risk
+license: MIT
+version: 0.1.0
+date-released: "2026-05-24"
+preferred-citation:
+  type: article
+  title: >-
+    Sharp Tail Asymptotics and Efficient Rare-Event Simulation for
+    Independent and Dependent Regularly-Varying Factor Models
+  authors:
+    - given-names: O.
+      family-names: Shams Solari
+    - given-names: F.
+      family-names: Pourbabaee
+  year: 2026

@@ -1,0 +1,14 @@
+run_id: F12_default
+seed: 20260524
+design: dirichlet_mrv_alpha2
+script: scripts/generate_F12_spectral_simplex.py
+mrv:
+  alpha: 2.0
+  angular_kind: dirichlet
+  angular_params:
+    concentration: [1.5, 1.5, 1.5]
+  radial_scale: 1.0
+  dim: 3
+n: 50000
+k: 500
+exposure: [1.0, 1.0, 1.0]

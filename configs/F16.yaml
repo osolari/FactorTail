@@ -1,0 +1,10 @@
+run_id: F16_default
+seed: 16
+panel: FF3_daily
+offline: true
+n_synthetic: 1500
+portfolio: Mkt-RF
+window: 400
+levels: [0.99, 0.995]
+n_inner: 3000
+script: scripts/generate_F16_var_es_dashboard.py

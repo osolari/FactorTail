@@ -1,0 +1,9 @@
+run_id: T_crisis_default
+seed: 0
+panel: FF3_daily
+offline: true
+n_synthetic: 5000
+script: scripts/generate_T_crisis_attribution.py
+windows:
+  - {name: tail-1pct, quantile: 0.99}
+  - {name: tail-0p1pct, quantile: 0.999}

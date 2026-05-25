@@ -1,0 +1,180 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "factortail"
+version = "0.1.0"
+description = "Sharp tail asymptotics and efficient rare-event simulation for independent and dependent regularly-varying factor models."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+  {name = "O. Shams Solari"},
+  {name = "F. Pourbabaee"},
+]
+keywords = [
+  "rare-event simulation",
+  "conditional Monte Carlo",
+  "regular variation",
+  "multivariate regular variation",
+  "hidden regular variation",
+  "factor models",
+  "tail risk",
+  "VaR",
+  "expected shortfall",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "pandas>=2.0",
+  "matplotlib>=3.7",
+  "pyyaml>=6.0",
+  "click>=8.1",
+  "rich>=13.0",
+]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.7", "seaborn>=0.12"]
+realdata = ["pandas-datareader>=0.10", "requests>=2.31"]
+dev = [
+  "pytest>=7.4",
+  "pytest-cov>=4.1",
+  "pytest-xdist>=3.3",
+  "hypothesis>=6.80",
+  "ruff>=0.5",
+  "black>=24.0",
+  "mypy>=1.7",
+  "pre-commit>=3.5",
+]
+docs = [
+  "mkdocs>=1.5",
+  "mkdocs-material>=9.5",
+  "mkdocstrings[python]>=0.24",
+]
+
+[project.scripts]
+factortail = "factortail.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/osolari/FactorTail"
+Documentation = "https://github.com/osolari/FactorTail"
+Repository = "https://github.com/osolari/FactorTail"
+Issues = "https://github.com/osolari/FactorTail/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["factortail*"]
+exclude = ["tests*", "scripts*", "docs*"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.package-data]
+factortail = ["py.typed", "data/*.csv", "data/*.yaml"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra --strict-markers --strict-config"
+testpaths = ["tests"]
+markers = [
+  "slow: tests that take significant compute",
+  "integration: end-to-end pipeline tests",
+  "golden: regression tests against golden CSVs",
+]
+filterwarnings = [
+  "error",
+  "ignore::DeprecationWarning:matplotlib.*",
+  "ignore::PendingDeprecationWarning",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["factortail"]
+source_pkgs = ["factortail"]
+omit = ["*/tests/*", "*/scripts/*"]
+
+[tool.coverage.report]
+precision = 1
+show_missing = true
+exclude_lines = [
+  "pragma: no cover",
+  "raise NotImplementedError",
+  "if TYPE_CHECKING:",
+  "if __name__ == .__main__.:",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests", "scripts"]
+extend-exclude = ["docs", "scripts/legacy"]
+
+[tool.ruff.lint]
+select = [
+  "E", "F", "W",   # pycodestyle / pyflakes
+  "I",             # isort
+  "N",             # pep8-naming
+  "UP",            # pyupgrade
+  "B",             # bugbear
+  "C4",            # comprehensions
+  "SIM",           # simplify
+  "RUF",           # ruff
+]
+ignore = [
+  "E501",          # line length (handled by formatter)
+  "N803",          # argument name lowercase (math notation: N, B, etc.)
+  "N806",          # variable in function lowercase (math notation)
+  "N802",          # function name lowercase (math notation)
+  "C408",          # `dict(...)` calls are clearer for CSV row construction
+  "RUF005",        # tuple concatenation is clearer than star-unpacking for the schema dicts
+  "UP038",         # the isinstance tuple form is more legible
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests use math notation and harmless local-variable patterns.
+"tests/*" = [
+  "N802", "N803", "N806",        # math-notation identifiers
+  "F841",                        # unused local (documentation in tests)
+  "E731",                        # lambda assignments are clearer for inline samplers
+  "B007",                        # unused loop control
+  "SIM117",                      # nested with
+]
+# Scripts use sys.path bootstrapping which forces E402; also math notation.
+"scripts/*" = [
+  "E402", "N802", "N803", "N806", "N999",  # math notation + module name conventions
+  "B008",                        # mutable default in CLI args
+  "B023",                        # late-binding lambda (configs are captured per row)
+  "E731", "E741",
+  "F401", "F841",                # unused imports/vars in stub blocks
+  "C401", "C408", "C409", "C413", "C416", "C419",  # comprehension style
+  "RUF003", "RUF005",            # ambiguous unicode in comments
+  "SIM117", "SIM118",
+]
+"src/factortail/cli.py" = ["E402"]
+"src/factortail/__init__.py" = ["E402", "F401"]
+"src/factortail/*/__init__.py" = ["F401"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = false
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+plugins = []
+exclude = ["scripts", "build"]

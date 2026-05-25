@@ -1,0 +1,28 @@
+run_id: T_runtime_default
+seed: 99
+threshold: 10.0
+n: 5000
+script: scripts/generate_T_runtime.py
+family1:
+  marginals:
+    - {type: pareto, alpha: 2.0, scale: 1.0}
+    - {type: pareto, alpha: 2.0, scale: 1.0}
+    - {type: pareto, alpha: 2.0, scale: 1.0}
+family2:
+  B: [[1.0, 0.0], [1.0, 0.5], [0.5, 1.0]]
+  shocks:
+    - {type: pareto, alpha: 2.0, scale: 1.0}
+    - {type: pareto, alpha: 2.0, scale: 1.0}
+  idiosyncratic:
+    - {type: lomax, alpha: 2.0, scale: 0.3}
+    - {type: lomax, alpha: 2.0, scale: 0.3}
+    - {type: lomax, alpha: 2.0, scale: 0.3}
+  exposure: [1.0, 1.0, 1.0]
+family5:
+  alpha: 2.0
+  angular_kind: dirichlet
+  angular_params:
+    concentration: [1.5, 1.5, 1.5]
+  radial_scale: 1.0
+  dim: 3
+  exposure: [1.0, 1.0, 1.0]

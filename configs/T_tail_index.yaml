@@ -1,0 +1,6 @@
+run_id: T_tail_index_default
+seed: 0
+panel: FF3_daily
+offline: true
+n_synthetic: 5000
+script: scripts/generate_T_tail_index.py

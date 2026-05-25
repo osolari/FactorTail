@@ -1,0 +1,8 @@
+run_id: F15_default
+seed: 15
+panel: FF3_daily
+offline: true
+n_synthetic: 5000
+threshold_u: 0.95
+eta_k: 50
+script: scripts/generate_F15_tail_dependence_heatmap.py

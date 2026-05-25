@@ -1,0 +1,15 @@
+run_id: F13_default
+seed: 20260524
+design: hidden_pair_alpha_3
+script: scripts/generate_F13_hidden_cones.py
+hidden:
+  alpha: 2.0
+  alpha_hidden: 3.0
+  hidden_prob: 0.2
+  dim: 4
+  pair_indices:
+    - [0, 1]
+    - [2, 3]
+  pair_weights: [0.6, 0.4]
+x_grid: [5.0, 10.0, 20.0, 40.0]
+n: 200000

@@ -1,0 +1,132 @@
+site_name: FactorTail
+site_description: >-
+  Sharp tail asymptotics and efficient rare-event simulation for independent
+  and dependent regularly-varying factor models.
+site_url: https://osolari.github.io/FactorTail/
+repo_url: https://github.com/osolari/FactorTail
+repo_name: osolari/FactorTail
+edit_uri: edit/main/docs/
+
+copyright: Copyright &copy; 2026 O. Shams Solari and F. Pourbabaee.
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - toc.follow
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+extra_javascript:
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            docstring_style: numpy
+            show_root_heading: true
+            show_source: true
+            members_order: source
+            merge_init_into_class: true
+            show_signature_annotations: true
+            separate_signature: true
+            line_length: 88
+            filters: ["!^_"]
+
+# Exclude the manuscript LaTeX source (kept in docs/report/) from the site
+exclude_docs: |
+  report/*
+  report/**/*
+  !report/index.md
+
+not_in_nav: |
+  report/*
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Installation: install.md
+      - Quickstart: quickstart.md
+      - CLI reference: cli.md
+  - Theory:
+      - Map to manuscript: theory/manuscript_map.md
+      - Algorithms: theory/algorithms.md
+      - Regular variation: theory/regular_variation.md
+      - Hidden regular variation: theory/hidden_regular_variation.md
+  - Experiments:
+      - Manifest: experiments/manifest.md
+      - Reproducibility contract: experiments/reproducibility.md
+      - Replacement rules: experiments/replacement.md
+  - Real data: realdata.md
+  - Plotting: plotting.md
+  - Architecture: architecture.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
+  - API reference:
+      - factortail.cdmc: api/cdmc.md
+      - factortail.hrv: api/hrv.md
+      - factortail.estimators: api/estimators.md
+      - factortail.diagnostics: api/diagnostics.md
+      - factortail.dgp: api/dgp.md
+      - factortail.io: api/io.md
+      - factortail.manifest: api/manifest.md
+      - factortail.plotting: api/plotting.md
+      - factortail.real_data: api/real_data.md
+      - factortail.utils: api/utils.md

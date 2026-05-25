@@ -1,0 +1,11 @@
+run_id: F8_default
+seed: 20260524
+design: lomax_alpha_2p5_N_4
+script: scripts/generate_F8_second_order.py
+marginals:
+  - {type: lomax, alpha: 2.5, scale: 1.0}
+  - {type: lomax, alpha: 2.5, scale: 1.4}
+  - {type: lomax, alpha: 2.5, scale: 0.7}
+  - {type: lomax, alpha: 2.5, scale: 1.0}
+x_grid: [5.0, 8.0, 12.0, 18.0, 26.0]
+n_reference: 50000

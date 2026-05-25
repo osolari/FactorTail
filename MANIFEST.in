@@ -1,0 +1,6 @@
+include README.md LICENSE CITATION.cff
+include pyproject.toml
+recursive-include factortail *.py *.yaml *.csv py.typed
+recursive-include configs *.yaml *.yml
+recursive-include results SCHEMA.md
+recursive-exclude tests *

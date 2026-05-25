@@ -1,0 +1,19 @@
+run_id: T_sim_indep_default
+seed: 1
+script: scripts/generate_T_sim_results_independent.py
+designs:
+  - name: pareto_N3
+    n: 5000
+    x_grid: [5.0, 10.0, 20.0]
+    marginals:
+      - {type: pareto, alpha: 2.0, scale: 1.0, sign: 1.0}
+      - {type: pareto, alpha: 2.0, scale: 1.0, sign: 1.0}
+      - {type: pareto, alpha: 2.0, scale: 1.0, sign: 1.0}
+  - name: lomax_N4
+    n: 5000
+    x_grid: [4.0, 8.0, 16.0]
+    marginals:
+      - {type: lomax, alpha: 2.5, scale: 1.0}
+      - {type: lomax, alpha: 2.5, scale: 1.0}
+      - {type: lomax, alpha: 2.5, scale: 1.0}
+      - {type: lomax, alpha: 2.5, scale: 1.0}

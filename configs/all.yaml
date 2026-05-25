@@ -1,0 +1,22 @@
+run_id: all_master
+experiments:
+  - configs/F1.yaml
+  - configs/F8.yaml
+  - configs/F11.yaml
+  - configs/F12.yaml
+  - configs/F13.yaml
+  - configs/F14.yaml
+  - configs/F15.yaml
+  - configs/F16.yaml
+  - configs/F17.yaml
+  - configs/F18.yaml
+  - configs/T_sim_results_independent.yaml
+  - configs/T_sim_results_dependent.yaml
+  - configs/T_data_panels.yaml
+  - configs/T_tail_index.yaml
+  - configs/T_dep_diag.yaml
+  - configs/T_var_es_backtest.yaml
+  - configs/T_crisis.yaml
+  - configs/T_runtime.yaml
+  - configs/T_realdata_experiments.yaml
+  - configs/T_empirical_design_matrix.yaml

@@ -1,0 +1,43 @@
+run_id: T_sim_dep_default
+seed: 2
+script: scripts/generate_T_sim_results_dependent.py
+designs:
+  - name: family2_latent
+    family: Family II
+    x: 10.0
+    n: 5000
+    B:
+      - [1.0, 0.0]
+      - [1.0, 0.5]
+      - [0.5, 1.0]
+    shocks:
+      - {type: pareto, alpha: 2.0, scale: 1.0}
+      - {type: pareto, alpha: 2.0, scale: 1.0}
+    idiosyncratic:
+      - {type: lomax, alpha: 2.0, scale: 0.3}
+      - {type: lomax, alpha: 2.0, scale: 0.3}
+      - {type: lomax, alpha: 2.0, scale: 0.3}
+    exposure: [1.0, 1.0, 1.0]
+
+  - name: family5_dirichlet
+    family: Family V
+    x: 10.0
+    n: 5000
+    alpha: 2.0
+    angular_kind: dirichlet
+    angular_params:
+      concentration: [1.5, 1.5, 1.5]
+    radial_scale: 1.0
+    dim: 3
+    exposure: [1.0, 1.0, 1.0]
+
+  - name: family6_hidden
+    family: Family VI
+    x: 10.0
+    n: 50000
+    alpha: 2.0
+    alpha_hidden: 3.0
+    hidden_prob: 0.2
+    dim: 4
+    pair_indices: [[0, 1], [2, 3]]
+    pair_weights: [0.6, 0.4]

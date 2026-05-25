@@ -1,0 +1,10 @@
+run_id: F1_default
+seed: 20260524
+design: pareto_alpha_2_N_3
+script: scripts/generate_F1_tail_equivalence.py
+marginals:
+  - {type: pareto, alpha: 2.0, scale: 1.0, sign: 1.0}
+  - {type: pareto, alpha: 2.0, scale: 1.5, sign: 1.0}
+  - {type: pareto, alpha: 2.0, scale: 0.8, sign: 1.0}
+x_grid: [3.0, 5.0, 8.0, 12.0, 18.0, 26.0, 40.0]
+n: 20000
