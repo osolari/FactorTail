@@ -1,0 +1,16 @@
+% Estimator summary table
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lllll}
+\toprule
+\textbf{Estimator} & \textbf{Tail evals} & \textbf{Status} & \textbf{Guarantee} & \textbf{Main condition} \\
+\midrule
+Crude MC ($\hat\mu^{\CrMC}$) & $0$ & baseline & No rare-event guarantee & Benchmark only \\
+Summed CdMC ($Z^{\CdMC}$) & $N$ & primary & BRE; bound $N^\alpha-1$ & PTE plus single-big-jump conditions \\
+Stratified CdMC ($Z^{\mathrm{strat}}$) & $1$ & primary & BRE with contribution weights & Positive exact weights; active-only weights are asymptotic \\
+Closed-form Pareto/Lomax ($Z^{\mathrm{ana}}$) & $N$ & implementation & Same variance as summed CdMC & Closed-form marginal survival \\
+Control variate ($Z^{\VRE}$) & $N$ & oracle/split & VRE only with safe centering & Local second order and $L^2$ surrogate accuracy \\
+\bottomrule
+\end{tabular}%
+}

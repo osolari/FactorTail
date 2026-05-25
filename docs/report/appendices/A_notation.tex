@@ -1,0 +1,162 @@
+%==============================================================================
+% appendices/A_notation.tex
+%==============================================================================
+\section{Notation and Output Conventions}
+\label{appx:notation}
+
+This appendix consolidates the notation used throughout the paper. Symbols are
+grouped by section of first use. When a symbol is reused with a different
+meaning in a later section the alternative usage is noted explicitly.
+
+\subsection{Probability and indicator conventions}
+
+\(\Pb\) and \(\E\) denote the probability and expectation under a generic
+probability space \((\Omega,\Fset,\Pb)\) carrying all random objects of
+interest. Indicator functions are written \(\1\{A\}\) or \(\mathbf{1}_A\). For
+a univariate distribution function \(F\) we write \(\Fb=1-F\) for the survival
+function. For a multivariate cumulative distribution function or measure
+\(H\) we write \(\Hb\) for the tail object specified locally. Independence of
+random vectors is written \(\indep\). The symbol \(\sim\) denotes asymptotic
+equivalence: \(f(x)\sim g(x)\) means \(f(x)/g(x)\to 1\) as \(x\to\infty\).
+The symbol \(\weakto\) denotes weak convergence of measures or distributions.
+
+\subsection{Loss vector, sums, and selected maxima}
+
+\begin{longtable}{p{0.22\linewidth}p{0.70\linewidth}}
+\toprule
+Symbol & Meaning \\
+\midrule
+\endhead
+\(X=(X_1,\ldots,X_N)\) & Observed \(N\)-vector of loss contributions; positive values are losses. \\
+\(S_N\) & Aggregate loss \(\sum_{i=1}^N X_i\). \\
+\(M_N\) & Maximum contribution \(\max_{i=1}^N X_i\). \\
+\(S_{-i}\) & Leave-one-out sum \(\sum_{j\ne i}X_j\); \(S_{-i}=0\) if \(N=1\). \\
+\(M_{-i}\) & Leave-one-out maximum \(\max_{j\ne i}X_j\); \(M_{-i}=-\infty\) if \(N=1\). \\
+\(T_i(x)\) & Selected-maximum conditioning threshold \((x-S_{-i})\vee M_{-i}\). \\
+\(R_i(X)=1\) & Event that coordinate \(i\) is the selected maximum under a fixed deterministic tie rule. \\
+\(\mu(x)\) & Rare-event probability \(\Pb(S_N>x)\). \\
+\(\mu_{-i}\) & Leave-one-out mean \(\sum_{j\ne i}\E X_j\). \\
+\bottomrule
+\end{longtable}
+
+\subsection{Regular variation and active-set constants}
+
+\begin{longtable}{p{0.22\linewidth}p{0.70\linewidth}}
+\toprule
+Symbol & Meaning \\
+\midrule
+\endhead
+\(\RV_{-\alpha}\) & Class of regularly varying tail functions with index \(-\alpha\). \\
+\(\Gb\) & Common reference survival function with \(\Gb\in\RV_{-\alpha}\). \\
+\(\alpha\) & Tail index, \(\alpha>0\); when context permits, \(\alpha>1\) for first-moment finiteness. \\
+\(c_i\) & Positive-tail equivalence constant: \(\Pb(X_i>x)\sim c_i\Gb(x)\). \\
+\(\Aset\) & Active right-tail set \(\{i:c_i>0\}\). \\
+\(C\) & First-order independent constant \(\sum_{i\in\Aset}c_i\). \\
+\(c_i^+,c_i^-\) & Signed-tail constants for the positive and negative tails of \(X_i\). \\
+\(p_i^+,p_i^-\) & Signed-factor-tail constants used in the financial loss map. \\
+\(b_i\) & Loss-direction coefficient with \(X_i=b_iF_i\). \\
+\(a\in\RR^d\) & Portfolio loading vector; \(L=a^\top F\) is the loss after sign alignment. \\
+\(A(x)\) & Second-order auxiliary function in the marginal expansion. \\
+\(\rho\) & Second-order regular-variation parameter \(\rho\le 0\). \\
+\(d_i\) & Marginal second-order coefficient appearing in \cref{ass:sote}. \\
+\(D_{\mathrm{marg}},D_{\mathrm{mean}}\) & Marginal and mean-shift second-order constants. \\
+\(D_{\mathrm{hid}}\) & Hidden-cone second-order constant. \\
+\(r(x)\) & Higher-order remainder scale satisfying \(r(x)=o(\Gb(x)A(x)+\Gb(x)/x)\). \\
+\bottomrule
+\end{longtable}
+
+\subsection{Estimators and efficiency notions}
+
+\begin{longtable}{p{0.22\linewidth}p{0.70\linewidth}}
+\toprule
+Symbol & Meaning \\
+\midrule
+\endhead
+\(\CrMC\) & Crude Monte Carlo. \\
+\(\CdMC\) & Conditional Monte Carlo (Asmussen--Kroese style). \\
+\(\BRE\) & Bounded relative error. \\
+\(\VRE\) & Vanishing relative error. \\
+\(Z^{\CrMC}\) & Crude indicator estimator \(\1\{S_N>x\}\). \\
+\(Z^{\CdMC}\) & Summed conditional Monte Carlo estimator \(\sum_i p_i(T_i;X_{-i})\). \\
+\(Z^{\mathrm{strat}}\) & Stratified conditional Monte Carlo estimator. \\
+\(Z^{\mathrm{ana}}\) & Closed-form analytic-marginal estimator. \\
+\(Z^{\VRE}\) & Control-variate vanishing-relative-error estimator. \\
+\(Z^{\mathrm{spec}}\) & Spectral/radial conditional Monte Carlo estimator. \\
+\(W(\hat\mu)\) & Work-normalized variance \(\Var(\hat\mu)\cdot\mathrm{cost}(\hat\mu)\). \\
+\(\mathrm{eff}(\hat\mu_1,\hat\mu_2)\) & Efficiency ratio \(W(\hat\mu_2)/W(\hat\mu_1)\). \\
+\(\widehat\mu_n,\mathrm{CI}_n\) & Sample mean estimator and confidence interval from \(n\) replicates. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Dependence classes and conditional kernels}
+
+\begin{longtable}{p{0.22\linewidth}p{0.70\linewidth}}
+\toprule
+Symbol & Meaning \\
+\midrule
+\endhead
+\(p_i(t;X_{-i})\) & Conditional tail kernel \(\Pb(X_i>t\mid X_{-i})\). \\
+\(F=BZ+\varepsilon\) & Latent-shock factor representation; \(B\) is the loading matrix, \(Z\) the shock vector. \\
+\(B\in\RR^{d\times K}\) & Latent-shock loading matrix. \\
+\(q=B^\top a\) & Portfolio exposure to latent shocks. \\
+\(Z_k\) & Latent shock \(k\); independent across \(k\) in the latent-shock model. \\
+\(\Pi\) & Block partition of the index set \(\{1,\ldots,N\}\). \\
+\(\Bset_b\) & Block \(b\) of the partition \(\Pi\). \\
+\(C(u_1,\ldots,u_d)\) & Copula coupling the marginals of \(F\). \\
+\bottomrule
+\end{longtable}
+
+\subsection{Multivariate and hidden regular variation}
+
+\begin{longtable}{p{0.22\linewidth}p{0.70\linewidth}}
+\toprule
+Symbol & Meaning \\
+\midrule
+\endhead
+\(\MRV\) & Class of multivariate regularly varying distributions. \\
+\(\HRV\) & Class of hidden-regular-variation distributions. \\
+\(\nu\) & MRV tail (limit) measure on the cone \(\Eset_0=[0,\infty)^d\setminus\{0\}\). \\
+\(\nu_2\) & Hidden-cone tail measure on \(\Eset_2\subsetneq\Eset_0\). \\
+\(\Eset_0,\Eset_2\) & Outer and hidden cones used in the MRV/HRV decomposition. \\
+\(S(\cdot)\) & Spectral (angular) measure on the unit sphere or simplex. \\
+\(\Theta\) & Angular random vector with law \(S\). \\
+\(R\) & Radial component with regularly varying survival. \\
+\(\Hb_2(x)\) & Hidden tail scale satisfying \(\Hb_2(x)=o(\Gb(x))\). \\
+\(\chi(q),\bar\chi(q),\eta\) & Coefficients of tail dependence, complementary tail dependence, and Ledford--Tawn residual index. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Financial and empirical objects}
+
+\begin{longtable}{p{0.22\linewidth}p{0.70\linewidth}}
+\toprule
+Symbol & Meaning \\
+\midrule
+\endhead
+\(F\in\RR^d\) & Factor return vector. \\
+\(L=a^\top F\) & Portfolio loss after sign alignment. \\
+\(\VaR_\tau(L)\) & Value-at-risk of \(L\) at confidence level \(\tau\). \\
+\(\ES_\tau(L)\) & Expected shortfall of \(L\) at level \(\tau\). \\
+\(w\) & Rolling estimation window length. \\
+\(\tau\) & VaR/ES confidence level (e.g., \(\tau\in\{0.99,0.995,0.999\}\)). \\
+\bottomrule
+\end{longtable}
+
+\subsection{Output conventions and placeholder rule}
+
+\begin{longtable}{p{0.22\linewidth}p{0.70\linewidth}}
+\toprule
+Symbol & Meaning \\
+\midrule
+\endhead
+\(\xx\) & Placeholder numeric value; not an empirical result. \\
+\bottomrule
+\end{longtable}
+
+\paragraph{Placeholder convention.}
+Every table cell containing \xx{} is deliberately unfilled. It must be replaced
+only by a value generated from a validated CSV with a recorded configuration
+hash, data vintage, and run identifier (see \cref{appx:manifest}).
+Placeholder figures are TikZ instruction sheets whose captions describe the
+intended diagnostic and source schema. A placeholder is not evidence for or
+against any model.

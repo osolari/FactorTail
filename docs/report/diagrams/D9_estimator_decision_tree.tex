@@ -1,0 +1,24 @@
+\begin{tikzpicture}[
+  node distance=0.65cm and 0.9cm,
+  box/.style={rectangle, rounded corners, draw, align=center, minimum width=2.7cm, minimum height=0.8cm, font=\scriptsize},
+  decision/.style={diamond, aspect=2.2, draw, align=center, font=\scriptsize, inner sep=1pt},
+  arr/.style={->, >=Stealth}
+]
+\node[box, fill=blue!10] (data) {Signed loss\\contributions};
+\node[decision, fill=yellow!15, right=of data] (marg) {Common heavy\\tail scale?};
+\node[box, fill=red!8, above right=of marg] (fixmarg) {Use heterogeneous\\tail model};
+\node[decision, fill=yellow!15, below right=of marg] (taildep) {Extremal\\dependence?};
+\node[box, fill=green!12, below left=of taildep] (ind) {Independent\\CdMC};
+\node[decision, fill=yellow!15, right=of taildep] (geom) {Geometry stable?};
+\node[box, fill=green!12, above right=of geom] (latent) {Latent/block\\CdMC};
+\node[box, fill=green!12, right=of geom] (spec) {Spectral\\CdMC};
+\node[box, fill=green!12, below right=of geom] (hidden) {Hidden-cone\\mixture};
+\draw[arr] (data) -- (marg);
+\draw[arr] (marg) -- node[above, font=\scriptsize] {no} (fixmarg);
+\draw[arr] (marg) -- node[left, font=\scriptsize] {yes} (taildep);
+\draw[arr] (taildep) -- node[left, font=\scriptsize] {weak} (ind);
+\draw[arr] (taildep) -- node[above, font=\scriptsize] {yes} (geom);
+\draw[arr] (geom) -- node[left, font=\scriptsize] {rays/blocks} (latent);
+\draw[arr] (geom) -- node[above, font=\scriptsize] {full MRV} (spec);
+\draw[arr] (geom) -- node[right, font=\scriptsize] {axis first order} (hidden);
+\end{tikzpicture}

@@ -1,0 +1,151 @@
+%==============================================================================
+% appendices/C_dependent_proofs.tex
+%==============================================================================
+\section{Proofs for Dependent Extensions}
+\label{appx:dependent-proofs}
+
+This appendix proves the results stated in \cref{sec:dependent-cdmcs} and
+\cref{sec:mrv-spectral}. Each proof environment is labelled by the result it
+establishes.
+
+\begin{proof}[Proof of \cref{thm:dep-cdmc-unbiased}]
+Let
+\[
+  E_i(x)=\{S_N>x,\ R_i(X)=1\},
+\]
+where \(R_i\) is the selected-maximum rule of \cref{ass:tie}. The events
+\(E_i(x)\) are disjoint and their union is \(\{S_N>x\}\). Conditional on
+\(X_{-i}\), the event \(E_i(x)\) is equivalent to \(X_i\) exceeding both the
+sum threshold and the selected-maximum threshold. In the continuous case this
+is
+\[
+  X_i>(x-S_{-i})\vee M_{-i}=T_i(x).
+\]
+For discrete laws, replacing \(>M_{-i}\) by the tie-rule endpoint gives the
+same identity with an adjusted threshold. Hence
+\[
+  \Pb(E_i(x))
+  =\E\!\left[\Pb(X_i>T_i(x)\mid X_{-i})\right]
+  =\E\!\left[p_i(T_i(x);X_{-i})\right].
+\]
+Summing over \(i\) proves the identity and the unbiasedness of
+\(Z^{\mathrm{dep}}(x)\). No independence step is required.
+\end{proof}
+
+\begin{remark}[Population identity versus estimator]
+\label{rem:pop-vs-est}
+\Cref{thm:dep-cdmc-unbiased} contains two distinct statements. The
+population-level identity
+\(\mu(x)=\sum_i\E[p_i(T_i(x);X_{-i})]\) holds without any computability
+assumption on the kernels. The estimator statement
+\(\E Z^{\mathrm{dep}}(x)=\mu(x)\) holds provided the kernels are evaluated
+exactly per replicate; if the kernels are evaluated by a noisy or approximate
+routine, an additional bias term appears that is controlled by the kernel
+approximation error.
+\end{remark}
+
+\begin{proof}[Proof of \cref{prop:dep-envelope-bre}]
+By \cref{thm:dep-cdmc-unbiased}, \(\E Z^{\mathrm{dep}}(x)=\mu(x)\). The
+selected-maximum threshold satisfies \(T_i(x)\ge x/N\) almost surely (the
+argument is the same as in the independent CdMC proof in
+\cref{appx:independent-proofs}). By \cref{ass:conditional-envelope}, for all
+$t\ge x/N$,
+\[
+  p_i(t;X_{-i})\le K_{i,x}b_i(t),
+\]
+and therefore
+\[
+  Z^{\mathrm{dep}}(x)
+  \le \sum_{i=1}^N K_{i,x}\, b_i(x/N).
+\]
+The second-moment envelope in \cref{ass:conditional-envelope} gives
+\[
+  \E\!\left[Z^{\mathrm{dep}}(x)^2\right]=O(\mu(x)^2),
+\]
+hence
+\[
+  \Var Z^{\mathrm{dep}}(x)\le \E Z^{\mathrm{dep}}(x)^2=O(\mu(x)^2),
+\]
+which is bounded relative error.
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:latent-shock-tail}]
+Set \(Y_k=q_kZ_k\). Independence of the shocks transfers to the signed shock
+contributions \(Y_k\). Their right-tail constants are
+\[
+  \Pb(Y_k>x)
+  =\Pb(q_kZ_k>x)
+  \sim |q_k|^\alpha\{p_k^+\1(q_k>0)+p_k^-\1(q_k<0)\}\Gb(x)
+  =c_k(q_k)\Gb(x).
+\]
+Applying \cref{thm:sum-equivalence} to \(\sum_kY_k=q^\top Z\) yields the
+first-order tail claim. Applying the independent CdMC construction and BRE
+proof of \cref{appx:independent-proofs} to the \(K\)-dimensional shock vector
+gives the estimator claim, with \(K\) replacing \(N\) in the BRE bound.
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:block-reduction}]
+By hypothesis the blocks are independent, so the block sums \(Y_1,\ldots,Y_K\)
+are independent. By assumption \(\Pb(Y_k>x)\sim d_k\Gb(x)\) and the block-level
+single-big-jump conditions hold. \Cref{thm:sum-equivalence} applied to
+\(\sum_kY_k\) gives
+\[
+  \Pb(S_N>x)=\Pb\!\left(\sum_kY_k>x\right)
+  \sim \sum_k\Pb(Y_k>x)
+  \sim \!\left(\sum_kd_k\right)\Gb(x).
+\]
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:mrv-linear-risk}]
+By multivariate regular variation,
+\[
+  \frac{\Pb(X/x\in A)}{\Hb(x)}\to \nu(A)
+\]
+for every Borel set \(A\) bounded away from the origin with
+\(\nu(\partial A)=0\). Take \(A=A_\ell=\{z:\ell(z)>1\}\); this set is bounded
+away from the origin and admissible by the boundary-continuity hypothesis of
+\cref{ass:mrv-loss}. Then
+\[
+  \Pb\{\ell(X)>x\}=\Pb(X/x\in A_\ell)\sim \Hb(x)\nu(A_\ell).
+\]
+For the polar representation,
+\[
+  \nu(A_\ell)=\int\!\!\int
+  \1\{r\ell(\theta)>1\}\,\alpha r^{-\alpha-1}\dd r\,S(\dd\theta).
+\]
+If \(\ell(\theta)\le 0\) the inner integral is zero. If \(\ell(\theta)>0\) the
+inner integral equals \(\int_{1/\ell(\theta)}^\infty \alpha r^{-\alpha-1}\dd r
+=\ell(\theta)^\alpha\). Integrating over \(\theta\) gives the stated spectral
+integral.
+\end{proof}
+
+\begin{proof}[Proof of \cref{prop:radial-cdmc}]
+Condition on \(\Theta\). If \(\ell(\Theta)\le 0\), then \(\ell(R\Theta)>x\) is
+impossible for \(x>0\). If \(\ell(\Theta)>0\), the event is
+\(R>x/\ell(\Theta)\). Thus
+\[
+  \Pb\{\ell(X)>x\mid\Theta\}
+  =\Fb_R\!\left(x/\ell(\Theta)\mid\Theta\right)\,\1\{\ell(\Theta)>0\}.
+\]
+Taking expectations yields the population identity and proves unbiasedness of
+\(Z^{\mathrm{spec}}(x)\).
+\end{proof}
+
+\begin{proof}[Proof of \cref{prop:spectral-bre}]
+Let \(Y=\ell(\Theta)_+\). The envelope assumption gives
+\[
+  Z^{\mathrm{spec}}(x)\le K\Hb(x)Y^\alpha,
+\]
+hence
+\[
+  \E\!\left[Z^{\mathrm{spec}}(x)^2\right]
+  \le K^2\Hb(x)^2\E Y^{2\alpha}.
+\]
+The MRV linear-risk asymptotic gives \(\mu(x)\sim \Hb(x)\E Y^\alpha\) under the
+same normalization. Therefore
+\[
+  \limsup_{x\to\infty}\frac{\Var Z^{\mathrm{spec}}(x)}{\mu(x)^2}
+  \le K^2\frac{\E Y^{2\alpha}}{(\E Y^\alpha)^2}<\infty,
+\]
+which is bounded relative error provided \(\E Y^{2\alpha}<\infty\).
+\end{proof}

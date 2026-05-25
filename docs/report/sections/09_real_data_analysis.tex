@@ -1,0 +1,305 @@
+%==============================================================================
+% sections/09_real_data_analysis.tex
+%==============================================================================
+\section{Real Data Analysis: Protocol and Projected Outputs}
+\label{sec:real-data}
+
+This section is written as a full empirical paper section with placeholders. It
+is intentionally detailed so that the analysis can be executed without changing
+the manuscript structure. No empirical run has been executed yet; numerical
+values remain \xx{} until the data pipeline is run. The public-data component
+uses the Kenneth French Data Library, and the licensed security-level
+extension uses CRSP through WRDS when institutional access is available
+\citep{FrenchDataLibrary2026,CRSPGuide2026}.
+
+\subsection{Empirical questions and reporting contract}
+
+The empirical study is organized around six questions.
+\begin{enumerate}[label=Q\arabic*.]
+\item Do signed one-sided factor and residual tails exhibit stable regularly
+varying behavior over rolling windows?
+\item Are active loss contributors compatible with a common tail index, or is a
+dominant-tail or heterogeneous-index approximation required?
+\item Do factor and residual extremes look independent, latent-shock driven,
+block dependent, copula dependent, or MRV/spectral?
+\item Which rare-event estimator gives the smallest work-normalized error for
+one-day VaR and ES under the same fitted tail model?
+\item Do heavy-tail forecasts improve out-of-sample VaR/ES calibration relative
+to Gaussian, historical, and GARCH/EVT baselines?
+\item How sensitive are conclusions to thresholds, rolling-window length,
+portfolio universe, crisis subsamples, and dependence specification?
+\end{enumerate}
+
+All empirical claims in the final paper must be traceable to a generated file
+in \texttt{results/}. A table value may remain \xx{} in a development draft,
+but any non-placeholder value must record the data vintage, configuration
+hash, script hash, random seed when applicable, and validation status. Data
+specifications, vintage rules, and freezing protocol are in
+\cref{appx:data-specs}. The reference implementation is the
+\texttt{FactorTail} library
+(\url{https://github.com/osolari/FactorTail}); the
+\texttt{script\_hash} field records the library commit used for each run.
+
+\begin{table}[p]
+\centering
+\input{tables/T_empirical_design_matrix.tex}
+\caption[Empirical design matrix (partial)]{\textbf{(PARTIAL.)} Planned
+empirical design matrix. Universe, factor model, tail estimator, and
+estimator-candidate columns are populated; window and run-status columns
+remain \xx{} until populated by the experiment registry. See
+\cref{appx:data-specs} for vintage controls.}
+\label{tab:empirical-design-matrix-current}
+\end{table}
+
+\subsection{Data panels, vintages, and freezing rules}
+
+The core public data source is the Kenneth French Data Library. The planned
+panels are daily FF3 factors, daily FF5 factors, daily momentum, daily
+industry portfolios, size/book-to-market portfolios,
+operating-profitability and investment portfolios, and the risk-free rate.
+The licensed extension uses CRSP daily security returns through WRDS, with
+delisting-return treatment, share-code filters, exchange-code filters, and
+market-equity screens documented in the data appendix
+(\cref{appx:data-specs}).
+
+\paragraph{Freezing rules.}
+Each empirical run records the data vintage (download timestamp and source
+file hash), the analysis configuration (config hash and git commit), and the
+random seed. Once a run is included in the manuscript, its inputs are frozen:
+re-running the analysis must reproduce the same outputs bit-for-bit (subject
+to documented platform-tolerance bounds). Re-fits with updated data are
+reported as separate runs and never overwrite existing rows.
+
+\begin{table}[p]
+\centering
+\input{tables/T_data_panels.tex}
+\caption[Real-data panels (planned)]{\textbf{(PLANNED).} Real-data panels
+and data-vintage controls. All numerical entries are \xx{} until the data
+pull is executed. The final version will report date range, number of assets
+or portfolios, missingness, source vintage, and access timestamp.}
+\label{tab:data-panels}
+\end{table}
+
+\subsection{Portfolio construction and factor fits}
+
+The analysis uses four portfolio families:
+\begin{enumerate}
+\item canonical test portfolios from the French library;
+\item equal-weighted and value-weighted industry portfolios;
+\item synthetic long-only and long-short portfolios formed by random or
+optimized exposure vectors;
+\item CRSP security-level portfolios when licensed access is available.
+\end{enumerate}
+For each portfolio \(p\), rolling windows of length \(w\in\{\xx,\xx,\xx\}\)
+fit FF3, FF5, and FF5+momentum models:
+\[
+  r_{p,t}=\alpha_{p,t}+\beta_{p,t}^\top f_t+\varepsilon_{p,t}.
+\]
+The loss contribution vector is
+\[
+  X_{p,t}=(-\beta_{1,t}f_{1,t},\ldots,-\beta_{d,t}f_{d,t},-\varepsilon_{p,t}).
+\]
+This vector is the input to marginal, dependent-kernel, latent-shock, block,
+and spectral estimators.
+
+\subsection{Marginal tail analysis}
+
+For every signed factor and residual contribution, the pipeline estimates
+one-sided right-tail indices using Hill, Pickands, and POT/GPD estimators
+across threshold grids. It will report stability plots, common-index tests,
+threshold selection, and uncertainty bands. No winsorization is applied to
+the tail sample used for risk estimation; data-cleaning flags are reported
+separately.
+
+\begin{table}[p]
+\centering
+\input{tables/T_tail_index_placeholder.tex}
+\caption[Real-data tail-index estimates (planned)]{\textbf{(PLANNED).}
+Tail-index estimates for signed factor and residual contributions. Values are
+\xx{} placeholders. The final table will report Hill, Pickands, and POT
+estimates, selected thresholds, standard errors or bootstrap intervals, and
+common-index diagnostic outcomes.}
+\label{tab:tail-index-placeholder}
+\end{table}
+
+\begin{figure}[p]
+\centering
+\input{figures/F18_hill_plots_placeholder.tex}
+\caption[Hill and POT stability (planned)]{\textbf{(PLANNED).} Hill and POT
+stability. The generated figure will show tail-index estimates across
+order-statistic thresholds for signed factors and residuals, with selected
+thresholds and bootstrap bands. Source schema:
+\texttt{results/F18\_hill\_plots.csv}.}
+\label{fig:hill-plots-placeholder}
+\end{figure}
+
+\subsection{Dependence diagnostics}
+
+Dependence is reported at three levels. First, ordinary dependence: Pearson,
+Spearman, Kendall, and rolling correlations of signed loss contributions.
+Second, extremal dependence: empirical \(\chi(u)\), \(\bar\chi(u)\),
+Ledford--Tawn \(\eta\), pair exceedance rates, and co-exceedance stability.
+Third, geometric dependence: empirical spectral mass on axes, rays, sectors,
+and hidden cones.
+
+\begin{table}[p]
+\centering
+\input{tables/T_dependence_diagnostic_placeholder.tex}
+\caption[Tail-dependence diagnostics (planned)]{\textbf{(PLANNED).}
+Tail-dependence diagnostics for factor and residual loss contributions.
+Values are \xx{} placeholders. The final table will identify whether each
+pair is consistent with asymptotic dependence, tail dependence, common-shock
+behavior, or hidden-cone dependence.}
+\label{tab:tail-dep-placeholder}
+\end{table}
+
+\begin{figure}[p]
+\centering
+\input{figures/F15_tail_dependence_heatmap_placeholder.tex}
+\caption[Tail-dependence heatmap (planned)]{\textbf{(PLANNED).}
+Tail-dependence heatmap. The generated figure will show pairwise \(\chi\),
+\(\bar\chi\), or \(\eta\) estimates for signed factor and residual
+contributions, with clustering used to propose block structures. Source
+schema: \texttt{results/F15\_tail\_dependence\_heatmap.csv}.}
+\label{fig:tail-dep-heatmap-placeholder}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\input{figures/F17_spectral_by_period_placeholder.tex}
+\caption[Rolling spectral measure (planned)]{\textbf{(PLANNED).} Rolling
+empirical spectral measure. The generated figure will compare angular mass
+before, during, and after stress windows, showing whether extremes are
+axis-dominated, common-shock dominated, or spread over a sector of the
+simplex. Source schema: \texttt{results/F17\_spectral\_by\_period.csv}.}
+\label{fig:spectral-by-period-placeholder}
+\end{figure}
+
+\subsection{Rare-event estimation on real data}
+
+For each portfolio, date, model, and confidence level, the pipeline estimates
+\[\mu_t(x)=\Pb_t(L_{p,t+1}>x)\]
+using the following estimators: independent CdMC, dependent copula-kernel
+CdMC, latent-shock CdMC from PCA/ICA or fitted common-shock models, block
+CdMC from clustered tail-dependence blocks, spectral CdMC from empirical
+angular resampling, and filtered historical simulation. Thresholds are
+selected to correspond to VaR levels 99\%, 99.5\%, and 99.9\%, plus a stress
+grid beyond observed quantiles for estimator-efficiency comparison.
+
+\subsection{VaR and ES forecasting}
+
+The VaR forecast \(\widehat q_{p,t}(\tau)\) solves
+\[
+  \widehat\Pb_t(L_{p,t+1}>\widehat q_{p,t}(\tau))=1-\tau.
+\]
+The ES forecast is computed either by tail integration of the fitted
+rare-event curve or by conditional-excess simulation under the same
+estimator. The final paper will report forecast paths, exception indicators,
+ES exceedance residuals, and crisis-period decompositions.
+
+\begin{figure}[p]
+\centering
+\input{figures/F16_var_es_dashboard_placeholder.tex}
+\caption[VaR and ES forecast dashboard (planned)]{\textbf{(PLANNED).} VaR/ES
+forecast dashboard. The generated figure will overlay realized portfolio
+losses, rolling VaR forecasts, ES forecasts, and exception markers for each
+estimator. Panels will include full sample and stress-window zooms. Source
+schema: \texttt{results/F16\_var\_es\_dashboard.csv}.}
+\label{fig:var-es-dashboard-placeholder}
+\end{figure}
+
+\subsection{Backtesting}
+
+VaR backtests include unconditional coverage, conditional coverage, dynamic
+quantile tests, exception clustering, and traffic-light summaries. ES
+backtests include Acerbi--Szekely-style exceedance residual tests and
+comparative loss functions. The final analysis will report both full-sample
+and rolling-window statistics, with crisis-window attribution separated from
+ordinary periods.
+
+\begin{table}[p]
+\centering
+\input{tables/T_var_es_backtest_placeholder.tex}
+\caption[VaR and ES backtest (planned)]{\textbf{(PLANNED).} VaR and ES
+backtest results. Values are \xx{} placeholders. The final table will compare
+independent, latent-shock, block, copula, spectral, historical, and
+parametric benchmarks across exception rate, independence, conditional
+coverage, ES residual, and comparative scoring metrics.}
+\label{tab:var-es-backtest-placeholder}
+\end{table}
+
+\subsection{Crisis-window attribution}
+
+For each stress window, the paper will report the estimated contribution of
+axes, latent shocks, blocks, spectral sectors, and hidden cones to the tail
+forecast. Planned windows include the 1987 crash if the selected data panel
+begins early enough, the dot-com unwind, the global financial crisis, the
+COVID-19 shock, and the 2022 inflation/rate-hike period. The exact windows
+are fixed in the configuration file and reported in the data appendix.
+
+\begin{table}[p]
+\centering
+\input{tables/T_crisis_attribution_placeholder.tex}
+\caption[Crisis attribution (planned)]{\textbf{(PLANNED).} Crisis-window
+tail attribution. Values are \xx{} placeholders. The final table will
+decompose forecast tail probability into marginal axes, latent common shocks,
+blocks, spectral sectors, and hidden cones by stress period.}
+\label{tab:crisis-attribution-placeholder}
+\end{table}
+
+
+\subsection{Planned real-data experiment registry}
+
+The execution plan separates model validation from estimator-efficiency
+measurement. Experiments that compare estimators hold the fitted distributional
+model fixed. Experiments that compare fitted models use the same forecasting
+calendar, loss definition, threshold grid, and backtest protocol.
+
+\begin{table}[p]
+\centering
+\input{tables/T_realdata_experiments.tex}
+\caption[Real-data experiment registry (partial)]{\textbf{(PARTIAL.)}
+Planned real-data experiment registry. Experiment descriptors, estimator
+candidates, forecast levels, and output identifiers are populated; the
+status/outcome column remains \xx{} until the run registry is populated.}
+\label{tab:realdata-experiments-current}
+\end{table}
+
+\begin{table}[p]
+\centering
+\input{tables/T_planned_real_data_figures.tex}
+\caption[Real-data figure replacement registry]{Planned real-data figure
+replacement registry. Each placeholder figure has a source CSV and replacement
+rule so that visual results can be regenerated without changing labels or
+captions. The cells in this table are real categorical descriptors.}
+\label{tab:planned-real-data-figures-current}
+\end{table}
+
+\subsection{Runtime and implementation cost}
+
+The empirical section will report wall-clock time, number of random variates,
+number of conditional-kernel evaluations, fit time, and memory use. Runtime
+will be reported separately for training, diagnostic estimation, and daily
+forecasting.
+
+\begin{table}[p]
+\centering
+\input{tables/T_runtime_placeholder.tex}
+\caption[Runtime (planned)]{\textbf{(PLANNED).} Runtime and
+computational-cost placeholder. Values are \xx{} placeholders. The final
+table will report per-date forecast cost, per-replicate cost, total runtime,
+and work-normalized relative error for each estimator.}
+\label{tab:runtime-placeholder}
+\end{table}
+
+\subsection{Empirical workflow diagram}
+
+\begin{figure}[p]
+\centering
+\input{diagrams/D12_real_data_workflow.tex}
+\caption[Real-data workflow]{Real-data workflow from raw factor and return
+files through tail diagnostics, dependence diagnostics, estimator selection,
+VaR/ES forecasting, backtesting, and artifact generation. Every output file
+is validated against the schema in \texttt{results/SCHEMA.md}.}
+\label{fig:real-data-workflow}
+\end{figure}

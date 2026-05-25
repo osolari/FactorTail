@@ -1,0 +1,123 @@
+%==============================================================================
+% appendices/D_second_order_and_hidden_rv.tex
+%==============================================================================
+\section{Second-Order and Hidden-Regular-Variation Details}
+\label{appx:second-hidden}
+
+This appendix collects the proofs and auxiliary lemmas for the second-order
+and hidden-cone expansions. We use the notation of \cref{appx:notation}.
+
+\subsection{A primitive condition for the local second-order equivalence}
+
+\Cref{ass:sote} is the local form used throughout the paper. The following
+classical condition is sufficient.
+
+\begin{lemma}[Sufficient condition for the local second-order equivalence]
+\label{lem:sote-primitive}
+Suppose, for each active \(i\),
+\[
+  \frac{\Fb_i(tx)/\Gb(x)-c_it^{-\alpha}}{A(x)}
+  \to c_i d_i t^{-\alpha}\frac{t^\rho-1}{\rho}
+\]
+locally uniformly for \(t\) near one, with \(\rho\le 0\), and assume Potter
+bounds for \(\Fb_i\) and \(\Gb\) permitting the local shift \(t=1-u/x\) for
+bounded \(u\). Then \(\Fb_i\) satisfies \cref{ass:sote} with the displayed
+constants \(c_i,d_i\), auxiliary \(A(x)\), and the expansion
+\[
+  t^{-\alpha}=1+\frac{\alpha u}{x}+O(u^2/x^2)
+\]
+for bounded \(u\).
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+Substitute \(t=1-u/x\) in the displayed limit, use the Taylor expansion of
+\(t\mapsto t^{-\alpha}\) at \(t=1\), and apply uniform Potter bounds to swap
+limit and substitution. The resulting expansion is precisely the local form in
+\cref{ass:sote} with the same \(c_i d_i\).
+\end{proof}
+
+\subsection{A binomial-type KL lemma}
+
+The Bernstein-style concentration inequalities for CdMC estimators rely on the
+following Taylor expansion of the binomial KL divergence.
+
+\begin{lemma}[Binomial KL Taylor expansion]
+\label{lem:binomial-kl}
+For \(p\in(0,1)\) and \(t\) such that \(p+t\in(0,1)\), the binomial Kullback--Leibler
+divergence
+\[
+  D_{\mathrm{KL}}(p+t\,\|\,p)
+  =(p+t)\log\frac{p+t}{p}+(1-p-t)\log\frac{1-p-t}{1-p}
+\]
+satisfies
+\[
+  D_{\mathrm{KL}}(p+t\,\|\,p)
+  =\frac{t^2}{2p(1-p)}+O\!\left(\frac{|t|^3}{p^2(1-p)^2}\right)
+\]
+as \(t\to 0\). For \(p\) bounded away from \(\{0,1\}\) the remainder is
+\(O(t^3)\); for \(p\to 0\), the leading constant is \(1/(2p(1-p))\sim 1/(2p)\)
+and the cubic remainder is bounded by \(C|t|^3/p^2\) for a universal \(C\).
+\end{lemma}
+
+\begin{proof}
+Set \(g(t)=D_{\mathrm{KL}}(p+t\,\|\,p)\). Direct differentiation gives
+\(g(0)=0\), \(g'(0)=0\) (by stationarity at \(t=0\)), and
+\(g''(0)=1/(p(1-p))\). The Taylor expansion to second order yields
+\(g(t)=t^2/(2p(1-p))+O(|t|^3 g'''(0))\). The third derivative is
+\(g'''(t)=(p+t)^{-2}-(1-p-t)^{-2}\), bounded by
+\(2/(p^2)+2/(1-p)^2\) on a neighbourhood of zero; the stated remainder bound
+follows.
+\end{proof}
+
+\subsection{Proof of \cref{thm:hidden-second-order}}
+
+\begin{proof}[Proof of \cref{thm:hidden-second-order}]
+Write \(A_S=\{z:\sum_i z_i>1\}\) and decompose the rescaled event
+\(\{X/x\in A_S\}\) into the axis region
+\(A_S\cap\bigcup_i N_\delta(\{te_i:t>0\})\) and the hidden-cone region
+\(A_S\cap\Eset_2\), where \(N_\delta(\cdot)\) denotes a \(\delta\)-tube around
+each axis. The axis tube width \(\delta=\delta(x)\) is chosen so that
+\(\delta(x)\downarrow 0\) sufficiently slowly to retain the localization but
+fast enough to keep the hidden region bounded away from the axes in the limit.
+
+\emph{Axis contribution.} On the axis tubes the analysis reduces to the
+independent second-order calculation of \cref{thm:second-order}, applied to
+each component. By \cref{ass:ind-sbj} and \cref{ass:sote}, this contributes
+\[
+  \Gb(x)\nu_1(A_S)+\Gb(x)A(x)D_{\mathrm{marg}}
+  +\frac{\alpha\Gb(x)}{x}D_{\mathrm{mean}}+o(r(x)),
+\]
+where \(\nu_1(A_S)=C_{\mathrm{axis}}\), \(D_{\mathrm{marg}}=\sum_{i\in\Aset}c_id_i\),
+and \(D_{\mathrm{mean}}=\sum_{i\in\Aset}c_i\mu_{-i}\).
+
+\emph{Hidden-cone contribution.} On the hidden region
+\(A_S\cap\Eset_2\), which is bounded away from the axes, \cref{def:hrv} and
+\cref{ass:hidden-scale} give
+\[
+  \Pb(X/x\in A_S\cap\Eset_2)
+  \sim \Hb_2(x)\,\nu_2(A_S\cap\Eset_2)
+  = \Hb_2(x) D_{\mathrm{hid}}.
+\]
+
+\emph{Overlap.} The overlap between the axis tube and the hidden region has
+mass \(o(\Gb(x))\) under \(\nu_1\) (it lies in $\Eset_2$, where $\nu_1$ vanishes)
+and \(o(\Hb_2(x))\) under \(\nu_2\) (it lies near the axes, where $\nu_2$ is
+asymptotically negligible by the homogeneity and the choice of $\delta(x)$).
+Triple and higher cones not modelled explicitly are \(o(r(x))\) by
+\cref{ass:hidden-scale}.
+
+Adding the four contributions gives the displayed expansion.
+\end{proof}
+
+\subsection{Threshold ordering in empirical work}
+
+The hidden-cone term is empirically relevant only when
+\[
+  \widehat\Hb_2(x)\widehat D_{\mathrm{hid}}
+  \gtrsim
+  \max\!\left\{\widehat\Gb(x)|\widehat A(x)|,\ \widehat\Gb(x)/x\right\}.
+\]
+The data pipeline reports this comparison directly. If the hidden term is
+below both marginal second-order scales over all forecast thresholds, hidden-
+cone estimators are reported as diagnostics but excluded from primary VaR/ES
+forecasts.

@@ -1,0 +1,206 @@
+%==============================================================================
+% sections/05_mrv_spectral.tex
+%==============================================================================
+\section{Multivariate Regular Variation and Spectral CdMC}
+\label{sec:mrv-spectral}
+
+\subsection{MRV tail measure}
+
+The most general first-order dependence extension is multivariate regular
+variation. We use the standard definition.
+
+\begin{definition}[Multivariate regular variation]
+\label{def:mrv}
+Let \(X\in\RR^N\) and \(\Eset\subset\RR^N\setminus\{0\}\) a cone. We say that
+\(X\) is multivariate regularly varying (MRV) on \(\Eset\) with limit measure
+\(\nu\) and tail scale \(\Hb\in\RV_{-\alpha}\), written
+\(X\in\MRV(\alpha,\Hb,\nu,\Eset)\), if \(\nu\) is a non-zero Radon measure on
+\(\Eset\) satisfying \(\nu(tA)=t^{-\alpha}\nu(A)\) for all \(t>0\) and Borel
+\(A\subset\Eset\) bounded away from the origin, and
+\[
+  \frac{\Pb(X/x\in\cdot)}{\Hb(x)}\xrightarrow{v}\nu(\cdot)
+  \quad\text{vaguely on }\Eset,
+\]
+i.e.\ \(\Pb(X/x\in A)/\Hb(x)\to\nu(A)\) for every Borel
+\(A\subset\Eset\) bounded away from the origin with \(\nu(\partial A)=0\).
+\end{definition}
+
+In polar coordinates \(X=R\Theta\) the homogeneity of \(\nu\) factorizes the
+limit measure as
+\(\nu(\dd r,\dd\theta)=\alpha r^{-\alpha-1}\dd r\,S(\dd\theta)\), where the
+angular measure \(S\) on the unit sphere or simplex encodes the directional
+concentration of extreme vectors. The spectral measure is identifiable up to
+the choice of radial normalization.
+
+\begin{definition}[Spectral measure]
+\label{def:spectral-measure}
+The angular (spectral) measure $S$ associated to an MRV law is the unique
+finite Radon measure on the unit sphere $\mathbb{S}^{N-1}$ (or on the unit
+simplex when the cone is restricted to the positive orthant) satisfying the
+polar decomposition above for the chosen radial normalization.
+\end{definition}
+
+For a linear loss \(\ell(z)=a^\top z\), define
+\[
+  A_\ell=\{z:\ell(z)>1\}.
+\]
+
+\begin{assumption}[MRV loss set is admissible]
+\label{ass:mrv-loss}
+The loss vector $X$ satisfies $X\in\MRV(\alpha,\Hb,\nu,\Eset)$ for some
+$\alpha>0$, tail scale $\Hb\in\RV_{-\alpha}$, limit measure $\nu$, and cone
+$\Eset\supseteq A_\ell$. The set $A_\ell=\{z:\ell(z)>1\}$ is bounded away from
+the origin and $\nu(\partial A_\ell)=0$.
+\end{assumption}
+
+\begin{theorem}[MRV linear-risk asymptotic]
+\label{thm:mrv-linear-risk}
+Under \cref{ass:mrv-loss},
+\[
+  \Pb\{\ell(X)>x\}
+  \sim \Hb(x)\nu(A_\ell).
+\]
+If \(\nu\) has polar representation
+\[
+  \nu(\dd r,\dd\theta)=\alpha r^{-\alpha-1}\dd r\,S(\dd\theta),
+\]
+with \(r>0\) and angular measure \(S\), then
+\[
+  \nu(A_\ell)=\int (\ell(\theta)_+)^\alpha S(\dd\theta),
+\]
+under the chosen radial normalization.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Apply \cref{def:mrv} to $A_\ell$, then change to polar coordinates and
+integrate radially. The full argument is in \cref{appx:dependent-proofs}.
+\end{proof}
+
+This theorem contains the independent leading constant as a special case. If
+\(S\) is concentrated on coordinate axes \(e_i\), with masses proportional to
+\(c_i\), and \(\ell(z)=\sum_i z_i\), then the integral collapses to
+\(\sum_i c_i\). If \(S\) has mass away from the axes, joint extreme directions
+contribute at first order.
+
+\begin{figure}[t]
+\centering
+\input{diagrams/D10_mrv_radial_angular.tex}
+\caption[Radial-angular decomposition]{Radial-angular decomposition of a
+dependent heavy-tailed factor vector. The radial variable supplies the large
+magnitude; the spectral direction determines which factors move together and
+how much the portfolio loss functional amplifies the event.}
+\label{fig:mrv-radial-angular}
+\end{figure}
+
+\subsection{Spectral estimator}
+
+Suppose we can simulate or resample from an angular distribution \(S/S(\Theta)\)
+and evaluate the conditional radial survival. For \(X=R\Theta\),
+\[\ell(X)>x \quad\Longleftrightarrow\quad R>x/\ell(\Theta),\]
+when \(\ell(\Theta)>0\). The radial conditional estimator is
+\[
+  Z^{\mathrm{spec}}(x)=
+  \Pb\{R>x/\ell(\Theta)\mid \Theta\}\1\{\ell(\Theta)>0\}.
+\]
+
+\begin{proposition}[Exact radial conditional estimator]
+\label{prop:radial-cdmc}
+If the joint law admits a radial-angular representation with regular
+conditional radial survival \(\Fb_R(r\mid\Theta)\), then
+\[
+  Z^{\mathrm{spec}}(x)=\Fb_R\{x/\ell(\Theta)\mid\Theta\}\1\{\ell(\Theta)>0\}
+\]
+is unbiased for \(\Pb\{\ell(X)>x\}\).
+\end{proposition}
+
+In an exact Pareto radial model with \(\Pb(R>r\mid\Theta)=r^{-\alpha}\) above a
+threshold and with \(x/\ell(\Theta)\) above that threshold,
+\[
+  Z^{\mathrm{spec}}(x)=x^{-\alpha}(\ell(\Theta)_+)^\alpha.
+\]
+The relative variance is then independent of \(x\) and equals
+\[
+  \frac{\E[(\ell(\Theta)_+)^{2\alpha}]}
+       {\E[(\ell(\Theta)_+)^{\alpha}]^2}-1,
+\]
+provided the numerator is finite.
+
+\begin{proposition}[Spectral BRE]
+\label{prop:spectral-bre}
+Assume the conditional radial survival satisfies, uniformly over the angular
+support used by the estimator,
+\[
+  \Fb_R\{x/y\mid\Theta\}
+  \le K\Hb(x)y^\alpha, \qquad y=\ell(\Theta)_+,
+\]
+for large \(x\), and
+\(0<\E[y^\alpha]\le \E[y^{2\alpha}]<\infty\). Then the radial estimator has
+bounded relative error.
+\end{proposition}
+
+\subsection{Estimating the spectral measure}
+
+The empirical spectral measure is estimated from exceedances of a radial norm
+\(\|X_t\|\) above a high threshold \(u\). For selected exceedances,
+\[
+  \widehat\Theta_t=X_t/\|X_t\|.
+\]
+The empirical spectral estimator of the first-order constant is
+\[
+  \widehat C_\ell(u)=\frac{1}{k}\sum_{t:\|X_t\|>u}
+  (\ell(\widehat\Theta_t)_+)^{\widehat\alpha},
+\]
+with threshold-stability and bootstrap bands. In the real-data section this is
+reported for the FF3, FF5, FF5+momentum, industry-portfolio, and security-level
+contribution vectors.
+
+\begin{remark}[Identifiability of the spectral measure]
+\label{rem:spectral-identifiability}
+The angular measure $S$ is identifiable only up to the chosen radial
+normalization (the norm $\|\cdot\|$ used to define $\Theta=X/\|X\|$ and the
+radial threshold $u$). Different choices of norm produce different spectral
+measures with the same first-order linear-risk constant $\nu(A_\ell)$ provided
+the boundary continuity of \cref{ass:mrv-loss} holds. The empirical spectral
+estimator $\widehat C_\ell(u)$ is consistent for $\nu(A_\ell)$ as $k\to\infty$,
+$u\to\infty$, and $k/n\to 0$ at appropriate rates; convergence rates require
+additional second-order regularity (see, e.g., \citet{EinmahlDeHaanZhou2016}).
+In empirical work we report $\widehat C_\ell(u)$ over a threshold grid and
+flag instability when no plateau is observed.
+\end{remark}
+
+\begin{definition}[Tail equivalence in the MRV sense]
+\label{def:mrv-tail-equiv}
+Two non-negative random vectors $X,Y$ on a cone $\Eset$ are MRV-tail-equivalent
+if there exists a common tail scale $\Hb\in\RV_{-\alpha}$ and a non-zero
+Radon measure $\nu$ on $\Eset$ such that both
+$X\in\MRV(\alpha,\Hb,\nu,\Eset)$ and $Y\in\MRV(\alpha,\Hb,\nu,\Eset)$ in the
+sense of \cref{def:mrv}. When $X$ has $N$ scalar coordinates and the limit
+measure $\nu$ is axis-concentrated with marginal weights $c_1,\ldots,c_N$,
+MRV-tail-equivalence reduces to the univariate tail equivalence
+$\Pb(X_i>x)\sim c_i\Gb(x)$ of \cref{ass:rv-common-ref}, recovering the
+independent baseline.
+\end{definition}
+
+\begin{figure}[p]
+\centering
+\input{figures/F12_spectral_simplex_placeholder.tex}
+\caption[Empirical spectral simplex placeholder]{Empirical spectral-measure
+placeholder. The generated figure will plot angular exceedances for selected
+factor-contribution vectors on a simplex or projected sphere, with axis mass,
+common-shock rays, and portfolio-loss contours. Source schema:
+\texttt{results/F12\_spectral\_simplex.csv}.}
+\label{fig:spectral-simplex-placeholder}
+\end{figure}
+
+\subsection{Comparison with dependent-sum simulation}
+
+MRV gives a first-order constant and a natural estimator when the vector itself
+is the extreme object. It is complementary to the dependent-sum simulation
+literature, which often constructs importance samplers by conditioning on one
+large component or by transforming dependent structures such as log-elliptical
+vectors. The spectral estimator is most attractive when empirical angular data
+show stable non-axis mass and when a radial tail model is credible. If angular
+mass is concentrated on a small number of rays, a latent-shock model may be more
+parsimonious. If angular mass is concentrated on coordinate axes but pair cones
+are non-negligible at a slower scale, hidden regular variation is the next
+layer.

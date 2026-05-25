@@ -1,0 +1,168 @@
+%==============================================================================
+% sections/03_independent_baseline.tex
+%==============================================================================
+\section{Independent Baseline}
+\label{sec:independent-baseline}
+
+This section records the independent theory inherited from the original
+manuscript. It is included because every dependent extension is easiest to
+understand by comparing its tail constant and estimator with the independent
+benchmark.
+
+\subsection{Maximum and sum asymptotics}
+
+\begin{assumption}[Independent pointwise tail equivalence]
+\label{ass:ind-pte}
+The random variables \(X_1,\ldots,X_N\) are independent, \(N<\infty\), and
+there exists \(\Gb\in\RV_{-\alpha}\), \(\alpha>0\), such that
+\[
+  \Pb(X_i>x)\sim c_i\Gb(x), \qquad i=1,\ldots,N.
+\]
+At least one \(c_i\) is positive.
+\end{assumption}
+
+\begin{theorem}[Exact leading maximum asymptotic]
+\label{thm:catastrophe-exact}
+Under \cref{ass:ind-pte},
+\[
+  \Pb(M_N>x)
+  = \sum_{i=1}^N\Pb(X_i>x)+o(\Gb(x))
+  \sim C\Gb(x).
+\]
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Finite inclusion--exclusion: pair intersections are products of marginal tails,
+hence $O(\Gb(x)^2)=o(\Gb(x))$, and there are finitely many pairs. The full
+argument appears in \cref{appx:independent-proofs}.
+\end{proof}
+
+The exact constant is \(C\), with no slack factor.
+
+For sums, marginal right-tail equivalence alone is insufficient because large
+negative components could cancel a large positive component and because many
+moderate components could combine to cross \(x\). The usual finite-dimensional
+single-big-jump truncation conditions rule out those pathologies.
+
+\begin{assumption}[Independent finite-sum single-big-jump conditions]
+\label{ass:ind-sbj}
+In addition to \cref{ass:ind-pte}, the left tails are negligible at the right
+reference scale and there exists \(h(x)\uparrow\infty\), \(h(x)=o(x)\), such
+that for each active \(i\),
+\[
+  \Pb(X_i>x-h(x))\sim \Pb(X_i>x),
+\]
+and the probability that two or more truncated components exceed order \(h(x)\)
+is \(o(\Gb(x))\). Equivalently, the finite collection is in the one-large-jump
+subexponential regime used for the displayed sum equivalence.
+\end{assumption}
+
+\begin{theorem}[Independent sum equivalence]
+\label{thm:sum-equivalence}
+Under \cref{ass:ind-sbj},
+\[
+  \Pb(S_N>x)
+  \sim \sum_{i=1}^N\Pb(X_i>x)
+  \sim C\Gb(x).
+\]
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+A truncation argument combined with the pair-exceedance estimate of
+\cref{thm:catastrophe-exact}. The full upper and lower bounds appear in
+\cref{appx:independent-proofs}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\input{figures/F1_tail_equivalence.tex}
+\caption[Independent tail equivalence (planned)]{\textbf{(PLANNED).} Planned
+independent baseline diagnostic. The generated figure will plot
+\(\Pb(S_N>x)\), \(\sum_i\Pb(X_i>x)\), and the second-order approximation on a
+log-log scale for fixed \(N\). Source schema:
+\texttt{results/F1\_tail\_equivalence.csv}. All curves are placeholders until
+generated results replace the box.}
+\label{fig:ind-tail-equivalence}
+\end{figure}
+
+\subsection{Corrected second-order expansion}
+
+The second-order term is important for finite thresholds. When \(X_i\) is the
+large component, the first-order shift is created by the remaining sum
+\(S_{-i}\), not by \(X_i\) itself. This yields the leave-one-out mean.
+
+\begin{assumption}[Second-order tail equivalence and finite means (independent baseline)]
+\label{ass:sote-ind}
+The active variables satisfy the local second-order condition
+\cref{ass:sote}; \(\E|X_i|<\infty\) for all \(i\); and inactive or lighter-tail
+summands are negligible at scale \(\Gb(x)(|A(x)|\vee x^{-1})\).
+\end{assumption}
+
+\begin{theorem}[Second-order independent expansion]
+\label{thm:second-order}
+Under \cref{ass:ind-sbj,ass:sote-ind},
+\[
+  \Pb(S_N>x)
+  = C\Gb(x)
+    + \Gb(x)A(x)\sum_{i\in\Aset}c_id_i
+    + \frac{\alpha\Gb(x)}{x}\sum_{i\in\Aset}c_i\mu_{-i}
+    + o\{\Gb(x)(|A(x)|\vee x^{-1})\},
+\]
+where \(\mu_{-i}=\sum_{j\ne i}\E X_j\).
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Stratify by the selected-maximum index from \cref{ass:tie}, localize to
+\(|S_{-i}|\le h(x)\), and apply the second-order tail equivalence of
+\cref{ass:sote} term by term. The full expansion, including the localization
+and inactive-component bounds, appears in \cref{appx:independent-proofs}.
+\end{proof}
+
+The formula passes the \(N=1\) check because \(\mu_{-1}=0\); a Lomax/Pareto
+benchmark verifies the cross-term by direct substitution (see
+\cref{appx:independent-proofs}, verification notes). The constants can be
+written in closed form and used as a regression test for implementations.
+
+\begin{figure}[t]
+\centering
+\input{figures/F8_second_order.tex}
+\caption[Second-order diagnostic (planned)]{\textbf{(PLANNED).} Planned
+second-order diagnostic. The generated plot will compare the first-order
+approximation, the corrected second-order expansion, and a high-precision
+reference probability across thresholds. The main empirical question is
+whether the leave-one-out correction improves finite-threshold accuracy. Source
+schema: \texttt{results/F8\_second\_order.csv}.}
+\label{fig:second-order-placeholder}
+\end{figure}
+
+\subsection{Independent conditional Monte Carlo}
+
+For independent variables define
+\[
+  Z^{\mathrm{ind}}(x)=\sum_{i=1}^N \Fb_i(T_i(x)),
+  \qquad \Fb_i(t)=\Pb(X_i>t).
+\]
+The selected-maximum events partition \(\{S_N>x\}\), and independence gives
+\(\Pb(X_i>T_i\mid X_{-i})=\Fb_i(T_i)\). Thus \(Z^{\mathrm{ind}}\) is unbiased.
+Moreover \(T_i(x)\ge x/N\) on the relevant scale, so
+\[
+  0\le Z^{\mathrm{ind}}(x)\le B(x):=\sum_{i=1}^N\Fb_i(x/N).
+\]
+Since \(B(x)/\mu(x)\to N^\alpha\),
+\[
+  \limsup_{x\to\infty}
+  \frac{\Var(Z^{\mathrm{ind}}(x))}{\mu(x)^2}
+  \le N^\alpha-1.
+\]
+This is the independent bounded-relative-error constant used throughout the
+simulation design.
+
+\begin{table}[t]
+\centering
+\input{tables/T_estimator_summary.tex}
+\caption[Independent estimator summary]{Independent estimator summary from the
+baseline manuscript. The dependent sections extend the conditioning kernel,
+shock basis, block basis, and radial basis while keeping this table as the
+comparison point.}
+\label{tab:ind-estimator-summary}
+\end{table}

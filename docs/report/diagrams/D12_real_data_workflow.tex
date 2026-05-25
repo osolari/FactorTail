@@ -1,0 +1,22 @@
+\begin{tikzpicture}[
+  box/.style={rectangle, draw, rounded corners, align=center, minimum width=2.65cm, minimum height=0.78cm, font=\scriptsize},
+  node distance=0.5cm and 0.6cm,
+  arr/.style={->, >=Stealth, thick}
+]
+\node[box, fill=blue!10] (raw) {Raw FF/CRSP\\files};
+\node[box, fill=blue!10, right=of raw] (audit) {Vintage and\\cleaning audit};
+\node[box, fill=blue!10, right=of audit] (fit) {Rolling factor\\fits};
+\node[box, fill=yellow!15, below=of fit] (tail) {Tail and dependence\\diagnostics};
+\node[box, fill=green!12, left=of tail] (est) {Estimator\\runs};
+\node[box, fill=green!12, left=of est] (forecast) {VaR/ES\\forecasts};
+\node[box, fill=orange!12, below=of forecast] (bt) {Backtests};
+\node[box, fill=orange!12, right=of bt] (art) {Tables, figures,\\logs};
+\draw[arr] (raw) -- (audit);
+\draw[arr] (audit) -- (fit);
+\draw[arr] (fit) -- (tail);
+\draw[arr] (tail) -- (est);
+\draw[arr] (est) -- (forecast);
+\draw[arr] (forecast) -- (bt);
+\draw[arr] (bt) -- (art);
+\draw[arr] (art.east) -- ++(0.9,0) |- (audit.south);
+\end{tikzpicture}

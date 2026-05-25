@@ -1,0 +1,111 @@
+%==============================================================================
+% sections/10_discussion.tex
+%==============================================================================
+\section{Discussion and Development Roadmap}
+\label{sec:discussion}
+
+\subsection{Theoretical results established versus empirical claims projected}
+
+The expanded manuscript separates two kinds of statements.
+
+\paragraph{Theoretical (established under the stated assumptions).}
+The independent finite-$N$ catastrophe principle
+(\cref{thm:catastrophe-exact}), the single-big-jump sum equivalence
+(\cref{thm:sum-equivalence}), the corrected second-order expansion with
+leave-one-out mean shift (\cref{thm:second-order}), independent-CdMC
+unbiasedness and the scale-invariant BRE bound $N^\alpha-1$
+(\cref{prop:ind-cdmc-bre}), the arbitrary-dependence CdMC identity
+(\cref{thm:dep-cdmc-unbiased}), the conditional-tail-envelope BRE result
+(\cref{prop:dep-cdmc-bre}), the latent-shock tail constant and BRE bound
+(\cref{thm:latent-shock-tail,prop:latent-shock-bre}), the independent-block
+reduction (\cref{thm:block-reduction}), the MRV linear-risk asymptotic
+(\cref{thm:mrv-linear-risk}) with the spectral CdMC identity and BRE
+(\cref{prop:radial-cdmc,prop:spectral-cdmc-bre}), the hidden-cone second-order
+expansion (\cref{thm:hidden-second-order}), the exact and asymptotic
+control-variate VRE result (\cref{prop:vre}), and the Bernstein-type
+confidence interval (\cref{thm:bernstein-ci}). Each of these is proved in
+\cref{appx:independent-proofs,appx:dependent-proofs,appx:second-hidden} with
+the underlying assumptions explicit.
+
+\paragraph{Projected (planned, not yet executed).}
+All simulation diagnostics in \cref{sec:simulation-plan}, all real-data
+diagnostics, forecasts, and backtests in \cref{sec:real-data}, and every
+figure with a (PLANNED) caption prefix or table cell marked \xx{}. Numerical
+performance, backtest success, and production runtime conclusions are not
+claimed until the corresponding pipeline outputs replace those entries.
+
+\subsection{Limitations and counterexamples}
+\label{subsec:limitations}
+
+The BRE bound $N^\alpha-1$ is finite for any finite $N$ but diverges as
+$N\to\infty$. The independent CdMC is therefore not suited as-is to
+high-dimensional limit regimes; in such regimes the latent-shock CdMC
+(\cref{prop:latent-shock-bre}) replaces $N$ by the number of active shocks
+$K$, and the spectral CdMC (\cref{prop:spectral-cdmc-bre}) replaces $N$ by a
+spectral integral that need not grow with the ambient dimension.
+
+The dependent CdMC identity (\cref{thm:dep-cdmc-unbiased}) is exact only when
+the conditional kernels $p_i(t;X_{-i})$ are evaluated exactly. A
+misspecified copula or a poorly fit conditional kernel produces a biased
+estimator at every threshold, and the bias can be much larger than the Monte
+Carlo standard error. \Cref{rem:kernel-identifiability,rem:numerical-stability}
+discuss identifiability and stability mitigations; the empirical protocol of
+\cref{sec:real-data} reports model-residual diagnostics before any kernel
+estimator is trusted.
+
+Hidden regular variation
+(\cref{def:hrv,ass:hidden-scale,thm:hidden-second-order}) requires
+identification of the hidden tail scale $\Hb_2$ from finite samples. In
+small samples, threshold noise can be mistaken for a hidden scale. The
+manuscript treats hidden-cone results as a second-order layer and requires
+threshold-stability diagnostics (\cref{appx:second-hidden}) before any
+hidden-cone estimator enters a primary VaR/ES forecast.
+
+\subsection{Connection to the literature placement}
+
+The independent finite-$N$ sharpening of \cref{sec:independent-baseline}
+positions this paper relative to \citet{PourbabaeeSolari2019} in the form
+spelled out in \cref{subsec:recent-developments}: scale-invariant BRE bound,
+corrected second-order expansion with $N=1$ specialization, and explicit
+assumption stack. The dependent extensions of
+\cref{sec:dependent-cdmcs,sec:mrv-spectral,sec:hidden-rv} connect to
+\citet{AsmussenKroese2006,HartingerKortschak2009,BlanchetRojasNandayapa2011,ChengFuhPang2025}
+(rare-event simulation under dependence),
+\citet{HultLindskogMikoschSamorodnitsky2005,Resnick2007,SamorodnitskySun2016}
+(MRV foundations), and
+\citet{LedfordTawn1996,MaulikResnick2005,DasMitraResnick2013}
+(hidden regular variation). The empirical protocol of \cref{sec:real-data}
+follows the factor-portfolio backtesting tradition of
+\citet{McNeilFreyEmbrechts2015,GlassermanHeidelbergerShahabuddin2002} and
+adds dependence-diagnostic gating for estimator selection.
+
+\subsection{Recommended development sequence}
+
+The recommended implementation sequence is:
+\begin{enumerate}
+\item finalize and test the independent baseline replication;
+\item implement common-shock and latent-shock simulation;
+\item implement empirical marginal tail diagnostics;
+\item implement pairwise tail-dependence and spectral diagnostics;
+\item implement latent, block, and spectral estimators;
+\item run real-data rolling VaR/ES forecasts;
+\item add hidden-cone estimators only after diagnostics justify them.
+\end{enumerate}
+
+\subsection{Conclusion}
+
+The original independent-factor paper is strongest when the extreme event is
+well represented by one large observed coordinate. The financial problem asks
+for more: extremes may be generated by one latent market shock, one dependent
+block, one radial vector movement, or one hidden joint-tail cone. The
+expanded paper keeps the original single-big-jump insight but moves it to
+the correct object. In the independent model that object is a coordinate;
+in the latent model it is a shock; in MRV it is a spectral/radial movement;
+and in hidden regular variation it is a slower-scale joint cone. The
+accompanying empirical protocol is designed to determine which object is
+visible in real financial data and whether modeling it improves VaR, ES,
+attribution, and simulation efficiency. The full method is implemented as
+the open-source \texttt{FactorTail} library
+(\url{https://github.com/osolari/FactorTail}); the repository is the
+canonical reference for any future numerical or empirical claim downstream
+of this manuscript.

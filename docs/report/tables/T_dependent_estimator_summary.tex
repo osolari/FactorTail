@@ -1,0 +1,13 @@
+\begin{tabularx}{\linewidth}{p{0.18\linewidth}p{0.19\linewidth}p{0.22\linewidth}p{0.18\linewidth}X}
+\toprule
+Estimator & Conditioning object & Required model input & Exactness condition & Planned diagnostic \\
+\midrule
+Independent CdMC & Observed coordinate & Marginal survival functions & Observed contributions independent & Bias under dependence; BRE replication \\
+Dependent kernel CdMC & Observed coordinate given others & Conditional survival kernels & Conditional kernels correctly specified & Kernel calibration and relative error \\
+Latent-shock CdMC & Independent shock & Shock mixing matrix and shock tails & Shock representation correctly specified & Shock attribution and common-shock bias reduction \\
+Block CdMC & Block sum & Block partition and block-tail model & Blocks independent or weakly coupled & Block stability and work-normalized error \\
+Copula CdMC & Conditional copula coordinate & Margins plus conditional copula & Copula and margins correctly specified & Tail-dependence fit and backtest performance \\
+Spectral CdMC & Angular direction & Spectral sample and radial tail & MRV radial-angular model valid & Spectral mass stability and radial tail fit \\
+Hidden-cone mixture & Axis/hidden stratum & Hidden-cone scale and sampler & Hidden scale estimated reliably & Hidden term versus second-order scales \\
+\bottomrule
+\end{tabularx}

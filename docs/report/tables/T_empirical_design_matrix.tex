@@ -1,0 +1,17 @@
+% Empirical design matrix placeholder
+\begingroup
+\scriptsize
+\renewcommand{\arraystretch}{1.14}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}X}
+\toprule
+Universe & Model and tail fit & Dependence diagnostics & Estimator candidates & Backtest / status \\
+\midrule
+Market portfolio & FF5 regression; Hill, GPD & \(\chi\), \(\bar\chi\), spectral mass & Independent, latent, MRV & Window \xx; status \xx \\
+25 size--BM portfolios & FF5 panel regressions; Hill/GPD/bootstrap & Pair heatmap, proposed blocks & Independent, block, copula & Window \xx; status \xx \\
+30 industry portfolios & FF5 plus industry residual; Hill/GPD & Block spectra, hidden cones & Block, MRV, HRV diagnostic & Window \xx; status \xx \\
+CRSP universe & Rolling constituent betas; Hill/GPD/residual LLN & Residual clusters and sector blocks & Latent, block, independent benchmark & Window \xx; status \xx \\
+Stress portfolios & High-loading sorts; Hill/GPD & Active-pair tails and crisis windows & Copula, MRV, HRV diagnostic & Window \xx; status \xx \\
+\bottomrule
+\end{tabularx}
+\par\medskip\footnotesize\emph{Placeholder.} Fill from \texttt{results/T\_empirical\_design\_matrix.csv}.
+\endgroup

@@ -1,0 +1,17 @@
+\begin{tikzpicture}[
+  node distance=0.8cm and 0.9cm,
+  box/.style={rectangle, rounded corners, draw, align=center, minimum width=3.2cm, minimum height=0.9cm, font=\small},
+  arr/.style={->, thick, >=Stealth}
+]
+\node[box, fill=blue!10] (coord) {One large\\observed coordinate};
+\node[box, fill=green!12, right=of coord] (latent) {One large\\latent shock};
+\node[box, fill=yellow!18, right=of latent] (radial) {One large radial\\vector shock};
+\node[box, fill=orange!15, right=of radial] (hidden) {One large hidden\\pair/block cone};
+\draw[arr] (coord) -- (latent);
+\draw[arr] (latent) -- (radial);
+\draw[arr] (radial) -- (hidden);
+\node[align=center, font=\scriptsize, below=0.35cm of coord] {independent CdMC};
+\node[align=center, font=\scriptsize, below=0.35cm of latent] {shock-basis CdMC};
+\node[align=center, font=\scriptsize, below=0.35cm of radial] {spectral CdMC};
+\node[align=center, font=\scriptsize, below=0.35cm of hidden] {mixture cone CdMC};
+\end{tikzpicture}
