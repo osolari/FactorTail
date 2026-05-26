@@ -141,3 +141,27 @@ factortail run --config configs/F15_live.yaml  # writes results/F15_tail_depende
 ```
 
 A `configs/F*_live.yaml` variant differs only by `offline: false`.
+
+## Archived live-run artefacts
+
+The exact CSVs / PDFs that produced the numbers above are checked in
+under [`results/live/`](https://github.com/osolari/FactorTail/tree/main/results/live):
+
+- `F15_tail_dependence_heatmap.csv` — pairwise
+  $\widehat\chi$, $\widehat{\bar\chi}$, $\widehat\eta$ at $u=0.95$.
+- `F18_hill_plots.csv` — Hill / POT stability curves across $k$ for
+  each factor and side.
+- The matching `.pdf` / `.png` figures.
+
+To regenerate from a fresh clone:
+
+```bash
+./setup_env.sh                  # creates .venv, installs, runs factortail-fetch-data
+factortail run --config configs/F15_live.yaml --results-dir results/live/
+factortail run --config configs/F18_live.yaml --results-dir results/live/
+```
+
+Each output is stamped with `data_vintage` (`2026-05-26` for the
+shipped snapshot) and a SHA-256 of the source ZIP from the
+Kenneth-French library, so the run is reproducible bit-for-bit
+subject to the upstream vintage.
