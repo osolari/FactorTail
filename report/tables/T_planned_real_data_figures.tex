@@ -1,0 +1,22 @@
+%==============================================================================
+% tables/T_planned_real_data_figures.tex
+%==============================================================================
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\linewidth}{@{}p{1.0cm}p{3.8cm}X@{}}
+\toprule
+\textbf{Figure} & \textbf{Primary diagnostic} & \textbf{Source and replacement rule} \\
+\midrule
+F11 & rolling left/right tail indices & Tail-index stability CSV; replace after threshold-selection validation. \\
+F12 & empirical angular/spectral mass & Spectral-mass CSV; replace after MRV diagnostic run. \\
+F13 & pairwise tail-dependence heat map & Tail-dependence CSV; replace with heat map and confidence overlay. \\
+F14 & latent-shock loading stability & Shock-loading CSV; replace with rolling eigen/ICA loading plot. \\
+F15 & model-gate timeline & Model-selection CSV; replace with estimator-gate timeline. \\
+F16 & VaR/ES forecast comparison & Forecast CSV; replace with multi-model VaR/ES forecast path. \\
+F17 & violation clusters & Backtest-hit CSV; replace with hit process and rolling violation rate. \\
+F18 & runtime frontier & Runtime CSV; replace with runtime-versus-error frontier plot. \\
+\bottomrule
+\end{tabularx}
+\endgroup

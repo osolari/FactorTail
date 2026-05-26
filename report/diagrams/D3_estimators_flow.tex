@@ -1,0 +1,16 @@
+% D3: Estimator flowchart
+\begin{tikzpicture}[
+  est/.style={rectangle, draw, rounded corners, minimum width=2.55cm, minimum height=0.9cm, align=center, font=\small},
+  lab/.style={font=\scriptsize, fill=white, inner sep=1pt},
+  >=Stealth, node distance=1.15cm and 1.85cm
+]
+\node[est, fill=red!10] (crmc) {CrMC \\ \footnotesize baseline};
+\node[est, fill=yellow!20, right=of crmc] (cdmc) {Summed CdMC \\ \footnotesize unbiased, BRE};
+\node[est, fill=yellow!20, above right=of cdmc] (strat) {Stratified CdMC \\ \footnotesize one index, BRE};
+\node[est, fill=blue!10, right=of cdmc] (ana) {Pareto/Lomax \\ \footnotesize closed form};
+\node[est, fill=green!15, below right=of cdmc] (vre) {Control variate \\ \footnotesize exact centering, VRE};
+\draw[->, shorten >=2pt, shorten <=2pt] (crmc) -- node[lab, above]{condition} (cdmc);
+\draw[->, shorten >=2pt, shorten <=2pt] (cdmc) -- node[lab, above, sloped]{sample index} (strat);
+\draw[->, shorten >=2pt, shorten <=2pt] (cdmc) -- node[lab, above]{closed form} (ana);
+\draw[->, shorten >=2pt, shorten <=2pt] (cdmc) -- node[lab, below, sloped]{centered proxy} (vre);
+\end{tikzpicture}

@@ -1,0 +1,13 @@
+\begin{tikzpicture}[scale=0.95, >=Stealth]
+\draw[->] (0,0) -- (5.3,0) node[right] {$X_1$};
+\draw[->] (0,0) -- (0,4.2) node[above] {$X_2$};
+\draw[thick, blue!60] (0,0) -- (4.1,2.7) node[midway, above, sloped] {$R\Theta$};
+\draw[dashed] (0,0) -- (3.5,0.4);
+\draw[dashed] (0,0) -- (1.0,3.6);
+\draw[red!70, thick] (1.2,3.8) -- (4.8,1.4) node[right] {$a^\top x=x_0$};
+\draw[->, thick] (0.9,0) arc (0:33:0.9);
+\node at (1.2,0.35) {$\Theta$};
+\node[align=left, text width=5.1cm, font=\small] at (8.2,2.8) {Large loss = large radius $R$ plus an angle $\Theta$ for which $a^\top\Theta>0$.\\[0.4em]
+Independent axes are a special case of spectral mass on coordinate rays.};
+\draw[rounded corners, dashed] (5.65,1.2) rectangle (10.8,4.05);
+\end{tikzpicture}

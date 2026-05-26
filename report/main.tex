@@ -1,0 +1,205 @@
+%==============================================================================
+% main.tex --- Master file
+% Long-form dependent-factor development draft
+%==============================================================================
+\documentclass[11pt, a4paper]{article}
+
+%---- Page layout -------------------------------------------------------------
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+
+%---- Math --------------------------------------------------------------------
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{dsfont}
+
+%---- Tables and figures ------------------------------------------------------
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{longtable}
+
+%---- TikZ and diagrams -------------------------------------------------------
+\usepackage{tikz}
+\usetikzlibrary{
+  positioning, arrows.meta, fit, calc, shapes.geometric,
+  decorations.pathreplacing, backgrounds, shapes.misc
+}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+%---- Algorithms --------------------------------------------------------------
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%---- Hyperlinks and citations ------------------------------------------------
+\usepackage[colorlinks=true, linkcolor=blue!50!black,
+            citecolor=blue!50!black, urlcolor=blue!50!black]{hyperref}
+% Fix hyperref/algorithmicx interaction: define \theHALG@line in terms of
+% \thealgorithm (which the algorithm package provides) rather than the
+% undefined \theHalgorithm.
+\makeatletter
+\providecommand*{\theHALG@line}{\thealgorithm.\arabic{ALG@line}}
+\makeatother
+\usepackage[capitalize, noabbrev]{cleveref}
+% Cleveref names for our custom theorem environments.
+\crefname{assumption}{Assumption}{Assumptions}
+\Crefname{assumption}{Assumption}{Assumptions}
+\crefname{definition}{Definition}{Definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{example}{Example}{Examples}
+\Crefname{example}{Example}{Examples}
+\crefname{algorithm}{Algorithm}{Algorithms}
+\Crefname{algorithm}{Algorithm}{Algorithms}
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+
+%---- Misc --------------------------------------------------------------------
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{authblk}
+\captionsetup{font=small}
+\setlist[itemize]{leftmargin=*, itemsep=0.15em, topsep=0.25em}
+\setlist[enumerate]{leftmargin=*, itemsep=0.15em, topsep=0.25em}
+
+%---- Theorem environments ----------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+%---- Notation macros ---------------------------------------------------------
+\newcommand{\Pb}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\esssup}{ess\,sup}
+\newcommand{\Fb}{\overline{F}}
+\newcommand{\Gb}{\overline{G}}
+\newcommand{\Hb}{\overline{H}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\1}{\mathbf{1}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\indep}{\perp\!\!\!\perp}
+\newcommand{\BRE}{\mathrm{BRE}}
+\newcommand{\VRE}{\mathrm{VRE}}
+\newcommand{\CdMC}{\mathrm{CdMC}}
+\newcommand{\CrMC}{\mathrm{CrMC}}
+\newcommand{\VaR}{\mathrm{VaR}}
+\newcommand{\ES}{\mathrm{ES}}
+\newcommand{\MRV}{\mathrm{MRV}}
+\newcommand{\HRV}{\mathrm{HRV}}
+\newcommand{\RV}{\mathrm{RV}}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\weakto}{\Rightarrow}
+\newcommand{\xx}{\ifmmode\mathtt{xx}\else\texttt{xx}\fi}
+\newcommand{\tbd}{\xx}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\Aset}{\mathcal{A}}
+\newcommand{\Bset}{\mathcal{B}}
+\newcommand{\Cset}{\mathcal{C}}
+\newcommand{\Dset}{\mathcal{D}}
+\newcommand{\Eset}{\mathcal{E}}
+\newcommand{\Fset}{\mathcal{F}}
+\newcommand{\Gset}{\mathcal{G}}
+\newcommand{\Hset}{\mathcal{H}}
+\newcommand{\Iset}{\mathcal{I}}
+\newcommand{\Kset}{\mathcal{K}}
+\newcommand{\Lset}{\mathcal{L}}
+\newcommand{\Mset}{\mathcal{M}}
+\newcommand{\Pset}{\mathcal{P}}
+\newcommand{\Rset}{\mathcal{R}}
+\newcommand{\Sset}{\mathcal{S}}
+\newcommand{\Tset}{\mathcal{T}}
+\newcommand{\Vset}{\mathcal{V}}
+\newcommand{\Xset}{\mathcal{X}}
+
+%---- Title block -------------------------------------------------------------
+\title{
+  Conditional Monte Carlo for Multivariate Heavy Tails:\\
+  Latent Shocks, Spectral Measures, Hidden Cones%
+  \thanks{The methods of this paper are implemented in the open-source
+  \texttt{FactorTail} library, available at
+  \url{https://github.com/osolari/FactorTail}.}
+}
+\hypersetup{
+  pdftitle={Conditional Monte Carlo for Multivariate Heavy Tails: Latent Shocks, Spectral Measures, Hidden Cones},
+  pdfauthor={Omid Shams Solari and Farzad Pourbabaee},
+  pdfkeywords={regular variation, rare-event simulation, conditional Monte Carlo, factor models, FactorTail}
+}
+
+\author[1]{Omid Shams Solari}
+\author[2]{Farzad Pourbabaee}
+\affil[1]{Department of Statistics, University of California, Berkeley}
+\affil[2]{Department of Economics, University of California, Berkeley}
+
+\date{Manuscript draft: \today}
+
+\begin{document}
+
+\maketitle
+
+\input{sections/00_abstract.tex}
+
+\medskip
+\noindent\textbf{Keywords:} rare-event simulation; regularly varying tails;
+multivariate regular variation; hidden regular variation; dependent factor models;
+conditional Monte Carlo; bounded relative error; vanishing relative error;
+Fama--French factor model; value at risk; expected shortfall.
+
+\medskip
+\noindent\textbf{MSC 2020:} Primary 60F10, 65C05; Secondary 60G70, 62P05,
+91G70, 60E07.
+
+\medskip
+\noindent\textbf{JEL:} C15, C58, G11, G17, G32.
+
+\bigskip
+\tableofcontents
+\bigskip
+
+\input{sections/01_introduction.tex}
+\input{sections/01b_literature_and_positioning.tex}
+\input{sections/02_setup_and_notation.tex}
+\input{sections/03_independent_baseline.tex}
+\input{sections/04_dependent_cdmcs.tex}
+\input{sections/05_mrv_spectral.tex}
+\input{sections/06_hidden_regular_variation.tex}
+\input{sections/07_estimators_and_efficiency.tex}
+\input{sections/08_simulation_study.tex}
+\input{sections/09_real_data_analysis.tex}
+\input{sections/10_discussion.tex}
+
+\bibliography{references}
+
+\appendix
+\input{appendices/A_notation.tex}
+\input{appendices/B_independent_proofs.tex}
+\input{appendices/C_dependent_proofs.tex}
+\input{appendices/D_second_order_and_hidden_rv.tex}
+\input{appendices/E_algorithms_and_pseudocode.tex}
+\input{appendices/F_data_specs.tex}
+\input{appendices/G_experiment_manifest.tex}
+
+\end{document}

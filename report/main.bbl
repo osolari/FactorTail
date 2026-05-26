@@ -1,0 +1,268 @@
+\begin{thebibliography}{38}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Acerbi and Sz{\'e}kely(2014)]{AcerbiSzekely2014}
+Carlo Acerbi and Bal{\'a}zs Sz{\'e}kely.
+\newblock Back-testing expected shortfall.
+\newblock \emph{Risk}, 27\penalty0 (11):\penalty0 76--81, 2014.
+
+\bibitem[Asmussen and Glynn(2007)]{AsmussenGlynn2007}
+S{\o}ren Asmussen and Peter~W. Glynn.
+\newblock \emph{Stochastic Simulation: Algorithms and Analysis}, volume~57 of
+  \emph{Stochastic Modelling and Applied Probability}.
+\newblock Springer, New York, 2007.
+\newblock \doi{10.1007/978-0-387-69033-9}.
+
+\bibitem[Asmussen and Kortschak(2015)]{AsmussenKortschak2015}
+S{\o}ren Asmussen and Dominik Kortschak.
+\newblock Error rates and improved algorithms for rare event simulation with
+  heavy {W}eibull tails.
+\newblock \emph{Methodology and Computing in Applied Probability}, 17\penalty0
+  (2):\penalty0 441--461, 2015.
+\newblock \doi{10.1007/s11009-013-9371-6}.
+
+\bibitem[Asmussen and Kroese(2006)]{AsmussenKroese2006}
+S{\o}ren Asmussen and Dirk~P. Kroese.
+\newblock Improved algorithms for rare event simulation with heavy tails.
+\newblock \emph{Advances in Applied Probability}, 38\penalty0 (2):\penalty0
+  545--558, 2006.
+\newblock \doi{10.1239/aap/1151337084}.
+
+\bibitem[Basrak and Segers(2009)]{BasrakSegers2009}
+Bojan Basrak and Johan Segers.
+\newblock Regularly varying multivariate time series.
+\newblock \emph{Stochastic Processes and their Applications}, 119\penalty0
+  (4):\penalty0 1055--1080, 2009.
+\newblock \doi{10.1016/j.spa.2008.05.004}.
+
+\bibitem[Bingham et~al.(1987)Bingham, Goldie, and
+  Teugels]{BinghamGoldieTeugels1987}
+N.~H. Bingham, C.~M. Goldie, and J.~L. Teugels.
+\newblock \emph{Regular Variation}, volume~27 of \emph{Encyclopedia of
+  Mathematics and its Applications}.
+\newblock Cambridge University Press, Cambridge, 1987.
+\newblock \doi{10.1017/CBO9780511721434}.
+
+\bibitem[Blanchet and Rojas-Nandayapa(2011)]{BlanchetRojasNandayapa2011}
+Jose~H. Blanchet and Leonardo Rojas-Nandayapa.
+\newblock Efficient simulation of tail probabilities of sums of dependent
+  random variables.
+\newblock \emph{Journal of Applied Probability}, 48A:\penalty0 147--164, 2011.
+\newblock \doi{10.1239/jap/1318940462}.
+
+\bibitem[{Center for Research in Security Prices}(2026)]{CRSPGuide2026}
+{Center for Research in Security Prices}.
+\newblock \emph{{CRSP US Stock and Indexes Database Data Descriptions Guide}}.
+\newblock University of Chicago Booth School of Business, 2026.
+\newblock Accessed May 2026.
+
+\bibitem[Chan and Kroese(2011)]{ChanKroese2011}
+Joshua C.~C. Chan and Dirk~P. Kroese.
+\newblock Rare-event probability estimation with conditional {M}onte {C}arlo.
+\newblock \emph{Annals of Operations Research}, 189\penalty0 (1):\penalty0
+  43--61, 2011.
+\newblock \doi{10.1007/s10479-009-0539-y}.
+
+\bibitem[Cheng et~al.(2025)Cheng, Fuh, and Pang]{ChengFuhPang2025}
+Siang Cheng, Cheng-Der Fuh, and Tianxiao Pang.
+\newblock Efficient importance sampling for copula models, 2025.
+
+\bibitem[Christoffersen(1998)]{Christoffersen1998}
+Peter~F. Christoffersen.
+\newblock Evaluating interval forecasts.
+\newblock \emph{International Economic Review}, 39\penalty0 (4):\penalty0
+  841--862, 1998.
+\newblock \doi{10.2307/2527341}.
+
+\bibitem[Coles et~al.(1999)Coles, Heffernan, and Tawn]{ColesHeffernanTawn1999}
+Stuart Coles, Janet Heffernan, and Jonathan Tawn.
+\newblock Dependence measures for extreme value analyses.
+\newblock \emph{Extremes}, 2\penalty0 (4):\penalty0 339--365, 1999.
+\newblock \doi{10.1023/A:1009963131610}.
+
+\bibitem[Cont(2001)]{Cont2001}
+Rama Cont.
+\newblock Empirical properties of asset returns: stylized facts and statistical
+  issues.
+\newblock \emph{Quantitative Finance}, 1\penalty0 (2):\penalty0 223--236, 2001.
+\newblock \doi{10.1080/713665670}.
+
+\bibitem[Das et~al.(2013)Das, Mitra, and Resnick]{DasMitraResnick2013}
+Bikramjit Das, Abhimanyu Mitra, and Sidney Resnick.
+\newblock Living on the multidimensional edge: seeking hidden risks using
+  regular variation.
+\newblock \emph{Advances in Applied Probability}, 45\penalty0 (1):\penalty0
+  139--163, 2013.
+\newblock \doi{10.1239/aap/1363354106}.
+
+\bibitem[Denisov et~al.(2008)Denisov, Dieker, and
+  Shneer]{DenisovDiekerShneer2008}
+Denis Denisov, A.~B. Dieker, and Vsevolod Shneer.
+\newblock Large deviations for random walks under subexponentiality: the
+  big-jump domain.
+\newblock \emph{Annals of Probability}, 36\penalty0 (5):\penalty0 1946--1991,
+  2008.
+\newblock \doi{10.1214/07-AOP382}.
+
+\bibitem[Djehiche and Svensson(2007)]{DjehicheSvensson2007}
+Boualem Djehiche and Jens Svensson.
+\newblock Large deviations for heavy-tailed factor models, 2007.
+
+\bibitem[Embrechts et~al.(1997)Embrechts, Kl{\"u}ppelberg, and
+  Mikosch]{EmbrechtsKluppelbergMikosch1997}
+Paul Embrechts, Claudia Kl{\"u}ppelberg, and Thomas Mikosch.
+\newblock \emph{Modelling Extremal Events for Insurance and Finance}.
+\newblock Springer, Berlin, 1997.
+\newblock \doi{10.1007/978-3-642-33483-2}.
+
+\bibitem[Engle and Manganelli(2004)]{EngleManganelli2004}
+Robert~F. Engle and Simone Manganelli.
+\newblock {CAViaR}: Conditional autoregressive value at risk by regression
+  quantiles.
+\newblock \emph{Journal of Business and Economic Statistics}, 22\penalty0
+  (4):\penalty0 367--381, 2004.
+\newblock \doi{10.1198/073500104000000370}.
+
+\bibitem[Fama and French(1993)]{FamaFrench1993}
+Eugene~F. Fama and Kenneth~R. French.
+\newblock Common risk factors in the returns on stocks and bonds.
+\newblock \emph{Journal of Financial Economics}, 33\penalty0 (1):\penalty0
+  3--56, 1993.
+\newblock \doi{10.1016/0304-405X(93)90023-5}.
+
+\bibitem[Fama and French(2015)]{FamaFrench2015}
+Eugene~F. Fama and Kenneth~R. French.
+\newblock A five-factor asset pricing model.
+\newblock \emph{Journal of Financial Economics}, 116\penalty0 (1):\penalty0
+  1--22, 2015.
+\newblock \doi{10.1016/j.jfineco.2014.10.010}.
+
+\bibitem[Foss et~al.(2013)Foss, Korshunov, and
+  Zachary]{FossKorshunovZachary2013}
+Sergey Foss, Dmitry Korshunov, and Stan Zachary.
+\newblock \emph{An Introduction to Heavy-Tailed and Subexponential
+  Distributions}.
+\newblock Springer Series in Operations Research and Financial Engineering.
+  Springer, New York, second edition, 2013.
+\newblock \doi{10.1007/978-1-4614-7101-1}.
+
+\bibitem[French(2026)]{FrenchDataLibrary2026}
+Kenneth~R. French.
+\newblock Kenneth r. french data library.
+\newblock Online data library, Dartmouth College, 2026.
+\newblock Accessed May 2026.
+
+\bibitem[Gabaix(2009)]{Gabaix2009}
+Xavier Gabaix.
+\newblock Power laws in economics and finance.
+\newblock \emph{Annual Review of Economics}, 1:\penalty0 255--294, 2009.
+\newblock \doi{10.1146/annurev.economics.050708.142940}.
+
+\bibitem[Ghamami and Ross(2012)]{GhamamiRoss2012}
+Samim Ghamami and Sheldon~M. Ross.
+\newblock Improving the {A}smussen--{K}roese-type simulation estimators.
+\newblock \emph{Journal of Applied Probability}, 49\penalty0 (4):\penalty0
+  1188--1193, 2012.
+\newblock \doi{10.1239/jap/1354716666}.
+
+\bibitem[Glasserman(2004)]{Glasserman2004}
+Paul Glasserman.
+\newblock \emph{Monte Carlo Methods in Financial Engineering}, volume~53 of
+  \emph{Stochastic Modelling and Applied Probability}.
+\newblock Springer, New York, 2004.
+\newblock \doi{10.1007/978-0-387-21617-1}.
+
+\bibitem[Glasserman et~al.(2002)Glasserman, Heidelberger, and
+  Shahabuddin]{GlassermanHeidelbergerShahabuddin2002}
+Paul Glasserman, Philip Heidelberger, and Perwez Shahabuddin.
+\newblock Portfolio value-at-risk with heavy-tailed risk factors.
+\newblock \emph{Mathematical Finance}, 12\penalty0 (3):\penalty0 239--269,
+  2002.
+\newblock \doi{10.1111/1467-9965.00141}.
+
+\bibitem[Hartinger and Kortschak(2009)]{HartingerKortschak2009}
+J{\"u}rgen Hartinger and Dominik Kortschak.
+\newblock On the efficiency of the {A}smussen--{K}roese-estimator and its
+  application to stop-loss transforms.
+\newblock \emph{Bl{\"a}tter der DGVFM}, 30\penalty0 (2):\penalty0 363--377,
+  2009.
+\newblock \doi{10.1007/s11857-009-0094-2}.
+
+\bibitem[Hult et~al.(2005)Hult, Lindskog, Mikosch, and
+  Samorodnitsky]{HultLindskogMikoschSamorodnitsky2005}
+Henrik Hult, Filip Lindskog, Thomas Mikosch, and Gennady Samorodnitsky.
+\newblock Functional large deviations for multivariate regularly varying random
+  walks.
+\newblock \emph{Annals of Applied Probability}, 15\penalty0 (4):\penalty0
+  2651--2680, 2005.
+\newblock \doi{10.1214/105051605000000502}.
+
+\bibitem[Juneja and Shahabuddin(2006)]{JunejaShahabuddin2006}
+Sandeep Juneja and Perwez Shahabuddin.
+\newblock Rare-event simulation techniques: An introduction and recent
+  advances.
+\newblock \emph{Handbooks in Operations Research and Management Science},
+  13:\penalty0 291--350, 2006.
+\newblock \doi{10.1016/S0927-0507(06)13011-X}.
+
+\bibitem[Kupiec(1995)]{Kupiec1995}
+Paul~H. Kupiec.
+\newblock Techniques for verifying the accuracy of risk measurement models.
+\newblock \emph{Journal of Derivatives}, 3\penalty0 (2):\penalty0 73--84, 1995.
+\newblock \doi{10.3905/jod.1995.407942}.
+
+\bibitem[Ledford and Tawn(1996)]{LedfordTawn1996}
+Anthony~W. Ledford and Jonathan~A. Tawn.
+\newblock Statistics for near independence in multivariate extreme values.
+\newblock \emph{Biometrika}, 83\penalty0 (1):\penalty0 169--187, 1996.
+\newblock \doi{10.1093/biomet/83.1.169}.
+
+\bibitem[Maulik and Resnick(2004)]{MaulikResnick2004}
+Krishanu Maulik and Sidney Resnick.
+\newblock Characterizations and examples of hidden regular variation.
+\newblock \emph{Extremes}, 7\penalty0 (1):\penalty0 31--67, 2004.
+\newblock \doi{10.1007/s10687-004-4728-4}.
+
+\bibitem[Maulik and Resnick(2005)]{MaulikResnick2005}
+Krishanu Maulik and Sidney~I. Resnick.
+\newblock Characterizations and examples of hidden regular variation.
+\newblock \emph{Extremes}, 7\penalty0 (1):\penalty0 31--67, 2005.
+\newblock \doi{10.1007/s10687-004-4728-4}.
+
+\bibitem[McNeil et~al.(2015)McNeil, Frey, and
+  Embrechts]{McNeilFreyEmbrechts2015}
+Alexander~J. McNeil, R{\"u}diger Frey, and Paul Embrechts.
+\newblock \emph{Quantitative Risk Management: Concepts, Techniques and Tools}.
+\newblock Princeton University Press, Princeton, NJ, revised edition, 2015.
+\newblock ISBN 9780691166278.
+
+\bibitem[Pourbabaee and Solari(2019)]{PourbabaeeSolari2019}
+Farzad Pourbabaee and Omid~Shams Solari.
+\newblock Tail probability estimation of factor models with regularly-varying
+  tails: Asymptotics and efficient estimation, 2019.
+\newblock arXiv preprint, version~3 (2022).
+
+\bibitem[Resnick(2002)]{Resnick2002}
+Sidney~I. Resnick.
+\newblock Hidden regular variation, second order regular variation and
+  asymptotic independence.
+\newblock \emph{Extremes}, 5\penalty0 (4):\penalty0 303--336, 2002.
+\newblock \doi{10.1023/A:1025148622954}.
+
+\bibitem[Resnick(2007)]{Resnick2007}
+Sidney~I. Resnick.
+\newblock \emph{Heavy-Tail Phenomena: Probabilistic and Statistical Modeling}.
+\newblock Springer, New York, 2007.
+\newblock ISBN 978-0-387-24272-9.
+
+\bibitem[Samorodnitsky and Sun(2016)]{SamorodnitskySun2016}
+Gennady Samorodnitsky and Julian Sun.
+\newblock Multivariate subexponential distributions and their applications.
+\newblock \emph{Extremes}, 19\penalty0 (2):\penalty0 171--196, 2016.
+\newblock \doi{10.1007/s10687-016-0242-8}.
+
+\end{thebibliography}

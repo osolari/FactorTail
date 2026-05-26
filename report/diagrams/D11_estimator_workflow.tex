@@ -1,0 +1,20 @@
+\begin{tikzpicture}[
+  box/.style={rectangle, draw, rounded corners, align=center, minimum width=2.55cm, minimum height=0.8cm, font=\scriptsize},
+  node distance=0.55cm and 0.55cm,
+  arr/.style={->, >=Stealth, thick}
+]
+\node[box, fill=blue!10] (loss) {Loss contribution\\matrix};
+\node[box, fill=blue!10, right=of loss] (marg) {Marginal tail\\fit};
+\node[box, fill=blue!10, right=of marg] (dep) {Dependence\\diagnostics};
+\node[box, fill=yellow!15, below=of dep] (select) {Estimator\\selection};
+\node[box, fill=green!12, left=of select] (rare) {Rare-event\\estimation};
+\node[box, fill=green!12, left=of rare] (risk) {VaR/ES\\forecast};
+\node[box, fill=orange!12, below=of risk] (back) {Backtests and\\attribution};
+\draw[arr] (loss) -- (marg);
+\draw[arr] (marg) -- (dep);
+\draw[arr] (dep) -- (select);
+\draw[arr] (select) -- (rare);
+\draw[arr] (rare) -- (risk);
+\draw[arr] (risk) -- (back);
+\draw[arr] (back.east) -- ++(1.0,0) |- (dep.south);
+\end{tikzpicture}

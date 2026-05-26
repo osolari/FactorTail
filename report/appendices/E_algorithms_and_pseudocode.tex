@@ -1,0 +1,109 @@
+%==============================================================================
+% appendices/E_algorithms_and_pseudocode.tex
+%==============================================================================
+\section{Algorithms and Pseudo-Code}
+\label{appx:algorithms}
+
+\paragraph{Reference implementation.}
+Every algorithm in this appendix has a one-to-one Python entry point in the
+\texttt{FactorTail} library
+(\url{https://github.com/osolari/FactorTail}). Module paths follow the
+manuscript: \texttt{factortail.cdmc.independent}, \texttt{factortail.cdmc.dependent},
+\texttt{factortail.cdmc.latent\_shock}, \texttt{factortail.cdmc.block},
+\texttt{factortail.cdmc.spectral}, and \texttt{factortail.real\_data.rolling\_var\_es}.
+Pseudo-code below uses mathematical notation; the implementation respects the
+numerical-stability conventions of \cref{rem:numerical-stability}.
+
+\begin{algorithm}[H]
+\caption{Dependent selected-maximum CdMC}
+\label{alg:dep-cdmc}
+\begin{algorithmic}[1]
+\Require threshold \(x\), joint sampler for \(X\), conditional kernels \(p_i(t;X_{-i})\)
+\For{replicate \(m=1,\ldots,n\)}
+  \State Draw \(X^{(m)}\) from the fitted joint model.
+  \State For each \(i\), compute \(S_{-i}^{(m)}\), \(M_{-i}^{(m)}\), and \(T_i^{(m)}=(x-S_{-i}^{(m)})\vee M_{-i}^{(m)}\).
+  \State Set \(Z_m=\sum_{i=1}^N p_i(T_i^{(m)};X_{-i}^{(m)})\).
+\EndFor
+\State \Return \(\widehat\mu=n^{-1}\sum_mZ_m\), sample variance, confidence interval, runtime.
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Complexity and numerical stability (\cref{alg:dep-cdmc}).}
+Per replicate: $O(N)$ conditional-kernel evaluations plus the cost of one joint
+draw. Total work for $n$ replicates is $O(n(N\,c_p+c_{\mathrm{draw}}))$, where
+$c_p$ is the kernel evaluation cost and $c_{\mathrm{draw}}$ is the joint-draw
+cost. Following \cref{rem:numerical-stability}, evaluate kernels on log-scale
+when the deep tail is involved and apply log-sum-exp when aggregating.
+
+\begin{algorithm}[H]
+\caption{Latent-shock CdMC}
+\label{alg:latent-cdmc}
+\begin{algorithmic}[1]
+\Require factor loading matrix \(B\), exposure \(a\), independent shock tails, threshold \(x\)
+\State Compute shock exposure \(q=B^\top a\).
+\For{replicate \(m=1,\ldots,n\)}
+  \State Draw all shocks except each candidate shock as needed for summed or stratified CdMC.
+  \State Compute signed shock thresholds for \(q_kZ_k\).
+  \State Evaluate one-dimensional shock survival functions with sign correction.
+\EndFor
+\State \Return tail estimate, attribution by shock, and BRE diagnostics.
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Complexity and numerical stability (\cref{alg:latent-cdmc}).}
+Per replicate: $O(K)$ univariate shock-survival evaluations plus $O(K)$ shock
+draws, where $K$ is the number of latent shocks. Total work is
+$O(n\,K\,c_{F_Z})$ for univariate-survival cost $c_{F_Z}$. Sign correction for
+$q_k<0$ requires evaluating the negative shock tail; both tails should be
+evaluated on log-scale when the shock distribution has very heavy tails
+(e.g., $\alpha$ close to 1).
+
+\begin{algorithm}[H]
+\caption{Spectral/radial CdMC}
+\label{alg:spectral-cdmc}
+\begin{algorithmic}[1]
+\Require angular sampler or empirical angular resample, radial survival model, loss vector \(a\), threshold \(x\)
+\For{replicate \(m=1,\ldots,n\)}
+  \State Draw or resample angle \(\Theta^{(m)}\).
+  \State Compute \(y_m=(a^\top\Theta^{(m)})_+\).
+  \If{\(y_m=0\)}
+    \State Set \(Z_m=0\).
+  \Else
+    \State Set \(Z_m=\Pb(R>x/y_m\mid \Theta^{(m)})\).
+  \EndIf
+\EndFor
+\State \Return \(\widehat\mu=n^{-1}\sum_mZ_m\), spectral attribution, and uncertainty bands.
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Complexity and numerical stability (\cref{alg:spectral-cdmc}).}
+Per replicate: one angular draw or resample plus one radial-survival evaluation
+at $x/y_m$. Total work is $O(n(c_\Theta+c_{F_R}))$. When $y_m$ is small, the
+quantile $x/y_m$ is extreme and the radial survival should be evaluated on
+log-scale. The estimator $Z_m=0$ branch when $y_m=0$ is exact for $x>0$.
+
+\begin{algorithm}[H]
+\caption{Real-data rolling VaR/ES protocol}
+\label{alg:real-data}
+\begin{algorithmic}[1]
+\Require returns, factors, portfolio definitions, rolling window \(w\), forecast levels \(\tau\)
+\For{forecast date \(t\)}
+  \State Fit rolling factor model on \([t-w,t-1]\).
+  \State Construct signed factor and residual loss contributions.
+  \State Estimate marginal tails and dependence diagnostics.
+  \State Select candidate estimators using \cref{fig:estimator-decision-tree}.
+  \State For each estimator and \(\tau\), solve for \(\widehat\VaR_t(\tau)\) and compute \(\widehat\ES_t(\tau)\).
+  \State Record forecasts, runtime, model diagnostics, and provenance.
+\EndFor
+\State Run VaR/ES backtests and write validated tables/figures.
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Complexity and numerical stability (\cref{alg:real-data}).}
+Per forecast date: one rolling fit ($O(w\,d^2)$ for a $d$-factor OLS), tail
+fitting ($O(w\log w)$ for order statistics), dependence diagnostics
+($O(w\,N^2)$ for pairwise tail measures), and one CdMC run per selected
+estimator (work as above). For a $T$-date backtest the total work scales as
+$T$ times the per-date work. VaR and ES are computed by root-finding on
+$\widehat\mu(\cdot;\theta_t)$; the root-finding tolerance should be tighter
+than the estimator's Monte Carlo half-width.

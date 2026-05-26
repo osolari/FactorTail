@@ -1,0 +1,63 @@
+%==============================================================================
+% appendices/F_data_specs.tex
+%==============================================================================
+\section{Data Specifications}
+\label{appx:data-specs}
+
+\subsection{Public factor and portfolio files}
+
+The public pipeline downloads or records local copies of these files:
+\begin{itemize}
+\item daily Fama--French three factors;
+\item daily Fama--French five factors;
+\item daily momentum factor;
+\item daily industry portfolios;
+\item daily size/book-to-market portfolios;
+\item daily profitability and investment portfolios when available;
+\item risk-free rate series bundled with the factor files.
+\end{itemize}
+For each file the pipeline stores source URL, data vintage, access date, row
+count, first date, last date, checksum, and parsing log.
+
+\paragraph{Vintage and citation requirements.}
+The Kenneth French Data Library is updated periodically and is the primary
+public source \citep{FrenchDataLibrary2026}. Each replication run records the
+\texttt{Last\_modified} field of every source file, the download timestamp, and
+the SHA-256 file hash. Citations in the final paper must reference both the
+data-library entry and the specific vintage used. When the data are reissued
+upstream (e.g., factor revisions), the manuscript run is not retroactively
+updated; new vintages create new runs.
+
+\subsection{Licensed CRSP extension}
+
+The licensed extension requires CRSP daily stock returns through WRDS. The
+planned filters are ordinary common shares (\texttt{shrcd}\,$\in\{10,11\}$),
+NYSE/AMEX/NASDAQ exchanges (\texttt{exchcd}\,$\in\{1,2,3\}$), nonmissing
+returns with delisting-return integration following standard CRSP guidance,
+and market-equity screens. Security-level portfolios are formed after all
+filters are recorded. \emph{No CRSP data are included in this archive.}
+
+\paragraph{License and citation.}
+CRSP data are licensed by the Center for Research in Security Prices at the
+University of Chicago Booth School of Business and are subject to the WRDS
+end-user license agreement \citep{CRSPGuide2026}. Replication of the
+CRSP-based results requires institutional WRDS access. Each CRSP-derived
+output records the WRDS access date and the CRSP file version
+(\texttt{dsf\_yyyymm}).
+
+\subsection{Output datasets}
+
+All generated outputs are written under \texttt{results/}. Required columns
+are listed in \texttt{results/SCHEMA.md}. The schema and writers are
+implemented in the \texttt{factortail.io} module of the \texttt{FactorTail}
+library (\url{https://github.com/osolari/FactorTail}). Each output
+contains:
+\begin{itemize}
+\item \texttt{run\_id}, \texttt{config\_hash}, \texttt{git\_hash};
+\item data source and vintage;
+\item random seed and spawned seed where applicable;
+\item estimator name and model class;
+\item threshold or forecast level;
+\item estimate, standard error, confidence interval, and runtime;
+\item validation status.
+\end{itemize}

@@ -1,0 +1,247 @@
+%==============================================================================
+% sections/07_estimators_and_efficiency.tex
+%==============================================================================
+\section{Estimator Families and Efficiency Criteria}
+\label{sec:estimators-efficiency}
+
+\subsection{Estimator menu}
+
+The expanded paper compares six estimator families.
+
+\begin{description}
+\item[Crude Monte Carlo.] Simulate \(X\) and average \(\1\{S_N>x\}\). This is
+the baseline for sample-size and work-normalized comparisons.
+
+\item[Independent summed CdMC.] Use \(\sum_i\Fb_i(T_i)\). This is exact only
+under independence but remains a useful misspecification benchmark.
+
+\item[Dependent kernel CdMC.] Use \(\sum_i\Pb(X_i>T_i\mid X_{-i})\). This is
+exact under arbitrary dependence if conditional kernels are correct.
+
+\item[Latent-shock CdMC.] Transform to independent shocks and apply independent
+CdMC to signed shock contributions.
+
+\item[Block CdMC.] Estimate or model block-tail probabilities and apply CdMC to
+independent block sums.
+
+\item[Spectral/radial CdMC.] Condition on angular direction and evaluate radial
+survival. This is the preferred estimator when MRV with non-axis spectral mass
+is empirically supported.
+\end{description}
+
+\begin{table}[p]
+\centering
+\input{tables/T_dependent_estimator_summary.tex}
+\caption[Dependent estimator summary]{Dependent estimator summary. The table
+specifies the conditioning object, required model input, exactness condition,
+and planned efficiency diagnostic for each estimator family.}
+\label{tab:dependent-estimator-summary}
+\end{table}
+
+\subsection{Efficiency definitions}
+
+We collect the efficiency notions used throughout the paper. Throughout,
+\(Z(x)\) denotes a generic unbiased estimator of \(\mu(x)\), \(n\) the
+replication count, and \(\mathrm{cost}(Z)\) the average wall-clock cost per
+replicate (or equivalently, the count of tail-function evaluations per
+replicate when wall-clock work is dominated by tail evaluations).
+
+\begin{definition}[Bounded relative error, vanishing relative error, log-efficiency]
+\label{def:efficiency-notions}
+An unbiased estimator $Z(x)$ for $\mu(x)$:
+\begin{itemize}
+\item has \emph{bounded relative error} (BRE) if
+  $\limsup_{x\to\infty}\Var Z(x)/\mu(x)^2<\infty$;
+\item has \emph{vanishing relative error} (VRE) if
+  $\Var Z(x)/\mu(x)^2\to 0$;
+\item is \emph{logarithmically efficient} if
+  $\liminf_{x\to\infty}\log\E Z(x)^2/\log\mu(x)^2\ge 1$.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Work, work-normalized variance, efficiency frontier]
+\label{def:work-normalized}
+The \emph{work} of $Z(x)$ at threshold $x$ is the mean cost per replicate
+$\mathrm{cost}(Z;x)\in(0,\infty)$. The \emph{work-normalized variance} is
+\[
+  W(Z;x)=\Var Z(x)\cdot\mathrm{cost}(Z;x),
+\]
+the \emph{work-normalized relative error} (WNRE) is
+\[
+  \mathrm{WNRE}(Z;x)=\sqrt{W(Z;x)}/\mu(x),
+\]
+and the \emph{efficiency ratio} of $Z_1$ relative to $Z_2$ is
+$\mathrm{eff}(Z_1,Z_2;x)=W(Z_2;x)/W(Z_1;x)$. The \emph{efficiency frontier}
+over a class of estimators $\mathcal{Z}$ at threshold $x$ is the lower convex
+boundary of the set $\{(\mathrm{cost}(Z;x),\Var Z(x)):Z\in\mathcal{Z}\}$.
+\end{definition}
+
+In the empirical pipeline $\widehat{c}_{\mathrm{cpu}}$ denotes the sample
+estimate of $\mathrm{cost}(Z;x)$ and $\widehat{\mathrm{WNRE}}(Z;x)$ replaces
+the population quantities by their sample analogues.
+
+\subsection{Efficiency results for the principal estimators}
+\label{subsec:efficiency-propositions}
+
+The independent and dependent CdMC efficiency results proved in
+\cref{appx:independent-proofs,appx:dependent-proofs} are summarized here as
+formal propositions for ease of reference.
+
+\begin{proposition}[BRE of independent CdMC]
+\label{prop:ind-cdmc-bre}
+Under \cref{ass:ind-pte,ass:ind-sbj}, the independent summed CdMC estimator
+$Z^{\mathrm{ind}}(x)$ is unbiased for $\mu(x)$ and satisfies
+\(
+  \limsup_{x\to\infty}\Var Z^{\mathrm{ind}}(x)/\mu(x)^2\le N^\alpha-1
+\).
+The bound is scale-invariant under common rescaling of the $X_i$.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Established in \cref{appx:independent-proofs} via the deterministic envelope
+$Z^{\mathrm{ind}}(x)\le\sum_i\Fb_i(x/N)$ and the regular-variation limit
+$\sum_i\Fb_i(x/N)/\mu(x)\to N^\alpha$.
+\end{proof}
+
+\begin{proposition}[BRE of dependent CdMC under a conditional-tail envelope]
+\label{prop:dep-cdmc-bre}
+Under \cref{ass:conditional-envelope}, the dependent CdMC estimator
+$Z^{\mathrm{dep}}(x)$ is unbiased for $\mu(x)$ and satisfies
+\(\limsup_{x\to\infty}\Var Z^{\mathrm{dep}}(x)/\mu(x)^2<\infty\).
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+This is \cref{prop:dep-envelope-bre}; see \cref{appx:dependent-proofs}.
+\end{proof}
+
+\begin{proposition}[BRE of latent-shock CdMC]
+\label{prop:latent-shock-bre}
+If $F=BZ$ with $Z_1,\ldots,Z_K$ independent and regularly varying with common
+index, and \cref{ass:ind-sbj} holds for the signed shock contributions
+$q_kZ_k$, then the latent-shock CdMC estimator is unbiased and satisfies the
+independent BRE bound $K^\alpha-1$ in place of $N^\alpha-1$.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+This is \cref{thm:latent-shock-tail} combined with the BRE bound for the
+independent CdMC applied to the shock vector. The full argument is in
+\cref{appx:dependent-proofs}.
+\end{proof}
+
+\begin{proposition}[BRE of spectral CdMC]
+\label{prop:spectral-cdmc-bre}
+Under \cref{ass:mrv-loss} with $\E[\ell(\Theta)_+^{2\alpha}]<\infty$ and the
+envelope condition of \cref{prop:spectral-bre}, the spectral/radial CdMC
+estimator $Z^{\mathrm{spec}}(x)$ is unbiased and has bounded relative error.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+\Cref{prop:spectral-bre}; full argument in \cref{appx:dependent-proofs}.
+\end{proof}
+
+\subsection{Control variates and the VRE estimator}
+
+The independent second-order approximation and the MRV spectral approximation
+both produce analytic or semi-analytic controls. If \(Y(x)\) has known mean
+\(m_Y(x)\), then
+\[
+  Z^{\mathrm{cv}}(x)=Z(x)-\gamma\{Y(x)-m_Y(x)\}
+\]
+is unbiased. The oracle coefficient is
+\[
+  \gamma^*(x)=\frac{\Cov(Z(x),Y(x))}{\Var(Y(x))}.
+\]
+In practice \(\gamma\) and sometimes \(m_Y\) are estimated on a pilot split.
+
+\begin{proposition}[Exact and asymptotic VRE for the centered control-variate estimator]
+\label{prop:vre}
+Let \(Y(x)\) be an $L^2$ surrogate for \(Z(x)\) with $\Var Z(x),\Var Y(x)>0$
+and let
+\(\rho(x)=\mathrm{Corr}(Z(x),Y(x))\). Then:
+\begin{enumerate}
+\item \emph{(Exact VRE with oracle centering.)} If \(m_Y(x)\) is known exactly
+and the oracle coefficient \(\gamma^*(x)\) is used, then $Z^{\mathrm{cv}}$ is
+unbiased and
+\[
+  \Var Z^{\mathrm{cv}}(x)=(1-\rho(x)^2)\Var Z(x).
+\]
+If $\rho(x)\to 1$ as $x\to\infty$, then $\Var Z^{\mathrm{cv}}(x)/\mu(x)^2\to 0$
+provided $Z(x)$ has BRE; that is, $Z^{\mathrm{cv}}$ has VRE.
+\item \emph{(Asymptotic VRE with sample-split centering.)} If \(m_Y(x)\) is
+estimated on a pilot split of size $n_0$ and \(\gamma\) on a second split, then
+$Z^{\mathrm{cv}}$ is unbiased as long as the splits are independent of the
+production sample, but its variance picks up an additional term of order
+$1/n_0$ from the centering estimate. Under the same conditions as part (1)
+and provided $n_0\to\infty$ at any rate with $x$, the work-normalized variance
+ratio $W(Z^{\mathrm{cv}};x)/\Var Z(x)\to 0$ along the same threshold sequence.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Part (1) is the standard identity for an oracle-centered control variate; the
+VRE implication follows because $1-\rho(x)^2\to 0$ kills the surviving BRE
+constant. Part (2) is the standard sample-splitting argument with an
+independent pilot. Details mirror the classical control-variate analysis in
+\citet{Glasserman2004}; see \cref{appx:dependent-proofs} for the bookkeeping.
+\end{proof}
+
+The distinction in \cref{prop:vre} matters for empirical claims: exact
+centering yields VRE, while sample-split centering yields VRE only along
+the joint limit $x\to\infty$, $n_0\to\infty$. The paper reports both variants.
+
+\subsection{Finite-sample concentration}
+
+If an estimator is bounded by \(0\le Z(x)\le B_Z(x)\), Hoeffding gives
+\[
+  \Pb\!\left(|\bar Z_n-\mu(x)|>\varepsilon\mu(x)\right)
+  \le 2\exp\!\left\{-\frac{2n\varepsilon^2\mu(x)^2}{B_Z(x)^2}\right\}.
+\]
+A tighter Bernstein-style bound that exploits the small variance of CdMC
+estimators is the following.
+
+\begin{theorem}[Bernstein-type confidence interval for bounded CdMC estimators]
+\label{thm:bernstein-ci}
+Let $Z(x)$ be an unbiased estimator of $\mu(x)$ with $0\le Z(x)\le B_Z(x)$ and
+$\Var Z(x)\le \sigma^2(x)$. Let $\bar Z_n$ denote the sample mean of $n$ i.i.d.\
+replicates. Then for all $\varepsilon>0$,
+\[
+  \Pb\!\left(|\bar Z_n-\mu(x)|>\varepsilon\right)
+  \le 2\exp\!\left\{-\frac{n\varepsilon^2}{2\sigma^2(x)+\tfrac{2}{3}B_Z(x)\varepsilon}\right\}.
+\]
+In particular, taking $\varepsilon=\delta\mu(x)$ and using the BRE bound
+$\sigma^2(x)/\mu(x)^2\le V$ and the envelope ratio
+$B_Z(x)/\mu(x)\le M$ gives
+\[
+  \Pb\!\left(|\bar Z_n-\mu(x)|>\delta\mu(x)\right)
+  \le 2\exp\!\left\{-\frac{n\delta^2}{2V+\tfrac{2}{3}M\delta}\right\}.
+\]
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+This is Bernstein's inequality applied to the i.i.d.\ sequence
+$Z_1(x),\ldots,Z_n(x)$, with the variance and uniform bound substituted in.
+The substitution to relative-error form uses the BRE bound on $\sigma^2/\mu^2$
+and the deterministic envelope ratio $B_Z/\mu$; for the independent CdMC,
+$M=N^\alpha$ and $V=N^\alpha-1$ by \cref{prop:ind-cdmc-bre}.
+\end{proof}
+
+The simulation study reports Bernstein intervals from \cref{thm:bernstein-ci},
+Hoeffding intervals when only a deterministic range bound is available, and
+self-normalized confidence sequences when heavy-tailed estimator outputs make
+a range bound too conservative.
+
+\subsection{Planned estimator workflow}
+
+The workflow is shown in \cref{fig:estimator-workflow}. It deliberately keeps
+estimation and validation separate: tail and dependence diagnostics determine
+candidate estimators; out-of-sample VaR/ES backtests determine whether the
+added dependence complexity improves risk forecasts.
+
+\begin{figure}[p]
+\centering
+\input{diagrams/D11_estimator_workflow.tex}
+\caption[Estimator workflow]{Estimator workflow from raw loss contributions to
+model diagnostics, rare-event estimation, VaR/ES forecasts, and backtests. The
+same workflow is used for synthetic experiments and for real data.}
+\label{fig:estimator-workflow}
+\end{figure}

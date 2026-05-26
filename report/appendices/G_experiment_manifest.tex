@@ -1,0 +1,71 @@
+%==============================================================================
+% appendices/G_experiment_manifest.tex
+%==============================================================================
+\section{Experiment Manifest and Replacement Rules}
+\label{appx:manifest}
+
+The replacement rules in this appendix are enforced by the
+\texttt{factortail.manifest} module of the \texttt{FactorTail} library
+(\url{https://github.com/osolari/FactorTail}); the CLI command
+\texttt{factortail validate-run} checks each rule before allowing a generated
+artifact to replace a placeholder in the manuscript build.
+
+\subsection{Figure replacement rule}
+
+Each placeholder figure contains a source CSV name. A placeholder may be
+replaced only when:
+\begin{enumerate}
+\item the CSV exists and passes schema validation;
+\item the generation script records run ID, config hash, git hash, and seed;
+\item the generated PDF has the same basename as the placeholder;
+\item the caption and label in the manuscript remain unchanged unless the
+underlying diagnostic changes.
+\end{enumerate}
+
+\subsection{Table replacement rule}
+
+Each table with \xx{} cells is a planned table. Replacement requires a generated
+\texttt{.tex} table with the same columns and a validation log. The validation
+log must state whether each value is empirical, analytic, simulated, or
+manually entered.
+
+\subsection{Single manifest aligned with the experiment-status table}
+
+The priority manifest below corresponds, row-for-row, to the seven experiments
+in \cref{tab:experiment-status}. Each row names the experiment, the required
+generated outputs, the labels of the figures and tables that the outputs
+replace, and the current run status. The replacement rules above govern how
+each output enters the manuscript.
+
+\begin{longtable}{p{0.10\linewidth}p{0.22\linewidth}p{0.32\linewidth}p{0.16\linewidth}p{0.12\linewidth}}
+\toprule
+Priority & Experiment & Required outputs and target labels & Required CSVs & Status \\
+\midrule
+\endhead
+P1 & Independent replication &
+F1 (\cref{fig:ind-tail-equivalence}), F8 (\cref{fig:second-order-placeholder}), \cref{tab:sim-results-independent} &
+F1, F8, sim\_indep & planned \\
+P2 & Common-shock simulation &
+F11 (\cref{fig:common-shock-geometry}), \cref{tab:sim-results-dependent} rows for Family II &
+F11, sim\_common\_shock & planned \\
+P3 & Copula-kernel test &
+\cref{tab:sim-results-dependent} rows for Family IV &
+sim\_copula & planned \\
+P4 & MRV spectral test &
+F12 (\cref{fig:spectral-simplex-placeholder}), \cref{tab:sim-results-dependent} rows for Family V &
+F12, sim\_spectral & planned \\
+P5 & Hidden-cone test &
+F13 (\cref{fig:hidden-cones-placeholder}), \cref{tab:sim-results-dependent} rows for Family VI &
+F13, sim\_hrv & planned \\
+P6 & Public Fama--French data &
+F15--F18, \cref{tab:data-panels,tab:tail-index-placeholder,tab:tail-dep-placeholder,tab:var-es-backtest-placeholder,tab:crisis-attribution-placeholder} &
+ff\_panels, ff\_tails, ff\_dep, ff\_backtest, ff\_crisis & planned \\
+P7 & CRSP licensed extension &
+F15--F16 with CRSP universe; security-level panels in \cref{tab:data-panels} &
+crsp\_panels, crsp\_tails, crsp\_dep & optional/planned \\
+\bottomrule
+\end{longtable}
+
+The mapping above is authoritative: any new experiment must be added both to
+\cref{tab:experiment-status} and to this manifest before being run, to
+preserve the one-to-one correspondence.

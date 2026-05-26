@@ -1,0 +1,163 @@
+%==============================================================================
+% appendices/B_independent_proofs.tex
+%==============================================================================
+\section{Proofs for the Independent Baseline}
+\label{appx:independent-proofs}
+
+This appendix collects the full proofs of the results stated in
+\cref{sec:independent-baseline}. Each proof environment is labelled by the
+result it establishes.
+
+\begin{proof}[Proof of \cref{thm:catastrophe-exact}]
+Let \(A_i(x)=\{X_i>x\}\). By finite inclusion--exclusion,
+\[
+  \sum_i\Pb(A_i)-\sum_{i<j}\Pb(A_i\cap A_j)
+  \le \Pb\!\left(\bigcup_iA_i\right)
+  \le \sum_i\Pb(A_i).
+\]
+Under \cref{ass:ind-pte} the variables are independent, so
+\[
+  \Pb(A_i\cap A_j)=\Pb(X_i>x)\Pb(X_j>x)
+  \sim c_ic_j\Gb(x)^2=o(\Gb(x)).
+\]
+There are finitely many pairs, so \(\sum_{i<j}\Pb(A_i\cap A_j)=o(\Gb(x))\).
+Higher-order intersections are bounded above by pair intersections and so are
+also \(o(\Gb(x))\). Combined with the marginal sum
+\(\sum_i\Pb(X_i>x)\sim C\Gb(x)\), this yields
+\(\Pb(M_N>x)\sim C\Gb(x)\).
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:sum-equivalence}]
+Let \(h=h(x)\uparrow\infty\) with \(h=o(x)\) as in \cref{ass:ind-sbj}.
+Upper bound. Decompose
+\[
+  \{S_N>x\}\subseteq
+  \bigcup_{i=1}^N\{X_i>x-h\}
+  \;\cup\;
+  \left\{S_N>x,\ \max_i X_i\le x-h\right\}.
+\]
+The first term satisfies
+\[
+  \Pb\!\left(\bigcup_i\{X_i>x-h\}\right)
+  \sim \sum_i\Pb(X_i>x-h)
+  \sim \sum_i\Pb(X_i>x),
+\]
+by inclusion--exclusion and the local invariance
+\(\Pb(X_i>x-h)\sim\Pb(X_i>x)\) of \cref{ass:ind-sbj}.
+The second term is excluded by the truncation conditions in
+\cref{ass:ind-sbj}: the joint event that two or more truncated components
+exceed order \(h\) is \(o(\Gb(x))\), and the residual non-large contribution is
+\(o(\Gb(x))\) by the same truncation.
+
+Lower bound. With the same \(h\),
+\[
+  \Pb(S_N>x)
+  \ge \sum_i\Pb(X_i>x+h,\ S_{-i}>-h) - o(\Gb(x)),
+\]
+where the overlap correction is \(o(\Gb(x))\) by the pair-exceedance estimate
+of \cref{thm:catastrophe-exact}. Independence gives
+\[
+  \Pb(X_i>x+h,S_{-i}>-h)
+  =\Pb(X_i>x+h)\,\Pb(S_{-i}>-h)
+  \sim \Pb(X_i>x),
+\]
+since \(\Pb(S_{-i}\le -h)=o(1)\) and \(\Pb(X_i>x+h)\sim\Pb(X_i>x)\). Summing
+yields the matching lower bound.
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:second-order}]
+Set \(r(x)=\Gb(x)(|A(x)|\vee x^{-1})\). The events
+\(\{i\ \text{selected}\}=\{R_i(X)=1\}\) partition \(\{S_N>x\}\) under the fixed
+tie-breaking rule of \cref{ass:tie}. On the \(i\)th stratum
+\[
+  \Pb(S_N>x, R_i(X)=1)
+  =\E\!\left[\Pb(X_i>T_i(x)\mid X_{-i})\,\1\{T_i(x)>M_{-i}\}\right].
+\]
+By \cref{ass:ind-sbj} the contribution to the right-hand side from the event
+\(\{T_i(x)\le M_{-i}\}\) is \(o(r(x))\), and the same truncation gives
+negligible mass on \(\{|S_{-i}|>h(x)\}\). It therefore suffices to expand
+\(\E[\Pb(X_i>x-S_{-i})]\) on \(\{|S_{-i}|\le h(x)\}\) and then take
+expectations.
+
+By \cref{ass:sote}, locally uniformly on \(|S_{-i}|\le h(x)\),
+\[
+  \Pb(X_i>x-S_{-i})
+  =\Gb(x)\!\left[c_i+c_id_iA(x)+\frac{\alpha c_iS_{-i}}{x}
+  + o\!\left(|A(x)|+x^{-1}\right)\right].
+\]
+Taking expectations,
+\[
+  \E\Pb(X_i>x-S_{-i})
+  = c_i\Gb(x)+c_id_i\Gb(x)A(x)
+  + \frac{\alpha c_i\Gb(x)}{x}\,\E S_{-i}
+  + o(r(x)),
+\]
+and \(\E S_{-i}=\mu_{-i}=\sum_{j\ne i}\E X_j\) by \cref{ass:sote}. Summing over
+active \(i\) and discarding inactive contributions (which are lower order by
+\cref{ass:sote}) yields the expansion in \cref{thm:second-order}.
+
+\emph{Consistency check at \(N=1\).} If \(N=1\), then \(S_{-1}=0\) and
+\(\mu_{-1}=0\); the mean-shift term vanishes, the marginal second-order term
+reduces to \(c_1d_1\Gb(x)A(x)\), and the formula collapses to the standard
+single-variable second-order expansion.
+\end{proof}
+
+\begin{proof}[Independent CdMC: unbiasedness and BRE bound]
+\emph{Unbiasedness.} For continuous variables the smallest-index tie-breaking
+rule of \cref{ass:tie} gives the disjoint union
+\[
+  \{S_N>x\}=\bigsqcup_{i=1}^N\{S_N>x,\ R_i(X)=1\}.
+\]
+Conditional on \(X_{-i}\), the \(i\)th stratum equals
+\(\{X_i>T_i(x)\}\cap\{T_i(x)>M_{-i}\}\), and independence yields
+\(\Pb(X_i>T_i(x)\mid X_{-i})=\Fb_i(T_i(x))\). Taking expectations and summing
+over \(i\) gives \(\E Z^{\mathrm{ind}}(x)=\Pb(S_N>x)\).
+
+\emph{Scale-invariant BRE bound.} We claim \(T_i(x)\ge x/N\) almost surely:
+suppose \(M_{-i}<x/N\); then if also \(x-S_{-i}<x/N\), one has
+\(S_{-i}>(N-1)x/N\). Since \(S_{-i}\) is a sum of \(N-1\) terms each bounded by
+\(M_{-i}<x/N\), this gives \(S_{-i}\le (N-1)x/N\), a contradiction. Hence
+\(T_i(x)\ge x/N\), and therefore
+\[
+  0\le Z^{\mathrm{ind}}(x)\le B(x):=\sum_{i=1}^N\Fb_i(x/N).
+\]
+Since \(\E Z^{\mathrm{ind}}(x)=\mu(x)\),
+\[
+  \Var Z^{\mathrm{ind}}(x)
+  \le \E\!\left[Z^{\mathrm{ind}}(x)^2\right]-\mu(x)^2
+  \le B(x)\mu(x)-\mu(x)^2.
+\]
+Regular variation gives \(\Fb_i(x/N)/\Fb_i(x)\to N^\alpha\) and the sum
+equivalence (\cref{thm:sum-equivalence}) gives \(\sum_i\Fb_i(x)\sim C\Gb(x)\),
+so \(B(x)/\mu(x)\to N^\alpha\). Consequently
+\[
+  \limsup_{x\to\infty}\frac{\Var Z^{\mathrm{ind}}(x)}{\mu(x)^2}
+  \le N^\alpha-1.
+\]
+The bound is scale-invariant: replacing \(X\) by \(\lambda X\) leaves \(N\),
+\(\alpha\), and the ratio unchanged.
+\end{proof}
+
+\subsection{Verification notes}
+
+\paragraph{Lomax second-order constant.}
+For the Lomax/Pareto-type benchmark $\Fb_i(t)=(1+t/\beta_i)^{-\alpha}$ on
+$t>0$, $\E X_i=\beta_i/(\alpha-1)$ when $\alpha>1$. A direct substitution
+verifies the cross-term in the second-order expansion of
+$\Pb(X_i>x-S_{-i})$: expanding to second order in $S_{-i}/x$ gives
+\[
+  (1+(x-S_{-i})/\beta_i)^{-\alpha}
+  = (x/\beta_i)^{-\alpha}\left(1-\beta_i/x\right)^{-\alpha}
+    \left(1+S_{-i}/(x-\beta_i)\right)^{\alpha},
+\]
+and expansion to first order in $S_{-i}/x$ and to leading order in the
+marginal-tail auxiliary $A(x)=\beta_i/x$ recovers
+$c_i d_i A(x)+\alpha c_i S_{-i}/x$ with the same sign convention used in
+\cref{thm:second-order}. This is the regression check used by the
+implementation pipeline.
+
+\paragraph{Scale-invariance check.}
+The BRE bound $N^\alpha-1$ is invariant under $X_i\to\lambda X_i$ because both
+$T_i(x)$ and $x$ scale by $\lambda$, leaving $\Fb_i(T_i(\lambda x))=\Fb_i(T_i(x))$
+when $\Fb_i$ is correctly rescaled. The bound therefore depends only on $N$ and
+$\alpha$, not on the marginal scale constants $c_i$.

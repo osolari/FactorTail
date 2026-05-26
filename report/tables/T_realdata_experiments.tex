@@ -1,0 +1,20 @@
+% Planned real-data experiments placeholder
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{2.8pt}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llllll@{}}
+\toprule
+\textbf{Experiment} & \textbf{Target} & \textbf{Estimators} & \textbf{Forecast levels} & \textbf{Output files} & \textbf{Status} \\
+\midrule
+E1 tail diagnostics & signed factor/residual tails & Hill, Pickands, POT & n/a & F11, T\_tail\_indices & \xx{} \\
+E2 dependence diagnostics & factor/residual joint tails & chi, chibar, eta, spectral mass & n/a & F12, F13, T\_dependence\_diagnostics & \xx{} \\
+E3 independent baseline & one-day portfolio loss & CrMC, CdMC, stratified, CV & 0.99, 0.995, 0.999 & T\_var\_es\_comparison, F9 & \xx{} \\
+E4 latent-shock model & common-shock loss tail & latent CdMC, common-shock formula & 0.99, 0.995, 0.999 & F14, T\_model\_gate & \xx{} \\
+E5 copula/block robustness & dependent factor loss tail & copula CdMC, block CdMC, radial CdMC & 0.99, 0.995, 0.999 & F15, T\_compute\_cost & \xx{} \\
+E6 backtesting & realized losses vs forecasts & all retained models + baselines & 0.99, 0.995 & T\_backtest, F10 & \xx{} \\
+E7 crisis windows & stress-event stability & retained production models & 0.99, 0.995, 0.999 & T\_crisis\_windows & \xx{} \\
+\bottomrule
+\end{tabular}%
+}
+\endgroup
