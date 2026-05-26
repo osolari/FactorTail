@@ -127,6 +127,129 @@ def run_all(config: Path, results_dir: Path) -> None:
         console.print(f"  - {path}")
 
 
+@main.command("repro")
+@click.argument("run_id")
+@click.option("--results-dir", default="results", type=click.Path(path_type=Path))
+@click.option(
+    "--scratch-dir",
+    default=None,
+    type=click.Path(path_type=Path),
+    help="Where to write re-generated CSVs (defaults to a sibling of results-dir).",
+)
+@click.option(
+    "--configs-dir",
+    default="configs",
+    type=click.Path(path_type=Path),
+    help="Directory holding the YAML configs referenced by the run.",
+)
+def cli_repro(run_id: str, results_dir: Path, scratch_dir: Path | None, configs_dir: Path) -> None:
+    """Re-run a recorded ``run_id`` and verify byte-identical CSVs.
+
+    Reads ``results/_run_<run_id>.json``, re-executes every config whose
+    output appears in the run's ``csvs`` list against a temporary results
+    dir, then compares every regenerated CSV to its archived counterpart
+    byte-for-byte (ignoring the volatile ``run_timestamp`` column).
+    """
+    import json
+    import re
+    import shutil
+    import tempfile
+
+    import pandas as pd
+
+    record_path = results_dir / f"_run_{run_id}.json"
+    if not record_path.exists():
+        console.print(f"[red]Run record missing:[/red] {record_path}")
+        sys.exit(1)
+    record = json.loads(record_path.read_text())
+    csvs = list(record.get("csvs", []))
+    if not csvs:
+        console.print(f"[red]Run record has no CSVs:[/red] {record_path}")
+        sys.exit(1)
+
+    if scratch_dir is None:
+        scratch_dir = Path(tempfile.mkdtemp(prefix=f"factortail_repro_{run_id}_"))
+    else:
+        scratch_dir.mkdir(parents=True, exist_ok=True)
+
+    # Map every CSV to a YAML config in configs_dir whose script writes it.
+    from factortail.experiments import dispatch
+
+    yaml_paths = sorted(configs_dir.glob("*.yaml"))
+    csv_to_config: dict[str, Path] = {}
+    for cfg_path in yaml_paths:
+        import yaml as _yaml
+
+        cfg = _yaml.safe_load(cfg_path.read_text()) or {}
+        script = cfg.get("script", "")
+        # The script's SCHEMA_NAME determines the CSV basename. Greedy match
+        # by reading the script for SCHEMA_NAME = "<basename>".
+        if not script:
+            continue
+        script_path = (Path.cwd() / script).resolve()
+        if not script_path.exists():
+            continue
+        text = script_path.read_text()
+        m = re.search(r"SCHEMA_NAME\s*=\s*['\"]([A-Za-z0-9_]+)['\"]", text)
+        if not m:
+            continue
+        basename = m.group(1)
+        csv_to_config[f"{basename}.csv"] = cfg_path
+
+    matched = [c for c in csvs if c in csv_to_config]
+    if not matched:
+        console.print(f"[red]No matching configs found for any of:[/red] {csvs}")
+        sys.exit(1)
+
+    mismatches: list[str] = []
+    for csv_name in matched:
+        cfg_path = csv_to_config[csv_name]
+        console.print(f"[cyan]repro[/cyan] {csv_name} via {cfg_path.name}")
+        dispatch.run_config(cfg_path, results_dir=scratch_dir)
+        orig = results_dir / csv_name
+        regen = scratch_dir / csv_name
+        if not regen.exists():
+            mismatches.append(f"{csv_name}: regenerated file missing")
+            continue
+        volatile = [
+            "run_timestamp",
+            "git_hash",
+            "config_hash",
+            "code_version",
+            "run_id",
+            "runtime_seconds",
+            "runtime",  # F14
+            "wnre",
+            "work_norm_variance",
+            "work_normalized_variance",
+        ]
+        df_orig = pd.read_csv(orig).drop(columns=volatile, errors="ignore")
+        df_new = pd.read_csv(regen).drop(columns=volatile, errors="ignore")
+        if df_orig.shape != df_new.shape:
+            mismatches.append(f"{csv_name}: shape {df_new.shape} != {df_orig.shape}")
+            continue
+        try:
+            pd.testing.assert_frame_equal(df_orig, df_new, check_exact=False, rtol=1e-6, atol=1e-9)
+        except AssertionError as exc:
+            mismatches.append(f"{csv_name}: {str(exc).splitlines()[0]}")
+
+    skipped = [c for c in csvs if c not in csv_to_config]
+    if skipped:
+        console.print(f"[yellow]skipped (no config):[/yellow] {skipped}")
+
+    if mismatches:
+        for m in mismatches:
+            console.print(f"[red]MISMATCH[/red] {m}")
+        sys.exit(1)
+    console.print(
+        f"[green]Run {run_id!r}: {len(matched)} CSV(s) reproduced byte-identical "
+        f"(modulo run_timestamp).[/green]"
+    )
+    # Clean up the scratch dir we created.
+    if scratch_dir.parent == Path(tempfile.gettempdir()):
+        shutil.rmtree(scratch_dir, ignore_errors=True)
+
+
 @main.command("replace-figure")
 @click.argument("label")
 @click.option("--results-dir", default="results", type=click.Path(path_type=Path))

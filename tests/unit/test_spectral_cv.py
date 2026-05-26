@@ -9,11 +9,11 @@ from factortail.estimators import spectral_control_variate
 from factortail.utils.tails import ParetoTail
 
 
-def test_runs_end_to_end_and_is_finite():
-    r"""The CV must always produce a finite estimate and a finite gamma even
-    when the spectral surrogate is weakly correlated with Z (which is the
-    typical case under Pareto-radial MRV — the manuscript's
-    Proposition ``prop:vre`` shows VRE only when ``rho -> 1``)."""
+def test_default_surrogate_achieves_high_correlation():
+    r"""The ``max_coord`` default surrogate (Y = sf_{i*}(X_(1))) couples
+    Z and Y through the argmax-dominant selected-maximum structure, so
+    rho^2 should comfortably exceed 0.5 on the Family-V Dirichlet design.
+    """
     alpha = 2.0
     dgp = RadialAngularMRV(
         alpha=alpha,
@@ -35,6 +35,10 @@ def test_runs_end_to_end_and_is_finite():
     assert np.isfinite(res.variance)
     assert np.isfinite(res.gamma_hat)
     assert 0.0 <= res.rho_squared <= 1.0
+    # The max_coord surrogate decisively beats the loss surrogate
+    # (~0.003 rho^2). Anything above 0.5 is a clear win.
+    assert res.rho_squared > 0.5
+    assert res.extra["surrogate"] == "max_coord"
 
 
 def test_oracle_centering_preserves_unbiasedness():

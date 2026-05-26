@@ -77,6 +77,10 @@ nav:
       - Results: results.md
       - Plotting: plotting.md
       - CLI: cli.md
+  - Tutorials:
+      - Quickstart notebook: tutorials/01_quickstart.ipynb
+      - Dependent designs: tutorials/02_dependent_designs.ipynb
+      - Real-data pipeline: tutorials/03_real_data_pipeline.ipynb
   - Reference:
       - API: api.md
       - Math notes: math.md
@@ -113,6 +117,10 @@ markdown_extensions:
 
 plugins:
   - search
+  - mkdocs-jupyter:
+      include_source: true
+      execute: false
+      include: ["tutorials/*.ipynb"]
   - mkdocstrings:
       handlers:
         python:
