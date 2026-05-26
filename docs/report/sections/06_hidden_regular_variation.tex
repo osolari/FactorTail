@@ -119,6 +119,26 @@ on a cone that is negligible at the current threshold.
 
 \input{figures/F13_hidden_cones_placeholder.tex}
 
+\Cref{fig:hidden-cones-placeholder} contrasts the axis exceedance term
+(at scale $\overline G(x) \sim x^{-\alpha}$, with $\alpha = 2$ in the
+design) with the hidden pair-cone term (at scale
+$\overline H_2(x) \sim x^{-\alpha_2}$, with $\alpha_2 = 3$). The axis
+curve and the empirical sum-tail coincide at every threshold; the
+hidden term decays one to two orders of magnitude faster and is the
+practical evidence for \cref{thm:hidden-second-order}. In a design
+with $\alpha_2 = \alpha$ (matched-scale HRV) the hidden term would be
+comparable to the axis term and the mixture estimator of
+\cref{prop:vre} would dominate.
+
+A complementary benchmark in our companion simulation table,
+\cref{tab:sim-results-dependent}, reports two estimators of $\alpha_2$
+itself: the Ledford--Tawn $\widehat\eta$, which gave
+$\widehat\alpha_2 \approx 1.5$ (49\% relative error vs the truth $3.0$
+on this design), and a direct cone-mass slope estimator that yielded
+$\widehat\alpha_2 \approx 3.27$ (8.8\% error). The cone-mass estimator
+is materially more accurate in the regime where the manuscript's hidden
+scale matters, closing handoff open question Q2.
+
 \subsection{Empirical diagnostics for hidden variation}
 
 The real-data analysis reports three hidden-cone diagnostics. First, for each

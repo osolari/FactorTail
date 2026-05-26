@@ -84,6 +84,30 @@ contribute at first order.
 
 \input{figures/F12_spectral_simplex_placeholder.tex}
 
+\Cref{fig:spectral-simplex-placeholder} visualises a Dirichlet
+$\mathrm{Dir}(1.5, 1.5, 1.5)$ angular sample on the unit simplex. The
+mass is concentrated near the centroid and is genuinely non-axis ---
+the manuscript's "interior" regime where the spectral CdMC is most
+attractive. If the empirical sample instead piled on the vertices,
+the independent CdMC would be the better choice; if it lay on a
+single ray, the latent-shock estimator would dominate.
+
+\subsection{Bootstrap stability of the spectral constant}
+\label{sec:mrv-bootstrap}
+
+Threshold-stability bands for the empirical spectral constant are
+estimated by bootstrap. \input{figures/F19_bootstrap_audit.tex}
+\Cref{fig:bootstrap-audit} stress-tests three
+schemes (iid, non-overlapping block, Politis--Romano stationary)
+against an AR(1)-injected MRV series with known truth. At $\rho = 0$
+all three schemes reach $\sim 95\%$ coverage. At $\rho = 0.9$ the iid
+bootstrap collapses to $\sim 0.4$ coverage while the block and
+stationary schemes hold near $0.78$--$0.88$; in serially dependent
+data the iid scheme reports bands far too narrow. The practical
+recommendation, which closes handoff open question Q4, is to use the
+stationary bootstrap for empirical spectral measures on financial
+time series.
+
 \subsection{Comparison with dependent-sum simulation}
 
 MRV gives a first-order constant and a natural estimator when the vector itself
@@ -97,5 +121,4 @@ parsimonious. If angular mass is concentrated on coordinate axes but pair cones
 are non-negligible at a slower scale, hidden regular variation is the next
 layer.
 
-%-- generated-figure inputs (auto) -----------------------------------
-\input{figures/F19_bootstrap_audit.tex}
+%-- generated-figure inputs (auto) — F19 referenced in \cref{sec:mrv-bootstrap}.

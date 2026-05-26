@@ -22,8 +22,8 @@ keywords:
   - factor models
   - tail risk
 license: MIT
-version: 0.1.0
-date-released: "2026-05-24"
+version: 0.1.1
+date-released: "2026-05-26"
 preferred-citation:
   type: article
   title: >-

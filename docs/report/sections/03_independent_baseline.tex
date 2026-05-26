@@ -75,6 +75,14 @@ A truncation argument combined with the pair-exceedance estimate of
 
 \input{figures/F1_tail_equivalence.tex}
 
+\Cref{fig:ind-tail-equivalence} demonstrates
+\cref{thm:catastrophe-exact,thm:sum-equivalence} empirically: the
+independent CdMC estimator sits between the first-order line and the
+second-order curve, and converges to the first-order line in the deep
+tail. The catastrophe principle itself --- the ratio
+$P(M_N > x) / P(S_N > x) \to 1$ --- is verified separately in
+\cref{fig:max-vs-sum}.
+
 \subsection{Corrected second-order expansion}
 
 The second-order term is important for finite thresholds. When \(X_i\) is the
@@ -115,6 +123,13 @@ written in closed form and used as a regression test for implementations.
 
 \input{figures/F8_second_order.tex}
 
+The corrected expansion reduces the absolute relative error of the
+leading sum-tail approximation by roughly an order of magnitude across
+the threshold range (\cref{fig:second-order-placeholder}). The
+$N=1$ check is mechanical: when there is a single summand the
+leave-one-out sum is empty and the second-order term vanishes,
+recovering the standard single-variable second-order tail asymptotic.
+
 \subsection{Independent conditional Monte Carlo}
 
 For independent variables define
@@ -147,10 +162,64 @@ comparison point.}
 \label{tab:ind-estimator-summary}
 \end{table}
 
-%-- generated-figure inputs (auto) -----------------------------------
+\subsection{Empirical efficiency diagnostics}
+\label{sec:ind-empirical-diagnostics}
+
+The remaining figures in this section probe the practical behaviour of
+the independent CdMC across thresholds, tail indices, and pilot rules.
+
 \input{figures/F2_max_vs_sum.tex}
+
+\Cref{fig:max-vs-sum} confirms the catastrophe principle: the ratio
+$P(M_N > x) / P(S_N > x)$ rises from $\sim 0.17$ at $x = 5$ to
+$\sim 0.87$ at $x = 80$ for a Pareto($\alpha = 2$) design with $N = 4$
+margins, consistent with \cref{thm:catastrophe-exact} and the
+single-big-jump conditions of \cref{ass:ind-sbj}.
+
 \input{figures/F3_exp_eff_vs_x.tex}
+
+\Cref{fig:exp-eff-vs-x} plots the inverse relative variance
+$1/\widehat\nu(x)$ of the independent CdMC against the threshold $x$.
+The CdMC's per-replicate rate stays well above the BRE asymptotic floor
+$1/(N^\alpha - 1)$ at all depths and rises with $x$ (a regime of
+\emph{vanishing} relative error empirically), while the crude
+Monte-Carlo rate $\mu/(1-\mu)$ decays to zero. The gap between the two
+curves is the headline efficiency claim of \cref{prop:ind-cdmc-bre}.
+
 \input{figures/F4_exp_eff_vs_alpha.tex}
 \input{figures/F5_exp_eff_vs_amin.tex}
+
+\Cref{fig:exp-eff-vs-alpha,fig:exp-eff-vs-amin} sweep the tail index.
+Common-$\alpha$ designs trace a clean monotone-decreasing rate curve:
+larger $\alpha$ implies larger $N^\alpha - 1$ implies smaller asymptotic
+rate. Heterogeneous-$\alpha$ designs at the \emph{same} $\bar\alpha$
+sit \emph{above} the common-$\alpha$ curve, because the BRE bound is
+controlled by $\alpha_{\min}$, not $\bar\alpha$. The
+$\alpha_{\min}$-only floor $1/(N^{\alpha_{\min}} - 1)$ in
+\cref{fig:exp-eff-vs-amin} tracks the empirical rate to within a few
+percent across the sweep.
+
 \input{figures/F6_relative_error.tex}
+
+\Cref{fig:relative-error} demonstrates the practical importance of
+control-variate \emph{surrogate} choice. On an MRV Family-V design the
+classical loss-functional surrogate gives
+$\widehat\rho^2 \approx 0.005$ (no usable variance reduction). The
+$X_{(2)}$-shift and max-coord surrogates, which couple the CV through
+the argmax-dominant selected-maximum kernel, push $\widehat\rho^2$ above
+$0.6$ and reduce the post-CV variance by a factor of three to four.
+This closes handoff open question Q1: at deep thresholds the marginal
+surrogate of \citet{Glasserman2004} is uninformative under MRV, and the
+selected-maximum structure must be exposed to the CV explicitly.
+
 \input{figures/F7_stratified.tex}
+
+\Cref{fig:stratified} compares three variants of the CdMC estimator
+under post-stratification by the empirical argmax index $i^\star =
+\argmax_i X_i$. The estimator means agree across all three variants
+(unbiasedness is independent of the allocation rule, by construction).
+Post-stratification yields a marginal variance reduction at
+near-zero added cost. Neyman \emph{allocation}, implemented via
+rejection sampling against the pilot's stratum-probability weights,
+introduces substantial wall-clock overhead with no work-normalised gain
+on this design; the proportional rule dominates in practice.

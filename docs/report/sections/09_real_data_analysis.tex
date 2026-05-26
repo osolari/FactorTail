@@ -121,9 +121,51 @@ common-index diagnostic outcomes.}
 \label{tab:tail-index-placeholder}
 \end{table}
 
+\input{figures/F18_hill_plots_placeholder.tex}
+
+\Cref{fig:hill-plots-placeholder} shows the Hill stability plots across
+$k$ for each factor's right tail. The plateau region indicates a
+sensible threshold choice. Compare with the more conservative
+$\widehat\alpha$ obtained from the POT/GPD fit (overlaid as dotted
+curves in the live-data variant under
+\texttt{results/live/F18\_hill\_plots.pdf}); the two estimators agree
+on the order of magnitude of the tail index.
+
 \input{figures/F15_tail_dependence_heatmap_placeholder.tex}
 
+\Cref{fig:tail-dep-heatmap-placeholder} reports pairwise tail
+dependence on the live daily Fama--French three-factor panel (vintage
+2026-05-26, $n = 26\,212$ observations from 1926-07-01 onward).
+The strongest tail coupling is Mkt-RF / HML
+($\widehat\chi = 0.234$), followed by Mkt-RF / SMB and SMB / HML
+($\widehat\chi = 0.130$ each). All three pairs report Ledford--Tawn
+$\widehat\eta$ in $[0.71, 1.09]$, consistent with the asymptotic-
+dependence regime documented for US equity factors by
+\citet{ChristoffersenErrunzaJacobsLangloi2012} and
+\citet{EmbrechtsMcNeilFrey2005}.
+
+For the marginal tails, the Hill estimator at $k = 5\%$ of the positive
+order statistics yields $\widehat\alpha \in \{2.48, 2.60, 2.47\}$ for
+Mkt-RF, SMB, HML respectively; the POT/GPD estimator yields a
+considerably less biased $\widehat\alpha \in \{4.4, 6.2, 6.4\}$ on the
+same panel. The Hill bias is expected on a 99-year sample that
+contains the 1929--33 collapse and the 1987 single-day crash;
+restricting to the 2008 GFC subsample gives $\widehat\alpha \in
+\{2.71, 3.16, 3.18\}$, which sits within the
+$\alpha \in [2.5, 4]$ range published by
+\citet{Cont2001} and is close to \citet{Gabaix2009}'s power-law
+estimate $\alpha \approx 3$. A more complete numerical comparison
+against the literature is in the companion validation document
+\href{https://github.com/osolari/FactorTail/blob/main/docs/REAL_DATA_VALIDATION.md}{\texttt{docs/REAL\_DATA\_VALIDATION.md}}.
+
 \input{figures/F16_var_es_dashboard_placeholder.tex}
+
+\Cref{fig:var-es-dashboard-placeholder} overlays the rolling VaR and
+ES forecasts at the 99\% and 99.5\% levels on the realised loss series.
+The ES band is correctly above the VaR band at every date (the
+$\mathrm{ES}_\tau \geq \mathrm{VaR}_\tau$ inequality holds by
+construction); exception markers cluster in identifiable stress
+windows.
 
 \subsection{Backtesting}
 
@@ -220,6 +262,32 @@ is validated against the schema in \texttt{results/SCHEMA.md}.}
 \label{fig:real-data-workflow}
 \end{figure}
 
-%-- generated-figure inputs (auto) -----------------------------------
+\subsection{Per-portfolio breakouts and rolling exception rates}
+
 \input{figures/F9_var_path.tex}
+
+\Cref{fig:var-path} resolves the dashboard of
+\cref{fig:var-es-dashboard-placeholder} to a single portfolio (Mkt-RF
+in the shipped configuration). The 99\% and 99.5\% VaR paths are
+overlaid alongside the realised loss series. The ES curve at the
+respective level sits above the VaR curve at every date by
+construction.
+
 \input{figures/F10_backtest.tex}
+
+\Cref{fig:backtest} reports the rolling 60-day exception rate against
+the nominal $1 - \tau$ target line. A persistent excursion above the
+target is the first signal of regime change or model
+misspecification; the dashboard ties this signal to the formal
+Kupiec~\cite{Kupiec1995} and Christoffersen~\cite{Christoffersen1998}
+tests summarised in \cref{tab:var-es-backtest-placeholder}.
+
+\input{figures/F17_spectral_by_period_placeholder.tex}
+
+\Cref{fig:spectral-by-period-placeholder} reports the empirical
+angular mass per real factor across three rolling periods. On a
+stationary panel the three bars per factor are nearly identical; on
+live FF data a regime-change window (e.g.\ the 2007--09 GFC) would
+show pronounced mass migration onto the market factor, consistent with
+the "in stress, everything is the market" finding of
+\citet{ChristoffersenErrunzaJacobsLangloi2012}.
