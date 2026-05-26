@@ -1,9 +1,10 @@
-r"""F5 — efficiency rate vs the minimum tail index $\alpha_{\min}$ in
+r"""F5 — efficiency rate ($1/\widehat\nu$) vs $\alpha_{\min}$ in
 heterogeneous Pareto sums.
 
-Sweeps $\alpha_{\min}$ on a grid while holding $\bar\alpha$ approximately
-fixed; the BRE bound is governed by $\alpha_{\min}$ rather than the
-average. The figure is the companion of F4.
+Sweeps $\alpha_{\min}$ on a grid while holding $\alpha_{\max}$ fixed.
+The BRE bound is governed by $\alpha_{\min}$, so the rate falls as
+$\alpha_{\min}$ increases. Overlay the $\alpha_{\min}$-only floor
+$1/(N^{\alpha_{\min}} - 1)$ for reference.
 """
 
 from __future__ import annotations
@@ -39,15 +40,16 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
 
     rows = []
     rates = []
+    bounds = []
     for idx, amin in enumerate(amin_grid):
-        # Build a 3-component design with one alpha_min and two alpha_max.
         alphas = [amin, a_max, a_max]
         margs = [ParetoTail(alpha=a, scale=1.0) for a in alphas]
         res = independent_cdmc(margs, x=x, n=n, rng=spawner.rng(idx))
         rel_var = res.variance / max(res.mu_hat, 1e-300) ** 2
-        kappa = max(np.log(max(1.0 / res.mu_hat, 1.0 + 1e-9)), 1e-6)
-        rate = 1.0 / (rel_var * kappa**2) if rel_var > 0 else float("inf")
+        rate = float(1.0 / max(rel_var, 1e-12))
+        kappa = float(np.log(max(1.0 / max(res.mu_hat, 1e-300), 1.0 + 1e-9)))
         rates.append(rate)
+        bounds.append(1.0 / max(3.0**amin - 1.0, 1e-12))
         rows.append(
             dict(
                 seed=spawner.spawned_seed(idx),
@@ -55,11 +57,11 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
                 alpha_bar=float(np.mean(alphas)),
                 alpha_min=float(amin),
                 n=n,
-                kappa=float(kappa),
-                lambda_n=float(rate * kappa**2),
-                rate_hat=float(rate),
+                kappa=kappa,
+                lambda_n=rate,
+                rate_hat=rate,
                 common_alpha_flag=0,
-                theory_tag="alpha_min dominates",
+                theory_tag=f"N^{amin:g} - 1",
             )
         )
     df = pd.DataFrame(rows)
@@ -68,11 +70,20 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
         df, results_dir / f"{SCHEMA_NAME}.csv", schema_name=SCHEMA_NAME, config=config
     )
 
-    fig, ax = plt.subplots(figsize=(6.8, 4.0))
-    ax.semilogy(amin_grid, rates, marker="o")
+    fig, ax = plt.subplots(figsize=(7.2, 4.2))
+    ax.semilogy(amin_grid, rates, marker="o", label=r"$1/\widehat\nu$  (CdMC)")
+    ax.semilogy(
+        amin_grid,
+        bounds,
+        marker="",
+        linestyle=":",
+        color="black",
+        label=r"floor $1/(N^{\alpha_{\min}}-1)$",
+    )
     ax.set_xlabel(r"$\alpha_{\min}$")
-    ax.set_ylabel("efficiency rate")
+    ax.set_ylabel(r"efficiency rate $1/\widehat\nu$")
     ax.set_title(rf"Rate vs $\alpha_{{\min}}$ at $x={x:g}$ ($\alpha_{{\max}}={a_max:g}$)")
+    ax.legend()
     fig_paths = save_figure(fig, results_dir / SCHEMA_NAME)
     plt.close(fig)
     return [csv_path, *fig_paths]

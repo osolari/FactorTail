@@ -222,3 +222,7 @@ __marimo__/
 
 # Claude Code local settings
 .claude/
+
+# Cached external data fetched by scripts/fetch_data.py
+data/raw/
+data/cache/

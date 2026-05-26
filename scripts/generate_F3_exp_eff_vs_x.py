@@ -1,20 +1,20 @@
-r"""F3 — exponential efficiency rate of the independent CdMC vs threshold x.
+r"""F3 — efficiency rate of the independent CdMC vs threshold $x$.
 
-For an unbiased estimator with relative variance $\nu(x) = \mathrm{Var}Z(x)/\mu(x)^2$,
-Markov's / Bernstein-style inequalities give a per-replicate large-deviation
-rate $\lambda_n(x) \approx 1/\nu(x)$. Bounded relative error (BRE) is
-equivalent to $\inf_x \lambda_n(x) > 0$. The empirical
-$\widehat{\mathrm{rate}}(x) = 1/\widehat\nu(x)$ tracks the LDP rate up to
-the standard CLT-to-LDP correction $\kappa = \log(1/\widehat{\mu})$ that
-appears in the rate normalisation:
+The exponential efficiency rate is the inverse of the relative variance,
 
-$$
-  \widehat{\mathrm{rate}}(x) = \frac{1}{\widehat\nu(x)\,\kappa(x)^2}.
-$$
+.. math::
+    \widehat{\mathrm{rate}}(x) \;=\; 1 / \widehat\nu(x), \qquad
+    \widehat\nu(x) = \widehat{\mathrm{Var}} Z(x) / \widehat\mu(x)^2.
 
-The figure plots $\widehat{\mathrm{rate}}(x)$ across thresholds and
-overlays the finite-$N$ envelope bound $1/(N^\alpha - 1)$ (from
-Proposition `prop:ind-cdmc-bre`) and its asymptotic value.
+Under BRE, $\widehat\nu \to V^* < \infty$ so the rate is bounded
+*below* by $1/V^*$. For independent CdMC the BRE bound is
+$V^* = N^\alpha - 1$ (Proposition `prop:ind-cdmc-bre`), so the
+asymptotic rate floor is $1/(N^\alpha - 1)$.
+
+For comparison we also plot $1/\nu_{\mathrm{crude}}(x) = \mu(x)/(1-\mu(x))$,
+the relative-variance reciprocal of *crude* Monte Carlo, which decays
+to 0 as $x\to\infty$. The CdMC's bounded floor sitting above the crude
+curve is the headline efficiency claim.
 """
 
 from __future__ import annotations
@@ -48,22 +48,27 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
     n = int(config.get("n", 20_000))
     N = dgp.N
     alpha = float(dgp.marginals[0].alpha)
-    # Asymptotic BRE bound.
-    bound_asym = 1.0 / max(N**alpha - 1.0, 1e-12)
+    # Asymptotic BRE rate floor for independent CdMC.
+    rate_asym = 1.0 / max(N**alpha - 1.0, 1e-12)
 
     rows = []
     rates = []
+    rates_crude = []
     bounds_finite = []
     for idx, xi in enumerate(x_grid):
         res = independent_cdmc(dgp.marginals, x=float(xi), n=n, rng=spawner.rng(idx))
         rel_var = res.variance / max(res.mu_hat, 1e-300) ** 2
-        kappa = max(np.log(max(1.0 / res.mu_hat, 1.0 + 1e-9)), 1e-6)
-        rate_hat = 1.0 / (rel_var * kappa**2) if rel_var > 0 else float("inf")
-        # Finite-N envelope: rel_var_bound = (B(x)/mu_hat)^2 / n_eff ... use envelope.
+        rate_hat = 1.0 / max(rel_var, 1e-12)
+        # Crude MC rate: 1 / [Var(Bernoulli)/μ^2] = μ / (1 - μ).
+        rate_crude = res.mu_hat / max(1.0 - res.mu_hat, 1e-12)
+        # Finite-N envelope: B(x)/μ̂ bounds the relative envelope ratio.
         env = res.extra.get("envelope", float("inf"))
         rel_env = env / max(res.mu_hat, 1e-300)
         bound_finite = 1.0 / max(rel_env**2, 1e-12)
+        # Kappa retained for schema back-compat.
+        kappa = float(np.log(max(1.0 / max(res.mu_hat, 1e-300), 1.0 + 1e-9)))
         rates.append(rate_hat)
+        rates_crude.append(rate_crude)
         bounds_finite.append(bound_finite)
         rows.append(
             dict(
@@ -73,12 +78,12 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
                 alpha=alpha,
                 x=float(xi),
                 n=n,
-                kappa=float(kappa),
+                kappa=kappa,
                 rel_variance=float(rel_var),
-                lambda_n=float(rate_hat * kappa**2),
+                lambda_n=float(rate_hat),
                 rate_hat=float(rate_hat),
                 rate_bound_finite=float(bound_finite),
-                rate_bound_asymptotic=float(bound_asym),
+                rate_bound_asymptotic=float(rate_asym),
             )
         )
     df = pd.DataFrame(rows)
@@ -87,14 +92,27 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
         df, results_dir / f"{SCHEMA_NAME}.csv", schema_name=SCHEMA_NAME, config=config
     )
 
-    fig, ax = plt.subplots(figsize=(6.8, 4.0))
-    ax.semilogx(x_grid, rates, marker="o", label=r"$\widehat{\mathrm{rate}}(x)$")
-    ax.semilogx(x_grid, bounds_finite, marker="s", linestyle="--", label="finite-N envelope")
-    ax.axhline(bound_asym, color="black", linestyle=":", label=r"asymptotic $1/(N^\alpha - 1)$")
+    fig, ax = plt.subplots(figsize=(7.0, 4.2))
+    ax.loglog(x_grid, rates, marker="o", label=r"$1/\widehat\nu(x)$  (independent CdMC)")
+    ax.loglog(
+        x_grid,
+        rates_crude,
+        marker="x",
+        linestyle="--",
+        color="#7f8c8d",
+        label=r"$\mu/(1-\mu)$  (crude MC)",
+    )
+    ax.axhline(
+        rate_asym,
+        color="black",
+        linestyle=":",
+        linewidth=1.0,
+        label=rf"asymptotic floor $1/(N^\alpha-1)={rate_asym:.3g}$",
+    )
     ax.set_xlabel(r"threshold $x$")
-    ax.set_ylabel("efficiency rate")
-    ax.set_title(f"Efficiency rate of independent CdMC (N={N}, $\\alpha$={alpha:g})")
-    ax.legend()
+    ax.set_ylabel(r"efficiency rate $1/\nu$")
+    ax.set_title(rf"Efficiency rate of independent CdMC (N={N}, $\alpha$={alpha:g})")
+    ax.legend(loc="lower right")
     fig_paths = save_figure(fig, results_dir / SCHEMA_NAME)
     plt.close(fig)
     return [csv_path, *fig_paths]

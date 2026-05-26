@@ -15,9 +15,16 @@ help:  ## Show this help.
 install:  ## Install package (editable).
 	$(PIP) install -e .
 
-dev:  ## Install with dev + docs + plot extras.
+dev:  ## Install with dev + docs + plot extras and fetch external data.
 	$(PIP) install -e ".[dev,docs,plot,realdata]"
 	pre-commit install
+	$(PY) scripts/fetch_data.py || true   # tolerate offline / no-network installs
+
+data:  ## Just fetch the external data (idempotent).
+	$(PY) scripts/fetch_data.py
+
+data-force:  ## Re-download all external data, ignoring cache.
+	$(PY) scripts/fetch_data.py --force
 
 lint:  ## Run ruff and black --check.
 	ruff check $(SRC) $(TESTS) scripts

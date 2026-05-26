@@ -1,4 +1,4 @@
 universe,model,tail_fit,dependence_diagnostic,estimator_candidates,backtest_window,status,run_id,config_hash,git_hash,code_version,run_timestamp
-FF3 daily,FF3,hill+pot,chi/eta,independent;latent_shock;spectral,rolling 500,ready,T_empirical_design_default,d5432d846773e9e85ce7fdff1fa9f5a2149338fb56fc7b68622ecc51313a2103,660f0ec,0.1.0,2026-05-25T18:36:55+00:00
-FF5 daily,FF5,hill+pot,chi/eta,independent;latent_shock;spectral;block,rolling 500,ready,T_empirical_design_default,d5432d846773e9e85ce7fdff1fa9f5a2149338fb56fc7b68622ecc51313a2103,660f0ec,0.1.0,2026-05-25T18:36:55+00:00
-FF5+mom daily,FF5+mom,hill+pot+pickands,chi/eta/spectral,all,rolling 1000,planned,T_empirical_design_default,d5432d846773e9e85ce7fdff1fa9f5a2149338fb56fc7b68622ecc51313a2103,660f0ec,0.1.0,2026-05-25T18:36:55+00:00
+FF3 daily,FF3,hill+pot,chi/eta,independent;latent_shock;spectral,rolling 500,ready,T_empirical_design_default,d5432d846773e9e85ce7fdff1fa9f5a2149338fb56fc7b68622ecc51313a2103,ff4006c,0.1.0,2026-05-26T14:44:26+00:00
+FF5 daily,FF5,hill+pot,chi/eta,independent;latent_shock;spectral;block,rolling 500,ready,T_empirical_design_default,d5432d846773e9e85ce7fdff1fa9f5a2149338fb56fc7b68622ecc51313a2103,ff4006c,0.1.0,2026-05-26T14:44:26+00:00
+FF5+mom daily,FF5+mom,hill+pot+pickands,chi/eta/spectral,all,rolling 1000,planned,T_empirical_design_default,d5432d846773e9e85ce7fdff1fa9f5a2149338fb56fc7b68622ecc51313a2103,ff4006c,0.1.0,2026-05-26T14:44:26+00:00

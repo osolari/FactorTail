@@ -1,11 +1,12 @@
-r"""F4 — efficiency rate of the independent CdMC vs the average tail index
-$\bar\alpha$, contrasting common-alpha designs with heterogeneous-alpha
-designs.
+r"""F4 — efficiency rate ($1/\widehat\nu$) of the independent CdMC vs the
+average tail index $\bar\alpha$, contrasting common-alpha designs with
+heterogeneous-alpha designs.
 
-For common-alpha designs, the BRE bound is $N^\alpha - 1$; the rate
-decreases monotonically in $\alpha$ once $\alpha > 1$. For
-heterogeneous designs, the rate is dominated by the smallest active
-tail index $\alpha_{\min}$ (see F5).
+For common-alpha designs the asymptotic floor is $1/(N^\alpha - 1)$;
+larger $\alpha$ → larger $N^\alpha - 1$ → smaller rate. For
+heterogeneous designs the BRE bound is governed by $\alpha_{\min}$,
+so the rate should sit **below** the common-alpha curve at the same
+$\bar\alpha$.
 """
 
 from __future__ import annotations
@@ -23,7 +24,6 @@ import pandas as pd
 
 from _common import cli, stamp_provenance  # type: ignore[import-not-found]
 from factortail.cdmc import independent_cdmc
-from factortail.dgp import IndependentINID
 from factortail.io.writers import write_csv
 from factortail.plotting import save_figure, set_theme
 from factortail.utils.seeds import SeedSpawner
@@ -34,6 +34,11 @@ SCHEMA_NAME = "F4_exp_eff_vs_alpha"
 
 def _design_marginals(alphas, scale=1.0):
     return [ParetoTail(alpha=a, scale=scale) for a in alphas]
+
+
+def _rate(res) -> float:
+    rel_var = res.variance / max(res.mu_hat, 1e-300) ** 2
+    return float(1.0 / max(rel_var, 1e-12))
 
 
 def run(*, config: dict, results_dir: Path) -> list[Path]:
@@ -53,15 +58,18 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
 
     rows = []
     common_rates = []
+    common_bounds = []
     hetero_rates = []
     hetero_alpha_bars = []
+    hetero_alpha_mins = []
+    hetero_tags = []
     for idx, a in enumerate(common_alphas):
         margs = _design_marginals([a] * 3)
         res = independent_cdmc(margs, x=x, n=n, rng=spawner.rng(idx))
-        rel_var = res.variance / max(res.mu_hat, 1e-300) ** 2
-        kappa = max(np.log(max(1.0 / res.mu_hat, 1.0 + 1e-9)), 1e-6)
-        rate = 1.0 / (rel_var * kappa**2) if rel_var > 0 else float("inf")
+        rate = _rate(res)
+        kappa = float(np.log(max(1.0 / max(res.mu_hat, 1e-300), 1.0 + 1e-9)))
         common_rates.append(rate)
+        common_bounds.append(1.0 / max(3.0**a - 1.0, 1e-12))
         rows.append(
             dict(
                 seed=spawner.spawned_seed(idx),
@@ -69,22 +77,23 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
                 alpha_bar=float(a),
                 alpha_min=float(a),
                 n=n,
-                kappa=float(kappa),
-                lambda_n=float(rate * kappa**2),
+                kappa=kappa,
+                lambda_n=float(rate),
                 rate_hat=float(rate),
                 common_alpha_flag=1,
-                theory_tag="N^alpha - 1",
+                theory_tag=f"N^{a:g} - 1",
             )
         )
     for j, design in enumerate(hetero_designs):
         alphas = np.asarray(design["alphas"], dtype=float)
         margs = _design_marginals(alphas.tolist())
         res = independent_cdmc(margs, x=x, n=n, rng=spawner.rng(len(common_alphas) + j))
-        rel_var = res.variance / max(res.mu_hat, 1e-300) ** 2
-        kappa = max(np.log(max(1.0 / res.mu_hat, 1.0 + 1e-9)), 1e-6)
-        rate = 1.0 / (rel_var * kappa**2) if rel_var > 0 else float("inf")
+        rate = _rate(res)
+        kappa = float(np.log(max(1.0 / max(res.mu_hat, 1e-300), 1.0 + 1e-9)))
         hetero_rates.append(rate)
         hetero_alpha_bars.append(float(alphas.mean()))
+        hetero_alpha_mins.append(float(alphas.min()))
+        hetero_tags.append(str(design.get("tag", j)))
         rows.append(
             dict(
                 seed=spawner.spawned_seed(len(common_alphas) + j),
@@ -92,8 +101,8 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
                 alpha_bar=float(alphas.mean()),
                 alpha_min=float(alphas.min()),
                 n=n,
-                kappa=float(kappa),
-                lambda_n=float(rate * kappa**2),
+                kappa=kappa,
+                lambda_n=float(rate),
                 rate_hat=float(rate),
                 common_alpha_flag=0,
                 theory_tag="alpha_min dominates",
@@ -105,15 +114,40 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
         df, results_dir / f"{SCHEMA_NAME}.csv", schema_name=SCHEMA_NAME, config=config
     )
 
-    fig, ax = plt.subplots(figsize=(6.8, 4.0))
-    ax.semilogy(common_alphas, common_rates, marker="o", label="common-α designs")
+    fig, ax = plt.subplots(figsize=(7.5, 4.5))
+    ax.semilogy(common_alphas, common_rates, marker="o", label=r"common-$\alpha$ (CdMC)")
     ax.semilogy(
-        hetero_alpha_bars, hetero_rates, marker="s", linestyle="", label="heterogeneous-α designs"
+        common_alphas,
+        common_bounds,
+        marker="",
+        linestyle=":",
+        color="black",
+        label=r"asymptotic floor $1/(N^\alpha-1)$",
     )
+    ax.scatter(
+        hetero_alpha_bars,
+        hetero_rates,
+        marker="s",
+        s=80,
+        color="#9b1f5b",
+        label=r"heterogeneous-$\alpha$",
+        zorder=5,
+    )
+    for ab, rate, amin, _tag in zip(
+        hetero_alpha_bars, hetero_rates, hetero_alpha_mins, hetero_tags, strict=True
+    ):
+        ax.annotate(
+            rf"$\alpha_{{\min}}={amin:g}$",
+            xy=(ab, rate),
+            xytext=(6, -3),
+            textcoords="offset points",
+            fontsize=8,
+            color="#5d1639",
+        )
     ax.set_xlabel(r"$\bar\alpha$")
-    ax.set_ylabel("efficiency rate")
-    ax.set_title(f"Rate vs $\\bar\\alpha$ at $x={x:g}$")
-    ax.legend()
+    ax.set_ylabel(r"efficiency rate $1/\widehat\nu$")
+    ax.set_title(rf"Rate vs $\bar\alpha$ at $x={x:g}$")
+    ax.legend(loc="upper right")
     fig_paths = save_figure(fig, results_dir / SCHEMA_NAME)
     plt.close(fig)
     return [csv_path, *fig_paths]

@@ -121,89 +121,9 @@ common-index diagnostic outcomes.}
 \label{tab:tail-index-placeholder}
 \end{table}
 
-\begin{figure}[p]
-\centering
-\input{figures/F18_hill_plots_placeholder.tex}
-\caption[Hill and POT stability]{Hill and POT
-stability. The generated figure will show tail-index estimates across
-order-statistic thresholds for signed factors and residuals, with selected
-thresholds and bootstrap bands. Source schema:
-\texttt{results/F18\_hill\_plots.csv}.}
-\label{fig:hill-plots-placeholder}
-\end{figure}
-
-\subsection{Dependence diagnostics}
-
-Dependence is reported at three levels. First, ordinary dependence: Pearson,
-Spearman, Kendall, and rolling correlations of signed loss contributions.
-Second, extremal dependence: empirical \(\chi(u)\), \(\bar\chi(u)\),
-Ledford--Tawn \(\eta\), pair exceedance rates, and co-exceedance stability.
-Third, geometric dependence: empirical spectral mass on axes, rays, sectors,
-and hidden cones.
-
-\begin{table}[p]
-\centering
-\input{tables/T_dependence_diagnostic_placeholder.tex}
-\caption[Tail-dependence diagnostics]{Tail-dependence diagnostics for factor and residual loss contributions.
-Values are \xx{} placeholders. The final table will identify whether each
-pair is consistent with asymptotic dependence, tail dependence, common-shock
-behavior, or hidden-cone dependence.}
-\label{tab:tail-dep-placeholder}
-\end{table}
-
-\begin{figure}[p]
-\centering
 \input{figures/F15_tail_dependence_heatmap_placeholder.tex}
-\caption[Tail-dependence heatmap]{Tail-dependence heatmap. The generated figure will show pairwise \(\chi\),
-\(\bar\chi\), or \(\eta\) estimates for signed factor and residual
-contributions, with clustering used to propose block structures. Source
-schema: \texttt{results/F15\_tail\_dependence\_heatmap.csv}.}
-\label{fig:tail-dep-heatmap-placeholder}
-\end{figure}
 
-\begin{figure}[p]
-\centering
-\input{figures/F17_spectral_by_period_placeholder.tex}
-\caption[Rolling spectral measure]{Rolling
-empirical spectral measure. The generated figure will compare angular mass
-before, during, and after stress windows, showing whether extremes are
-axis-dominated, common-shock dominated, or spread over a sector of the
-simplex. Source schema: \texttt{results/F17\_spectral\_by\_period.csv}.}
-\label{fig:spectral-by-period-placeholder}
-\end{figure}
-
-\subsection{Rare-event estimation on real data}
-
-For each portfolio, date, model, and confidence level, the pipeline estimates
-\[\mu_t(x)=\Pb_t(L_{p,t+1}>x)\]
-using the following estimators: independent CdMC, dependent copula-kernel
-CdMC, latent-shock CdMC from PCA/ICA or fitted common-shock models, block
-CdMC from clustered tail-dependence blocks, spectral CdMC from empirical
-angular resampling, and filtered historical simulation. Thresholds are
-selected to correspond to VaR levels 99\%, 99.5\%, and 99.9\%, plus a stress
-grid beyond observed quantiles for estimator-efficiency comparison.
-
-\subsection{VaR and ES forecasting}
-
-The VaR forecast \(\widehat q_{p,t}(\tau)\) solves
-\[
-  \widehat\Pb_t(L_{p,t+1}>\widehat q_{p,t}(\tau))=1-\tau.
-\]
-The ES forecast is computed either by tail integration of the fitted
-rare-event curve or by conditional-excess simulation under the same
-estimator. The final paper will report forecast paths, exception indicators,
-ES exceedance residuals, and crisis-period decompositions.
-
-\begin{figure}[p]
-\centering
 \input{figures/F16_var_es_dashboard_placeholder.tex}
-\caption[VaR and ES forecast dashboard]{VaR/ES
-forecast dashboard. The generated figure will overlay realized portfolio
-losses, rolling VaR forecasts, ES forecasts, and exception markers for each
-estimator. Panels will include full sample and stress-window zooms. Source
-schema: \texttt{results/F16\_var\_es\_dashboard.csv}.}
-\label{fig:var-es-dashboard-placeholder}
-\end{figure}
 
 \subsection{Backtesting}
 
@@ -299,3 +219,7 @@ VaR/ES forecasting, backtesting, and artifact generation. Every output file
 is validated against the schema in \texttt{results/SCHEMA.md}.}
 \label{fig:real-data-workflow}
 \end{figure}
+
+%-- generated-figure inputs (auto) -----------------------------------
+\input{figures/F9_var_path.tex}
+\input{figures/F10_backtest.tex}

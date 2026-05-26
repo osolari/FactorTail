@@ -67,6 +67,7 @@ docs = [
 
 [project.scripts]
 factortail = "factortail.cli:main"
+factortail-fetch-data = "factortail.scripts_fetch_data:main"
 
 [project.urls]
 Homepage = "https://github.com/osolari/FactorTail"

@@ -1,4 +1,4 @@
 pair,diagnostic,threshold_grid,estimate,interval_low,interval_high,decision,selected_model_layer,status,run_id,config_hash,git_hash,code_version,run_timestamp
-Mkt-RF::SMB,chi/eta,0.95,0.596,0.4768,0.7152,block,dependent,complete,T_dep_diag_default,01c76ad4722bd4961a584e5a46f6efb44aee9c8b0d7d2059027310b043908714,660f0ec,0.1.0,2026-05-25T18:36:26+00:00
-Mkt-RF::HML,chi/eta,0.95,0.39999999999999997,0.32,0.4799999999999999,block,dependent,complete,T_dep_diag_default,01c76ad4722bd4961a584e5a46f6efb44aee9c8b0d7d2059027310b043908714,660f0ec,0.1.0,2026-05-25T18:36:26+00:00
-SMB::HML,chi/eta,0.95,0.33599999999999997,0.2688,0.40319999999999995,block,dependent,complete,T_dep_diag_default,01c76ad4722bd4961a584e5a46f6efb44aee9c8b0d7d2059027310b043908714,660f0ec,0.1.0,2026-05-25T18:36:26+00:00
+Mkt-RF::SMB,chi/eta,0.95,0.596,0.4768,0.7152,block,dependent,complete,T_dep_diag_default,01c76ad4722bd4961a584e5a46f6efb44aee9c8b0d7d2059027310b043908714,ff4006c,0.1.0,2026-05-26T14:43:56+00:00
+Mkt-RF::HML,chi/eta,0.95,0.39999999999999997,0.32,0.4799999999999999,block,dependent,complete,T_dep_diag_default,01c76ad4722bd4961a584e5a46f6efb44aee9c8b0d7d2059027310b043908714,ff4006c,0.1.0,2026-05-26T14:43:56+00:00
+SMB::HML,chi/eta,0.95,0.33599999999999997,0.2688,0.40319999999999995,block,dependent,complete,T_dep_diag_default,01c76ad4722bd4961a584e5a46f6efb44aee9c8b0d7d2059027310b043908714,ff4006c,0.1.0,2026-05-26T14:43:56+00:00

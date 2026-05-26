@@ -1,28 +1,31 @@
 r"""F19 — bootstrap-scheme audit for the empirical spectral constant
 (handoff open question Q4).
 
-Stationary heavy-tailed test process: an AR(1) on Pareto-radial / Dirichlet-
-angular MRV draws. The **true** linear-risk constant is computable in closed
-form for the Pareto-radial / Dirichlet-angular DGP via the formula
+Compares iid / non-overlapping-block / Politis-Romano stationary
+bootstrap on a stationary heavy-tailed series.
 
-$$
-  C_\ell = E[(\ell(\Theta)_+)^\alpha].
-$$
+**Design.** AR(1)-injected Pareto-radial / Dirichlet-angular MRV; the
+true linear-risk constant is computed by a 200k-MC closed-form
+reference (the constant is :math:`E[(\ell(\Theta)_+)^\alpha]`).
 
-For each of the three bootstrap schemes (iid, block, stationary) we record:
+**Why a sweep.** Single-seed coverage is binary (the band either covers
+the truth or it doesn't). We sweep:
 
-- the point estimate of $\widehat C_\ell(u)$ at threshold $k$,
-- the 95% percentile band,
-- the bootstrap SE,
-- whether the true constant is covered.
+1. ``rho`` (AR(1) auto-correlation) in
+   :math:`\{0.0, 0.4, 0.7, 0.9\}` so the panel can show how the
+   schemes break under stronger serial dependence,
+2. ``replicate`` index in :math:`\{0, \dots, R-1\}` so coverage
+   *proportion* (not 0/1) is the y-axis.
 
-The figure overlays coverage proportions across the k-grid for each scheme.
+The headline expected result: under :math:`\rho = 0` (iid), all three
+schemes hit ~95% coverage. Under :math:`\rho \ge 0.7`, the iid
+bootstrap under-covers (over-confident bands ignore serial dep) while
+block and stationary stay near nominal.
 """
 
 from __future__ import annotations
 
 import sys
-from math import gamma
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -44,27 +47,20 @@ SCHEMA_NAME = "F19_bootstrap_audit"
 
 
 def _true_spectral_constant(alpha: float, exposure: np.ndarray, concentration: np.ndarray) -> float:
-    r"""Closed-form $E[(\ell(\Theta)_+)^\alpha]$ for symmetric exposure with
-    a single non-degenerate concentration vector; we estimate it by a
-    very-high-budget Monte Carlo because the closed form for a general
-    exposure × Dirichlet is not analytical."""
     rng = np.random.default_rng(0)
     Theta = rng.dirichlet(concentration, size=200_000)
     y_pos = np.maximum(Theta @ exposure, 0.0)
     return float(np.mean(y_pos**alpha))
 
 
-def _ar1_resample(X: np.ndarray, rho: float, rng: np.random.Generator) -> np.ndarray:
-    """Inject simple AR(1) auto-correlation: ``X_t' = rho * X_{t-1}' + sqrt(1-rho^2)*X_t``.
-
-    Preserves marginal mass (approximately) while introducing serial
-    dependence — a clean stress test for the bootstrap schemes.
-    """
-    n, d = X.shape
+def _ar1_resample(X: np.ndarray, rho: float) -> np.ndarray:
+    if rho == 0.0:
+        return X
     Y = np.zeros_like(X)
     Y[0] = X[0]
-    for t in range(1, n):
-        Y[t] = rho * Y[t - 1] + np.sqrt(max(1 - rho**2, 0.0)) * X[t]
+    sigma = np.sqrt(max(1.0 - rho**2, 0.0))
+    for t in range(1, X.shape[0]):
+        Y[t] = rho * Y[t - 1] + sigma * X[t]
     return Y
 
 
@@ -76,88 +72,106 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
     concentration = np.asarray(config.get("concentration", [2.0] * dim), dtype=float)
     exposure = np.asarray(config.get("exposure", [1.0, 2.0, 0.5]), dtype=float)
     n = int(config.get("n", 4000))
-    rho = float(config.get("ar_rho", 0.4))
-    k_grid = list(config.get("k_grid", [80, 160, 320, 640]))
-    n_boot = int(config.get("n_boot", 300))
+    rho_grid = list(config.get("rho_grid", [0.0, 0.4, 0.7, 0.9]))
+    R = int(config.get("replications", 40))
+    k = int(config.get("k", 200))
+    n_boot = int(config.get("n_boot", 200))
     schemes = list(config.get("schemes", ["iid", "block", "stationary"]))
     block_length = int(config.get("block_length", 30))
 
     true_C = _true_spectral_constant(alpha, exposure, concentration)
-
-    rng = spawner.rng(0)
     dgp = RadialAngularMRV(
         alpha=alpha,
         angular_kind="dirichlet",
         angular_params={"concentration": concentration.tolist()},
         dim=dim,
     )
-    X_iid = dgp.sample(n, rng)
-    X = _ar1_resample(X_iid, rho=rho, rng=rng)
 
-    rows = []
-    coverage = {s: [] for s in schemes}
-    for scheme in schemes:
-        res = bootstrap_bands(
-            X,
-            exposure=exposure,
-            alpha=alpha,
-            k_grid=k_grid,
-            n_boot=n_boot,
-            scheme=scheme,
-            block_length=block_length,
-            seed=int(spawner.spawned_seed(1) % (2**31)),
-        )
-        for j, k in enumerate(k_grid):
-            est = float(res["estimate"][j])
-            lo = float(res["lo"][j])
-            hi = float(res["hi"][j])
-            covered = int(lo <= true_C <= hi)
-            coverage[scheme].append(covered)
-            rows.append(
-                dict(
-                    seed=spawner.spawned_seed(j),
-                    design=config.get("design", "ar1_pareto_dirichlet"),
-                    scheme=scheme,
-                    block_length=block_length if scheme != "iid" else 0,
-                    k=int(k),
-                    true_constant=true_C,
-                    estimate=est,
-                    lo=lo,
-                    hi=hi,
-                    se=float(res["se"][j]),
-                    covered=covered,
+    rows: list[dict] = []
+    coverage_map: dict[tuple[float, str], list[int]] = {
+        (r, s): [] for r in rho_grid for s in schemes
+    }
+    for r_idx, rho_val in enumerate(rho_grid):
+        for rep in range(R):
+            base_rng = spawner.rng(r_idx * 1000 + rep)
+            X_iid = dgp.sample(n, base_rng)
+            X = _ar1_resample(X_iid, rho=rho_val)
+            for scheme in schemes:
+                res = bootstrap_bands(
+                    X,
+                    exposure=exposure,
+                    alpha=alpha,
+                    k_grid=[k],
                     n_boot=n_boot,
+                    scheme=scheme,
+                    block_length=block_length,
+                    seed=int(spawner.spawned_seed(r_idx * 10_000 + rep) % (2**31)),
                 )
-            )
+                est = float(res["estimate"][0])
+                lo = float(res["lo"][0])
+                hi = float(res["hi"][0])
+                covered = int(lo <= true_C <= hi)
+                coverage_map[(rho_val, scheme)].append(covered)
+                rows.append(
+                    dict(
+                        seed=spawner.spawned_seed(r_idx * 10_000 + rep),
+                        design=f"ar1_rho_{rho_val:g}_rep_{rep}",
+                        scheme=scheme,
+                        block_length=block_length if scheme != "iid" else 0,
+                        k=k,
+                        true_constant=true_C,
+                        estimate=est,
+                        lo=lo,
+                        hi=hi,
+                        se=float(res["se"][0]),
+                        covered=covered,
+                        n_boot=n_boot,
+                    )
+                )
+
     df = pd.DataFrame(rows)
     df = stamp_provenance(df, ctx=_Ctx(Path("F19.yaml"), config, results_dir))
     csv_path = write_csv(
         df, results_dir / f"{SCHEMA_NAME}.csv", schema_name=SCHEMA_NAME, config=config
     )
 
-    fig, axes = plt.subplots(1, 2, figsize=(11.0, 4.0), constrained_layout=True)
+    # Plot: coverage proportion vs rho, one curve per scheme + Wilson CI.
+    fig, ax = plt.subplots(figsize=(7.6, 4.4))
+    from math import sqrt
+
+    scheme_colors = {"iid": "#7f8c8d", "block": "#1f3a93", "stationary": "#188a4f"}
     for scheme in schemes:
-        sub = df[df["scheme"] == scheme].sort_values("k")
-        axes[0].errorbar(
-            sub["k"],
-            sub["estimate"],
-            yerr=[sub["estimate"] - sub["lo"], sub["hi"] - sub["estimate"]],
+        props = []
+        cis_lo = []
+        cis_hi = []
+        for rho_val in rho_grid:
+            covers = np.asarray(coverage_map[(rho_val, scheme)], dtype=float)
+            p_hat = float(covers.mean()) if covers.size else float("nan")
+            # Wilson CI half-width at 95%.
+            z = 1.96
+            half = z * sqrt(max(p_hat * (1 - p_hat), 1e-12) / max(R, 1))
+            props.append(p_hat)
+            cis_lo.append(max(0.0, p_hat - half))
+            cis_hi.append(min(1.0, p_hat + half))
+        props = np.asarray(props)
+        cis_lo = np.asarray(cis_lo)
+        cis_hi = np.asarray(cis_hi)
+        ax.errorbar(
+            rho_grid,
+            props,
+            yerr=[props - cis_lo, cis_hi - props],
             marker="o",
+            capsize=4,
             label=scheme,
-            capsize=3,
+            color=scheme_colors[scheme],
         )
-    axes[0].axhline(true_C, color="black", linestyle="--", linewidth=0.8, label=r"true $C_\ell$")
-    axes[0].set_xlabel("k")
-    axes[0].set_ylabel(r"$\widehat C_\ell(k)$ with 95% band")
-    axes[0].set_title("Estimate vs k by scheme")
-    axes[0].legend()
-    for scheme in schemes:
-        sub = df[df["scheme"] == scheme].sort_values("k")
-        axes[1].plot(sub["k"], sub["covered"], marker="s", label=scheme)
-    axes[1].set_xlabel("k")
-    axes[1].set_ylabel("covered (1=yes)")
-    axes[1].set_title("Coverage of true constant")
-    axes[1].legend()
+    ax.axhline(0.95, color="black", linestyle=":", linewidth=0.8, label="nominal 0.95")
+    ax.set_xlabel(r"AR(1) coefficient $\rho$")
+    ax.set_ylabel(r"empirical coverage of true $C_\ell$  (R=" + str(R) + ")")
+    ax.set_ylim(-0.05, 1.05)
+    ax.set_title("Bootstrap coverage vs serial dependence")
+    ax.legend(loc="lower left")
+
     fig_paths = save_figure(fig, results_dir / SCHEMA_NAME)
     plt.close(fig)
     return [csv_path, *fig_paths]

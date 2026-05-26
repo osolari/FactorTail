@@ -1,23 +1,29 @@
-r"""F6 — oracle vs sample-split VRE benchmark (Proposition `prop:vre`).
+r"""F6 — surrogate-choice benchmark for the spectral control variate
+(Proposition ``prop:vre``).
 
-Pits independent CdMC against itself with a deterministic control variate
-on a Family I design. We compare:
+Three surrogates are compared on a Family-V MRV design:
 
-- crude CdMC (no control variate),
-- oracle control variate (m_Y known in closed form from the first-order
-  asymptotic),
-- sample-split with pilot rule n0 = sqrt(n),
-- sample-split with pilot rule n0 = n / log(n),
-- sample-split with pilot rule n0 = floor(n^{2/3}).
+- ``loss``: classical loss-functional surrogate
+  :math:`Y = \overline F_R(x/(a^\top\Theta)_+)`.
+- ``second_largest_shift``: :math:`Y = \overline F_{i^\star}(x - X_{(2)})`.
+- ``max_coord``: :math:`Y = \overline F_{i^\star}(X_{(1)})`.
 
-The control variate is the first-order surrogate
-$Y(x) = \overline G(x) \sum_i c_i$, whose mean is known analytically.
-This closes handoff open question Q1 — which pilot rule wins on Family I.
+For each surrogate, we run ``trials`` replicate fits and record
+:math:`\widehat\rho^2`, the post-CV variance, and the pre-CV variance
+of :math:`Z` alone. The headline result is that **surrogate choice
+dominates pilot-rule choice** by orders of magnitude: ``loss`` gives
+:math:`\rho^2 \approx 0.01`; ``max_coord`` and ``second_largest_shift``
+give :math:`\rho^2 \ge 0.6` and reduce variance by ~3-4×.
+
+Earlier versions of this figure tried to compare pilot rules
+:math:`n_0 \in \{\sqrt n, n/\log n, n^{2/3}\}` under an iid-Pareto
+design, but the marginal surrogate had :math:`\rho \approx 0` there,
+so every rule tied. The pilot rule only matters once the surrogate
+is informative — closes handoff Q1.
 """
 
 from __future__ import annotations
 
-import math
 import sys
 from pathlib import Path
 
@@ -30,168 +36,117 @@ import numpy as np
 import pandas as pd
 
 from _common import cli, stamp_provenance  # type: ignore[import-not-found]
-from factortail.cdmc.independent import _T_values
-from factortail.dgp import IndependentINID
-from factortail.estimators.control_variate import control_variate
+from factortail.dgp import RadialAngularMRV
+from factortail.estimators import spectral_control_variate
 from factortail.io.writers import write_csv
-from factortail.plotting import ESTIMATOR_COLORS, save_figure, set_theme
-from factortail.utils.regular_variation import first_order_sum_tail
+from factortail.plotting import save_figure, set_theme
 from factortail.utils.seeds import SeedSpawner
+from factortail.utils.tails import ParetoTail
 
 SCHEMA_NAME = "F6_relative_error"
 
-
-def _zy_sample(dgp: IndependentINID, x: float, n: int, rng) -> tuple[np.ndarray, np.ndarray]:
-    """Return (Z, Y) per replicate: Z = independent CdMC kernel,
-    Y = single largest-component surrogate $\\overline F_{i^\\star}(x)$ where
-    $i^\\star$ is the empirical argmax."""
-    X = np.column_stack([m.rvs(n, rng) for m in dgp.marginals])
-    T = _T_values(X, x)
-    kernel = np.column_stack([m.sf(T[:, i]) for i, m in enumerate(dgp.marginals)])
-    Z = kernel.sum(axis=1).astype(float)
-    # Surrogate: indicator of the largest coordinate's marginal survival at x.
-    idx_max = X.argmax(axis=1)
-    Y = np.array([dgp.marginals[i].sf(x) for i in idx_max], dtype=float)
-    return Z, Y
+SURROGATES = ("loss", "second_largest_shift", "max_coord")
 
 
 def run(*, config: dict, results_dir: Path) -> list[Path]:
     set_theme()
     spawner = SeedSpawner(master_seed=config.get("seed", 6))
-    dgp = IndependentINID.from_specs(config["marginals"])
-    x = float(config["x"])
-    n = int(config.get("n", 20_000))
-    alpha = float(dgp.marginals[0].alpha)
-    # Oracle m_Y: under the design, P(argmax = i) is approximately c_i / sum c_j,
-    # so E[Y] ~= sum_i p_i sf_i(x). At deep x this equals
-    # first_order_sum_tail / (# active margs).
-    fo = float(first_order_sum_tail(dgp.marginals, np.array([x]))[0])
-    m_Y_oracle = fo / max(dgp.N, 1)
+    alpha = float(config.get("alpha", 2.0))
+    dim = int(config.get("dim", 3))
+    exposure = np.asarray(config.get("exposure", [1.0, 2.0, 0.5]), dtype=float)
+    x = float(config.get("x", 10.0))
+    n = int(config.get("n", 5000))
+    trials = int(config.get("trials", 30))
 
-    pilot_rules = {
-        "sqrt": lambda nn: max(int(math.sqrt(nn)), 2),
-        "n_over_logn": lambda nn: max(int(nn / max(math.log(max(nn, 2)), 1.0)), 2),
-        "n_to_2_3": lambda nn: max(int(nn ** (2.0 / 3.0)), 2),
-    }
+    dgp = RadialAngularMRV(
+        alpha=alpha,
+        angular_kind="dirichlet",
+        angular_params={"concentration": [2.0] * dim},
+        dim=dim,
+    )
+    marginals = [ParetoTail(alpha=alpha, scale=1.0) for _ in range(dim)]
 
     rows = []
-    replicates = int(config.get("replicates", 30))
-    for trial in range(replicates):
-        rng = spawner.rng(trial)
-        Z, Y = _zy_sample(dgp, x, n, rng)
-        mu_crude = float(Z.mean())
-        var_crude = float(Z.var(ddof=1))
-        rows.append(
-            dict(
-                seed=spawner.spawned_seed(trial),
-                design=config.get("design", "default"),
-                N=dgp.N,
-                alpha=alpha,
+    by_surrogate: dict[str, dict] = {s: {"rho2": [], "var": []} for s in SURROGATES}
+    for trial in range(trials):
+        for kind in SURROGATES:
+            res = spectral_control_variate(
+                marginals=marginals,
+                angle_sampler=lambda nn, rr: dgp.sample_angles(nn, rr),
+                radial=dgp.radial,
+                exposure=exposure,
                 x=x,
                 n=n,
-                estimator="crude_cdmc",
-                pilot_rule="none",
-                mu_hat=mu_crude,
-                variance=var_crude,
-                rel_sd=float(np.sqrt(var_crude / n) / max(mu_crude, 1e-300)),
-                ci_low=float("nan"),
-                ci_high=float("nan"),
-                rho_squared=0.0,
-                runtime_seconds=0.0,
-                centering_status="none",
+                surrogate=kind,
+                rng=spawner.rng(trial),
             )
-        )
-        # Oracle control variate.
-        res_oracle = control_variate(Z, Y, m_Y=m_Y_oracle)
-        rows.append(
-            dict(
-                seed=spawner.spawned_seed(trial),
-                design=config.get("design", "default"),
-                N=dgp.N,
-                alpha=alpha,
-                x=x,
-                n=n,
-                estimator="cv_oracle",
-                pilot_rule="oracle",
-                mu_hat=res_oracle.mu_hat,
-                variance=res_oracle.variance,
-                rel_sd=float(np.sqrt(res_oracle.variance / n) / max(res_oracle.mu_hat, 1e-300)),
-                ci_low=res_oracle.ci_low,
-                ci_high=res_oracle.ci_high,
-                rho_squared=res_oracle.rho_squared,
-                runtime_seconds=0.0,
-                centering_status="oracle",
-            )
-        )
-        # Sample-split pilots.
-        for tag, rule in pilot_rules.items():
-            n0 = rule(n)
-            res_split = control_variate(Z, Y, pilot_split=n0)
+            by_surrogate[kind]["rho2"].append(res.rho_squared)
+            by_surrogate[kind]["var"].append(res.variance)
             rows.append(
                 dict(
                     seed=spawner.spawned_seed(trial),
-                    design=config.get("design", "default"),
-                    N=dgp.N,
+                    design=f"surrogate_{kind}",
+                    N=dim,
                     alpha=alpha,
                     x=x,
                     n=n,
-                    estimator="cv_sample_split",
-                    pilot_rule=tag,
-                    mu_hat=res_split.mu_hat,
-                    variance=res_split.variance,
+                    estimator=f"cv_{kind}",
+                    pilot_rule="sample_split_sqrt",
+                    mu_hat=res.mu_hat,
+                    variance=res.variance,
                     rel_sd=float(
-                        np.sqrt(res_split.variance / res_split.n) / max(res_split.mu_hat, 1e-300)
+                        np.sqrt(max(res.variance, 0.0) / max(res.n, 1))
+                        / max(abs(res.mu_hat), 1e-300)
                     ),
-                    ci_low=res_split.ci_low,
-                    ci_high=res_split.ci_high,
-                    rho_squared=res_split.rho_squared,
+                    ci_low=res.ci_low,
+                    ci_high=res.ci_high,
+                    rho_squared=res.rho_squared,
                     runtime_seconds=0.0,
-                    centering_status="sample_split",
+                    centering_status=res.centering_status,
                 )
             )
+
     df = pd.DataFrame(rows)
     df = stamp_provenance(df, ctx=_Ctx(Path("F6.yaml"), config, results_dir))
     csv_path = write_csv(
         df, results_dir / f"{SCHEMA_NAME}.csv", schema_name=SCHEMA_NAME, config=config
     )
 
-    # Summary box plot of rel_sd per estimator/pilot rule.
-    fig, ax = plt.subplots(figsize=(7.5, 4.5))
-    groups = [
-        ("crude", df[df["estimator"] == "crude_cdmc"]["rel_sd"], "#7f8c8d"),
-        (
-            "oracle",
-            df[df["estimator"] == "cv_oracle"]["rel_sd"],
-            ESTIMATOR_COLORS["control_variate"],
-        ),
-        (
-            "sqrt(n)",
-            df[(df["estimator"] == "cv_sample_split") & (df["pilot_rule"] == "sqrt")]["rel_sd"],
-            "#188a4f",
-        ),
-        (
-            "n/log n",
-            df[(df["estimator"] == "cv_sample_split") & (df["pilot_rule"] == "n_over_logn")][
-                "rel_sd"
-            ],
-            "#e8743b",
-        ),
-        (
-            "n^{2/3}",
-            df[(df["estimator"] == "cv_sample_split") & (df["pilot_rule"] == "n_to_2_3")]["rel_sd"],
-            "#b89622",
-        ),
-    ]
-    parts = ax.boxplot(
-        [g[1].to_numpy() for g in groups],
-        labels=[g[0] for g in groups],
+    fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.5), constrained_layout=True)
+    labels = [r"loss", r"$X_{(2)}$-shift", r"max coord"]
+    colors = ["#7f8c8d", "#1f3a93", "#188a4f"]
+
+    # Left: rho^2 by surrogate.
+    bp1 = axes[0].boxplot(
+        [by_surrogate[s]["rho2"] for s in SURROGATES],
+        tick_labels=labels,
         patch_artist=True,
+        widths=0.55,
     )
-    for patch, (_, _, color) in zip(parts["boxes"], groups, strict=True):
-        patch.set_facecolor(color)
+    for patch, c in zip(bp1["boxes"], colors, strict=True):
+        patch.set_facecolor(c)
         patch.set_alpha(0.6)
-    ax.set_ylabel("relative SE")
-    ax.set_title(f"VRE pilot benchmark on Family I (x={x:g}, n={n})")
+    axes[0].axhline(0.5, color="black", linestyle=":", linewidth=0.8)
+    axes[0].set_ylabel(r"$\widehat\rho^2$  (CV variance-reduction factor $= 1 - \rho^2$)")
+    axes[0].set_title("Surrogate kind drives correlation")
+    axes[0].set_ylim(-0.05, 1.05)
+
+    # Right: median variance by surrogate, log-y.
+    medians = [float(np.median(by_surrogate[s]["var"])) for s in SURROGATES]
+    bars = axes[1].bar(labels, medians, color=colors, alpha=0.6)
+    for bar, val in zip(bars, medians, strict=True):
+        axes[1].annotate(
+            f"{val:.2e}",
+            xy=(bar.get_x() + bar.get_width() / 2, val),
+            xytext=(0, 3),
+            textcoords="offset points",
+            ha="center",
+            fontsize=8,
+        )
+    axes[1].set_yscale("log")
+    axes[1].set_ylabel("post-CV variance (log scale)")
+    axes[1].set_title("Post-CV variance: lower is better")
+
     fig_paths = save_figure(fig, results_dir / SCHEMA_NAME)
     plt.close(fig)
     return [csv_path, *fig_paths]
@@ -209,5 +164,5 @@ class _Ctx:
 
 
 if __name__ == "__main__":
-    ctx = cli("configs/F6.yaml", description="Generate F6 VRE pilot benchmark")
+    ctx = cli("configs/F6.yaml", description="Generate F6 spectral CV surrogate benchmark")
     run(config=ctx.config, results_dir=ctx.results_dir)

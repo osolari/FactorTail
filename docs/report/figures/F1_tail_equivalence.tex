@@ -1,11 +1,6 @@
-%==============================================================================
-% figures/F1_tail_equivalence.tex --- Implementation placeholder
-%==============================================================================
-% Required source CSV: results/F1_tail_equivalence.csv
-% Required columns: seed, spawned_seed, N, alpha, x, n, mu_hat, ci_low, ci_high, first_order, second_order, truth_method
-% Target diagnostic: Plot log-log tail estimates against first- and second-order asymptotics.
-% Replacement instruction:
-%   Generate a PDF/PNG with the same basename and replace the tikzpicture below
-%   by \includegraphics[width=0.85\linewidth]{figures/F1_tail_equivalence.pdf}.
-%==============================================================================
+\begin{figure}[t]
+\centering
 \includegraphics[width=0.85\linewidth]{figures/F1_tail_equivalence.pdf}
+\caption[Independent tail equivalence]{Independent CdMC vs first- and second-order asymptotics on Pareto margins. The CdMC curve tracks the second-order asymptotic at moderate $x$ and converges to the first-order line in the deep tail, illustrating Theorem~\ref{thm:second-order}.}
+\label{fig:ind-tail-equivalence}
+\end{figure}

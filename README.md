@@ -47,11 +47,26 @@ table in the paper has a one-script entry point under `scripts/`.
 
 ## Install
 
+The fastest path is the one-shot bootstrap script — it creates a
+`.venv/`, installs FactorTail with all extras, installs pre-commit
+hooks, and downloads the Fama–French daily panels into `./data/raw/`:
+
+```bash
+./setup_env.sh
+source .venv/bin/activate
+pytest
+factortail list-experiments
+```
+
+Manual install if you'd rather:
+
 ```bash
 # editable install with dev extras
 pip install -e ".[dev,plot]"
 # or with the full set
 pip install -e ".[dev,plot,docs,realdata]"
+# then download the external data
+factortail-fetch-data
 ```
 
 System requirements: Python 3.10 or newer; numpy, scipy, pandas,

@@ -18,6 +18,7 @@ from factortail.plotting.theme import (
     FAMILY_COLORS,
     LINESTYLES,
     MARKERS,
+    add_insight_caption,
     save_figure,
     set_theme,
 )
@@ -29,6 +30,7 @@ __all__ = [
     "FAMILY_COLORS",
     "LINESTYLES",
     "MARKERS",
+    "add_insight_caption",
     "save_figure",
     "set_theme",
 ]

@@ -15,6 +15,7 @@ __all__ = [
     "FAMILY_COLORS",
     "LINESTYLES",
     "MARKERS",
+    "add_insight_caption",
     "save_figure",
     "set_theme",
 ]
@@ -110,30 +111,39 @@ def set_theme(*, mode: str = "paper", grid: bool = True) -> None:
             "Bitstream Vera Sans",
             "sans-serif",
         ],
+        "font.size": 13,
         "mathtext.fontset": "stix",
-        "axes.titlesize": 11,
+        "axes.titlesize": 15,
         "axes.titleweight": "semibold",
-        "axes.labelsize": 10,
-        "axes.linewidth": 0.9,
-        "axes.spines.top": False,
-        "axes.spines.right": False,
+        "axes.labelsize": 13,
+        "axes.labelweight": "semibold",
+        "axes.linewidth": 1.1,
+        # Full spine: keep all four edges so every panel is fully boxed.
+        "axes.spines.top": True,
+        "axes.spines.right": True,
+        "axes.spines.bottom": True,
+        "axes.spines.left": True,
         "axes.grid": grid,
-        "grid.alpha": 0.25,
+        "grid.alpha": 0.30,
         "grid.linestyle": "--",
-        "grid.linewidth": 0.5,
-        "legend.fontsize": 9,
-        "legend.frameon": False,
-        "legend.borderaxespad": 0.6,
-        "xtick.labelsize": 9,
-        "ytick.labelsize": 9,
+        "grid.linewidth": 0.6,
+        "legend.fontsize": 11,
+        "legend.frameon": True,
+        "legend.framealpha": 0.85,
+        "legend.edgecolor": "#444444",
+        "legend.borderaxespad": 0.7,
+        "xtick.labelsize": 12,
+        "ytick.labelsize": 12,
         "xtick.direction": "out",
         "ytick.direction": "out",
-        "xtick.major.size": 3.5,
-        "ytick.major.size": 3.5,
-        "xtick.minor.size": 2.0,
-        "ytick.minor.size": 2.0,
-        "lines.linewidth": 1.6,
-        "lines.markersize": 4.5,
+        "xtick.major.size": 4.5,
+        "ytick.major.size": 4.5,
+        "xtick.minor.size": 2.6,
+        "ytick.minor.size": 2.6,
+        "xtick.major.width": 1.0,
+        "ytick.major.width": 1.0,
+        "lines.linewidth": 2.0,
+        "lines.markersize": 6.0,
         "savefig.bbox": "tight",
         "savefig.dpi": 200,
         "figure.dpi": 110,
@@ -142,12 +152,13 @@ def set_theme(*, mode: str = "paper", grid: bool = True) -> None:
     if mode == "slides":
         base.update(
             {
-                "axes.titlesize": 14,
-                "axes.labelsize": 13,
-                "legend.fontsize": 12,
-                "xtick.labelsize": 12,
-                "ytick.labelsize": 12,
-                "lines.linewidth": 2.0,
+                "font.size": 16,
+                "axes.titlesize": 18,
+                "axes.labelsize": 16,
+                "legend.fontsize": 14,
+                "xtick.labelsize": 14,
+                "ytick.labelsize": 14,
+                "lines.linewidth": 2.5,
                 "figure.dpi": 130,
             }
         )
@@ -177,3 +188,28 @@ def save_figure(
         fig.savefig(target, format=fmt)
         out.append(target)
     return out
+
+
+def add_insight_caption(fig: plt.Figure, text: str, *, fontsize: int = 11) -> None:
+    """Add a one- to two-line "insight" caption at the bottom of ``fig``.
+
+    The text is rendered in a dark grey italic so it doesn't compete
+    with the panel titles. The figure is auto-padded to leave room for
+    the caption (uses ``subplots_adjust(bottom=...)``).
+    """
+    fig.text(
+        0.5,
+        0.018,
+        text,
+        ha="center",
+        va="bottom",
+        fontsize=fontsize,
+        style="italic",
+        color="#333333",
+        wrap=True,
+    )
+    import contextlib
+
+    with contextlib.suppress(AttributeError, ValueError):
+        # constrained-layout figs ignore this
+        fig.subplots_adjust(bottom=0.18)

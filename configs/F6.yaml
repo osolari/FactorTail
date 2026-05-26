@@ -1,11 +1,10 @@
 run_id: F6_default
 seed: 6
-design: pareto_alpha_2_N_3
+design: mrv_dirichlet_max_coord
 script: scripts/generate_F6_relative_error.py
-marginals:
-  - {type: pareto, alpha: 2.0, scale: 1.0}
-  - {type: pareto, alpha: 2.0, scale: 1.0}
-  - {type: pareto, alpha: 2.0, scale: 1.0}
-x: 20.0
-n: 10000
-replicates: 30
+alpha: 2.0
+dim: 3
+exposure: [1.0, 2.0, 0.5]
+x: 10.0
+n: 5000
+trials: 30
