@@ -238,8 +238,8 @@ def cli_repro(run_id: str, results_dir: Path, scratch_dir: Path | None, configs_
         console.print(f"[yellow]skipped (no config):[/yellow] {skipped}")
 
     if mismatches:
-        for m in mismatches:
-            console.print(f"[red]MISMATCH[/red] {m}")
+        for msg in mismatches:
+            console.print(f"[red]MISMATCH[/red] {msg}")
         sys.exit(1)
     console.print(
         f"[green]Run {run_id!r}: {len(matched)} CSV(s) reproduced byte-identical "
