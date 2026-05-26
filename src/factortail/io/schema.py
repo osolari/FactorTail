@@ -11,7 +11,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-__all__ = ["RequiredColumns", "SCHEMA", "get_schema"]
+__all__ = ["SCHEMA", "RequiredColumns", "get_schema"]
 
 
 @dataclass(frozen=True)

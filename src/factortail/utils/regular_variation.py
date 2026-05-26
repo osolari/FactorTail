@@ -15,8 +15,8 @@ from factortail.utils.tails import TailDistribution
 
 __all__ = [
     "first_order_sum_tail",
-    "second_order_sum_tail",
     "reference_sum_tail",
+    "second_order_sum_tail",
 ]
 
 

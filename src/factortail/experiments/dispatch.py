@@ -34,7 +34,7 @@ def run_config(config_path: Path, *, results_dir: Path) -> list[Path]:
     if not hasattr(module, "run"):
         raise AttributeError(f"{script}: expected a ``run(config, results_dir)`` entry point")
     out = module.run(config=cfg, results_dir=results_dir)
-    return list(out) if isinstance(out, (list, tuple)) else [out]
+    return list(out) if isinstance(out, list | tuple) else [out]
 
 
 def run_master(master_path: Path, *, results_dir: Path) -> list[Path]:
@@ -54,5 +54,5 @@ def run_master(master_path: Path, *, results_dir: Path) -> list[Path]:
                 script = Path.cwd() / script
             module = _import_script(script)
             out = module.run(config=sub_cfg, results_dir=results_dir)
-            artifacts.extend(list(out) if isinstance(out, (list, tuple)) else [out])
+            artifacts.extend(list(out) if isinstance(out, list | tuple) else [out])
     return artifacts

@@ -23,11 +23,11 @@ from factortail.dgp.family5_mrv import RadialAngularMRV
 from factortail.dgp.family6_hidden_cones import HiddenConeMixture
 
 __all__ = [
-    "IndependentINID",
-    "CommonShockModel",
-    "LatentFactorModel",
     "BlockModel",
+    "CommonShockModel",
     "CopulaModel",
-    "RadialAngularMRV",
     "HiddenConeMixture",
+    "IndependentINID",
+    "LatentFactorModel",
+    "RadialAngularMRV",
 ]

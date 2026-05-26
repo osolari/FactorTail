@@ -22,7 +22,7 @@ from factortail.cdmc.base import CdMCResult, bernstein_ci
 from factortail.utils.tails import TailDistribution
 from factortail.utils.timing import runtime_seconds
 
-__all__ = ["independent_cdmc", "envelope"]
+__all__ = ["envelope", "independent_cdmc"]
 
 
 def envelope(marginals: list[TailDistribution], x: float) -> float:

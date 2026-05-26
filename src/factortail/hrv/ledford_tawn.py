@@ -17,7 +17,7 @@ from __future__ import annotations
 import numpy as np
 from numpy.typing import NDArray
 
-__all__ = ["ledford_tawn_eta", "chi_chibar"]
+__all__ = ["chi_chibar", "ledford_tawn_eta"]
 
 
 def ledford_tawn_eta(

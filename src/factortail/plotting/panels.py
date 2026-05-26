@@ -15,10 +15,10 @@ from factortail.plotting.theme import (
 )
 
 __all__ = [
-    "tail_loglog",
-    "rel_error_panel",
     "heatmap_panel",
+    "rel_error_panel",
     "simplex_scatter",
+    "tail_loglog",
     "var_es_overlay",
 ]
 

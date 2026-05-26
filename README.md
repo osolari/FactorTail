@@ -1,9 +1,14 @@
 # FactorTail
 
-[![CI](https://github.com/osolari/FactorTail/actions/workflows/ci.yml/badge.svg)](https://github.com/osolari/FactorTail/actions/workflows/ci.yml)
-[![Docs](https://github.com/osolari/FactorTail/actions/workflows/docs.yml/badge.svg)](https://osolari.github.io/FactorTail/)
+[![CI](https://github.com/osolari/FactorTail/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/osolari/FactorTail/actions/workflows/ci.yml)
+[![Docs](https://github.com/osolari/FactorTail/actions/workflows/docs.yml/badge.svg?branch=main)](https://osolari.github.io/FactorTail/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![PyPI](https://img.shields.io/pypi/v/factortail.svg)](https://pypi.org/project/factortail/)
+[![mypy](https://img.shields.io/badge/mypy-checked-blue.svg)](https://mypy-lang.org/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Tests](https://img.shields.io/badge/tests-136%20passing-brightgreen.svg)](https://github.com/osolari/FactorTail/actions/workflows/ci.yml)
 
 Reference implementation of **"Conditional Monte Carlo for Multivariate
 Heavy Tails: Latent Shocks, Spectral Measures, Hidden Cones"** by

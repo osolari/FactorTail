@@ -12,8 +12,8 @@ from factortail.io.validators import ValidationError, validate_csv, validate_dat
 from factortail.io.writers import write_csv
 
 __all__ = [
-    "RequiredColumns",
     "SCHEMA",
+    "RequiredColumns",
     "ValidationError",
     "get_schema",
     "validate_csv",

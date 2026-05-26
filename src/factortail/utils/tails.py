@@ -15,11 +15,11 @@ from numpy.typing import ArrayLike, NDArray
 from scipy import stats
 
 __all__ = [
-    "TailDistribution",
-    "ParetoTail",
-    "LomaxTail",
     "BurrTail",
+    "LomaxTail",
+    "ParetoTail",
     "StudentTTail",
+    "TailDistribution",
     "build_marginal",
 ]
 

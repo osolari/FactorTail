@@ -6,10 +6,10 @@ from factortail.utils.timing import StopWatch, runtime_seconds
 
 __all__ = [
     "SeedSpawner",
-    "spawn_seeds",
+    "StopWatch",
     "config_hash",
     "file_sha256",
     "git_hash",
-    "StopWatch",
     "runtime_seconds",
+    "spawn_seeds",
 ]

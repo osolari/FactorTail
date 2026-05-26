@@ -14,7 +14,7 @@ from collections.abc import Callable
 import numpy as np
 from scipy.optimize import brentq
 
-__all__ = ["invert_survival", "expected_shortfall_from_tail"]
+__all__ = ["expected_shortfall_from_tail", "invert_survival"]
 
 
 def invert_survival(

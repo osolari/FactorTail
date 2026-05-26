@@ -10,7 +10,7 @@ from numpy.typing import NDArray
 
 from factortail.hrv.ledford_tawn import chi_chibar, ledford_tawn_eta
 
-__all__ = ["chi_diagnostic", "pairwise_dependence_table", "empirical_ranks"]
+__all__ = ["chi_diagnostic", "empirical_ranks", "pairwise_dependence_table"]
 
 
 def empirical_ranks(x: NDArray[np.float64]) -> NDArray[np.float64]:
@@ -33,7 +33,7 @@ def chi_diagnostic(
 ) -> dict[str, NDArray[np.float64]]:
     r"""Pairwise :math:`\\chi`, :math:`\\bar\\chi`, and :math:`\\eta` matrices."""
     X = np.asarray(X, dtype=float)
-    n, d = X.shape
+    _n, d = X.shape
     U = empirical_ranks(X)
     chi = np.zeros((d, d))
     chibar = np.zeros((d, d))

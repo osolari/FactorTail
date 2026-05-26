@@ -11,7 +11,7 @@ from __future__ import annotations
 import numpy as np
 from scipy import stats
 
-__all__ = ["kupiec_test", "christoffersen_test", "dq_test", "acerbi_szekely_es"]
+__all__ = ["acerbi_szekely_es", "christoffersen_test", "dq_test", "kupiec_test"]
 
 
 def kupiec_test(hits: np.ndarray, *, level: float) -> dict[str, float]:

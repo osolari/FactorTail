@@ -142,7 +142,6 @@ ignore = [
   "RUF002",        # en-dashes in docstrings are intentional
   "RUF005",        # tuple concatenation is clearer than star-unpacking for the schema dicts
   "SIM108",        # explicit if/else is clearer than ternary in numeric code
-  "UP038",         # the isinstance tuple form is more legible
 ]
 
 [tool.ruff.lint.per-file-ignores]
