@@ -62,6 +62,7 @@ def latent_shock_cdmc(
         )
 
         sh = shocks[k]
+        scaled: TailDistribution
         if isinstance(sh, ParetoTail):
             scaled = ParetoTail(alpha=sh.alpha, scale=sh.scale * scale_factor)
         elif isinstance(sh, LomaxTail):
@@ -86,17 +87,18 @@ def latent_shock_cdmc(
                 StudentTTail,
             )
 
+            scaled_eps: TailDistribution
             if isinstance(eps, ParetoTail):
-                scaled = ParetoTail(alpha=eps.alpha, scale=eps.scale * scale_factor)
+                scaled_eps = ParetoTail(alpha=eps.alpha, scale=eps.scale * scale_factor)
             elif isinstance(eps, LomaxTail):
-                scaled = LomaxTail(alpha=eps.alpha, scale=eps.scale * scale_factor)
+                scaled_eps = LomaxTail(alpha=eps.alpha, scale=eps.scale * scale_factor)
             elif isinstance(eps, BurrTail):
-                scaled = BurrTail(k=eps.k, d=eps.d, scale=eps.scale * scale_factor)
+                scaled_eps = BurrTail(k=eps.k, d=eps.d, scale=eps.scale * scale_factor)
             elif isinstance(eps, StudentTTail):
-                scaled = StudentTTail(alpha=eps.alpha, scale=eps.scale * scale_factor)
+                scaled_eps = StudentTTail(alpha=eps.alpha, scale=eps.scale * scale_factor)
             else:
                 raise TypeError(f"Unsupported idiosyncratic type: {type(eps)}")
-            effective_margs.append(scaled)
+            effective_margs.append(scaled_eps)
             effective_signs.append(np.sign(exposure[i]))
     signs = np.array(effective_signs, dtype=float)
     # Now run independent CdMC on the effective margins, but only positive-sign

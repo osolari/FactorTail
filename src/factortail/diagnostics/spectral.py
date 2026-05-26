@@ -125,7 +125,7 @@ def bootstrap_bands(
 
     def resample_indices() -> NDArray[np.int_]:
         if scheme == "iid":
-            return rng.integers(0, n, size=n)
+            return np.asarray(rng.integers(0, n, size=n, dtype=np.int64))
         if scheme == "block":
             n_blocks = (n + block_length - 1) // block_length
             starts = rng.integers(0, n - block_length + 1, size=n_blocks)

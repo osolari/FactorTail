@@ -6,8 +6,10 @@ Each copula exposes a ``sample(size, rng) -> uniform marginals`` and a
 
 from factortail.copula.archimedean import ClaytonCopula, FrankCopula, GumbelCopula
 from factortail.copula.elliptical import GaussianCopula, StudentTCopula
+from factortail.copula.vine import CVineKernel
 
 __all__ = [
+    "CVineKernel",
     "ClaytonCopula",
     "FrankCopula",
     "GaussianCopula",

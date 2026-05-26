@@ -21,12 +21,14 @@ __all__ = ["block_cdmc", "fit_block_tail"]
 
 BlockSampler = Callable[[int, np.random.Generator], NDArray[np.float64]]
 BlockTail = Callable[[float, int], float]
+BlockTailBatch = Callable[[NDArray[np.float64], int], NDArray[np.float64]]
 
 
 def block_cdmc(
     *,
     block_sampler: BlockSampler,
-    block_tail: BlockTail,
+    block_tail: BlockTail | None = None,
+    block_tail_batch: BlockTailBatch | None = None,
     K: int,
     x: float,
     n: int,
@@ -40,9 +42,11 @@ def block_cdmc(
     block_sampler:
         Function ``(n, rng) -> (n, K)`` returning a matrix of block sums.
     block_tail:
-        Callable ``(t, k) -> P(Y_k > t)`` returning the tail of block ``k``
-        at threshold ``t`` (this is the analog of :math:`\overline F_i` for
-        the independent estimator).
+        Scalar callable ``(t, k) -> P(Y_k > t)``. Used when
+        ``block_tail_batch`` is ``None``.
+    block_tail_batch:
+        Batched callable ``(t_array, k) -> P(Y_k > t_array)``. Preferred when
+        the block tail can be evaluated vectorised.
     K:
         Number of blocks.
     x:
@@ -50,15 +54,22 @@ def block_cdmc(
     """
     if rng is None:
         rng = np.random.default_rng(seed)
+    if block_tail is None and block_tail_batch is None:
+        raise ValueError("Provide either `block_tail` or `block_tail_batch`")
     Y = block_sampler(n, rng)
     if Y.shape != (n, K):
         raise ValueError(f"block_sampler returned shape {Y.shape}; expected ({n},{K})")
     with runtime_seconds() as elapsed:
         T = _T_values(Y, x)
-        kernel = np.zeros_like(Y)
-        for k in range(K):
-            for m in range(n):
-                kernel[m, k] = block_tail(float(T[m, k]), k)
+        kernel = np.zeros_like(Y, dtype=float)
+        if block_tail_batch is not None:
+            for k in range(K):
+                kernel[:, k] = np.asarray(block_tail_batch(T[:, k].astype(float), k), dtype=float)
+        else:
+            assert block_tail is not None  # for mypy; entry-point guard ensures this
+            for k in range(K):
+                for m in range(n):
+                    kernel[m, k] = block_tail(float(T[m, k]), k)
         Z = kernel.sum(axis=1)
         mu_hat = float(Z.mean())
         var = float(Z.var(ddof=1)) if n > 1 else float("nan")
@@ -70,7 +81,11 @@ def block_cdmc(
         runtime_seconds=float(elapsed[0]),
         ci_low=lo,
         ci_high=hi,
-        extra={"estimator": "block_cdmc", "n_blocks": K},
+        extra={
+            "estimator": "block_cdmc",
+            "n_blocks": K,
+            "kernel_kind": "batched" if block_tail_batch is not None else "scalar",
+        },
     )
 
 
@@ -131,10 +146,13 @@ def fit_block_tail(
         empirical.append((sorted_Y, ranks))
 
     def block_tail(t: float, k: int) -> float:
-        if closed[k] is not None and method != "nested_mc":
-            alpha, c = closed[k]
+        closed_k = closed[k]
+        if closed_k is not None and method != "nested_mc":
+            alpha, c = closed_k
             return float(c * max(t, 1e-300) ** (-alpha))
-        sorted_Y, ranks = empirical[k]
+        emp_k = empirical[k]
+        assert emp_k is not None  # mypy: method != "nested_mc" path ruled out above
+        sorted_Y, ranks = emp_k
         # Linearly interpolate the empirical survival.
         idx = int(np.searchsorted(sorted_Y, t, side="left"))
         if idx >= len(sorted_Y):

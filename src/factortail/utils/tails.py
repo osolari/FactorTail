@@ -52,6 +52,9 @@ class _Tail:
     alpha: float
     c: float
 
+    def sf(self, x: ArrayLike) -> NDArray[np.float64]:  # pragma: no cover - abstract
+        raise NotImplementedError
+
     def logsf(self, x: ArrayLike) -> NDArray[np.float64]:
         x = np.asarray(x, dtype=float)
         with np.errstate(divide="ignore"):

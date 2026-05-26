@@ -18,6 +18,7 @@ experiments:
   - configs/F16.yaml
   - configs/F17.yaml
   - configs/F18.yaml
+  - configs/F19.yaml
   - configs/T_sim_results_independent.yaml
   - configs/T_sim_results_dependent.yaml
   - configs/T_data_panels.yaml

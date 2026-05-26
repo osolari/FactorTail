@@ -72,18 +72,18 @@ def validate_schema(target: Path) -> None:
             if name not in text:
                 failures.append(f"SCHEMA.md missing entry for {name}")
         if failures:
-            for f in failures:
-                console.print(f"[red]FAIL[/red] {f}")
+            for msg in failures:
+                console.print(f"[red]FAIL[/red] {msg}")
             sys.exit(1)
         console.print(f"[green]OK[/green] SCHEMA.md mentions all {len(all_schema_names())} schemas")
         return
-    for f in files:
+    for path in files:
         try:
-            validate_csv(f)
-            console.print(f"[green]OK[/green] {f.name}")
+            validate_csv(path)
+            console.print(f"[green]OK[/green] {path.name}")
         except (ValidationError, KeyError) as exc:
-            failures.append(f"{f.name}: {exc}")
-            console.print(f"[red]FAIL[/red] {f.name}: {exc}")
+            failures.append(f"{path.name}: {exc}")
+            console.print(f"[red]FAIL[/red] {path.name}: {exc}")
     if failures:
         sys.exit(1)
 

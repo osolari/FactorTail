@@ -1,0 +1,14 @@
+run_id: F19_default
+seed: 19
+design: ar1_pareto_dirichlet
+script: scripts/generate_F19_bootstrap_audit.py
+alpha: 2.0
+dim: 3
+concentration: [2.0, 2.0, 2.0]
+exposure: [1.0, 2.0, 0.5]
+n: 4000
+ar_rho: 0.4
+k_grid: [80, 160, 320, 640]
+n_boot: 300
+schemes: [iid, block, stationary]
+block_length: 30

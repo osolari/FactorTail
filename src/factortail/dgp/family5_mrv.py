@@ -47,30 +47,29 @@ class RadialAngularMRV:
         return cls(**clean)
 
     def sample_angles(self, size: int, rng: np.random.Generator) -> NDArray[np.float64]:
+        params = self.angular_params or {}
         if self.angular_kind == "axis":
-            weights = np.asarray(self.angular_params.get("weights", np.ones(self.dim)))
+            weights = np.asarray(params.get("weights", np.ones(self.dim)), dtype=float)
             weights = weights / weights.sum()
             idx = rng.choice(self.dim, size=size, p=weights)
             Theta = np.zeros((size, self.dim))
             Theta[np.arange(size), idx] = 1.0
             return Theta
         if self.angular_kind == "ray_mixture":
-            rays = np.asarray(self.angular_params.get("rays"), dtype=float)
-            if rays is None or rays.ndim != 2:
+            rays = np.asarray(params.get("rays"), dtype=float)
+            if rays.ndim != 2:
                 raise ValueError("ray_mixture requires 'rays' as 2D array")
-            weights = np.asarray(self.angular_params.get("weights", np.ones(rays.shape[0])))
+            weights = np.asarray(params.get("weights", np.ones(rays.shape[0])), dtype=float)
             weights = weights / weights.sum()
             idx = rng.choice(rays.shape[0], size=size, p=weights)
             T = rays[idx]
             norm = np.linalg.norm(T, axis=1, keepdims=True)
             return T / np.where(norm > 0, norm, 1.0)
         if self.angular_kind == "dirichlet":
-            concentration = np.asarray(
-                self.angular_params.get("concentration", np.ones(self.dim)), dtype=float
-            )
+            concentration = list(params.get("concentration", [1.0] * self.dim))
             return rng.dirichlet(concentration, size=size)
         if self.angular_kind == "empirical":
-            pool = np.asarray(self.angular_params.get("angles"), dtype=float)
+            pool = np.asarray(params.get("angles"), dtype=float)
             idx = rng.integers(0, pool.shape[0], size=size)
             return pool[idx]
         raise AssertionError("unreachable")

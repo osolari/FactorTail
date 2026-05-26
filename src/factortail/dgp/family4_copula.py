@@ -8,6 +8,7 @@ a copula. The DGP returns :math:`X_i = F_i^{-1}(U_i)` for a copula sample
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -37,7 +38,7 @@ _COPULAS = {
 class CopulaModel:
     """Copula + heavy-tailed margins."""
 
-    copula: object
+    copula: Any
     marginals: list[TailDistribution]
 
     @classmethod

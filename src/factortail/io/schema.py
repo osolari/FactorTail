@@ -352,6 +352,28 @@ _SCHEMAS: list[RequiredColumns] = [
         metadata_required=("data_vintage",) + _METADATA_DEFAULT,
         description="Hill / POT stability plots.",
     ),
+    RequiredColumns(
+        name="F19_bootstrap_audit",
+        columns=(
+            "seed",
+            "design",
+            "scheme",
+            "block_length",
+            "k",
+            "true_constant",
+            "estimate",
+            "lo",
+            "hi",
+            "se",
+            "covered",
+            "n_boot",
+        ),
+        description=(
+            "Bootstrap-scheme audit for the empirical spectral constant: "
+            "coverage of iid / block / stationary bootstrap percentile bands "
+            "on a stationary heavy-tailed series with known truth (handoff Q4)."
+        ),
+    ),
     # Tables (Sec. 8, 9)
     RequiredColumns(
         name="T_data_panels",

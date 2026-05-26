@@ -42,6 +42,7 @@ also carry `model_name`, `sample_start`, `sample_end` when applicable.
 - `F16_var_es_dashboard`: `date, portfolio, model, level, loss, var, es, hit, crisis_flag` (+ `data_vintage`, `config_hash`)
 - `F17_spectral_by_period`: `period, theta_1, theta_2, theta_3, theta_4, theta_5, weight, axis_flag, block_flag, stress_flag` (+ `data_vintage`)
 - `F18_hill_plots`: `date, series, side, threshold_k, estimator, alpha_hat, ci_low, ci_high, selected_threshold, active_flag` (+ `data_vintage`)
+- `F19_bootstrap_audit`: `seed, design, scheme, block_length, k, true_constant, estimate, lo, hi, se, covered, n_boot`
 
 ## Tables
 
