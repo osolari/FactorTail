@@ -22,7 +22,15 @@ also carry `model_name`, `sample_start`, `sample_end` when applicable.
 ## Simulation figures
 
 - `F1_tail_equivalence`: `seed, design, x, n, mu_hat, ci_low, ci_high, first_order, second_order, runtime_seconds`
+- `F2_max_vs_sum`: `seed, design, N, alpha, x, n, p_max, p_sum, ratio, ci_low, ci_high, truth_method`
+- `F3_exp_eff_vs_x`: `seed, design, N, alpha, x, n, kappa, rel_variance, lambda_n, rate_hat, rate_bound_finite, rate_bound_asymptotic`
+- `F4_exp_eff_vs_alpha`: `seed, design, alpha_bar, alpha_min, n, kappa, lambda_n, rate_hat, common_alpha_flag, theory_tag`
+- `F5_exp_eff_vs_amin`: `seed, design, alpha_bar, alpha_min, n, kappa, lambda_n, rate_hat, common_alpha_flag, theory_tag`
+- `F6_relative_error`: `seed, design, N, alpha, x, n, estimator, pilot_rule, mu_hat, variance, rel_sd, ci_low, ci_high, rho_squared, runtime_seconds, centering_status`
+- `F7_stratified`: `seed, design, N, alpha, x, n, estimator, mu_hat, variance, work_norm_variance, tail_evals_per_rep, runtime_seconds, weight_rule`
 - `F8_second_order`: `seed, design, x, first_order_error, second_order_error, leave_one_out_term, remainder_estimate`
+- `F9_var_path`: `date, loss, var_99, es_99, var_995, es_995, estimator, window, crisis_flag` (+ `data_vintage`)
+- `F10_backtest`: `date, level, loss, var, hit, rolling_violation_rate, model, window` (+ `data_vintage`)
 - `F11_common_shock_geometry`: `seed, design, x, observed_constant, latent_constant, empirical_tail, ci_low, ci_high, attribution_class`
 - `F12_spectral_simplex`: `seed, design, theta_1, theta_2, theta_3, spectral_weight, portfolio_loading, contribution`
 - `F13_hidden_cones`: `seed, design, x, axis_term, hidden_pair_term, marginal_second_order, empirical_tail, selected_scale`

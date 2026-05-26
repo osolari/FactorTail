@@ -60,19 +60,63 @@ def run(*, config: dict, results_dir: Path) -> list[Path]:
             est_name = "spectral_cdmc"
             ref = float("nan")
         elif family == "Family VI":
+            from factortail.diagnostics.dependence import empirical_ranks
+            from factortail.hrv import cone_mass_alpha, ledford_tawn_eta
+
             dgp6 = HiddenConeMixture.from_spec(design)
             rng = spawner.rng(i)
             X = dgp6.sample(n, rng)
             emp = float((X.sum(axis=1) > x).mean())
+            # Q2 hidden-tail-scale benchmark: Ledford-Tawn eta vs direct
+            # cone-mass slope.
+            U = empirical_ranks(X[:, :2])
+            eta = ledford_tawn_eta(U[:, 0], U[:, 1], k=max(int(np.sqrt(n)), 50))
+            # Under HRV(alpha_2), eta = 1/alpha_2 (Ledford-Tawn 1996).
+            alpha2_hat_eta = 1.0 / max(eta["eta_hat"], 1e-9)
+            cone = cone_mass_alpha(X)
+            alpha2_hat_cone = float(cone["alpha_hat"])
+            true_alpha2 = float(dgp6.alpha_hidden)
             rows.append(
                 dict(
                     family=family,
-                    design=design.get("name", f"design_{i}"),
+                    design=design.get("name", f"design_{i}") + "::empirical",
                     estimator="empirical",
                     x=x,
                     mu_hat=emp,
                     ref_mu=emp,
                     rel_error=0.0,
+                    wnre=0.0,
+                    runtime_seconds=0.0,
+                    status="complete",
+                )
+            )
+            rows.append(
+                dict(
+                    family=family,
+                    design=design.get("name", f"design_{i}") + "::eta",
+                    estimator="ledford_tawn_eta",
+                    x=x,
+                    mu_hat=float(alpha2_hat_eta),
+                    ref_mu=true_alpha2,
+                    rel_error=float(abs(alpha2_hat_eta - true_alpha2) / true_alpha2),
+                    wnre=0.0,
+                    runtime_seconds=0.0,
+                    status="complete",
+                )
+            )
+            rows.append(
+                dict(
+                    family=family,
+                    design=design.get("name", f"design_{i}") + "::cone_mass",
+                    estimator="cone_mass",
+                    x=x,
+                    mu_hat=alpha2_hat_cone,
+                    ref_mu=true_alpha2,
+                    rel_error=(
+                        float(abs(alpha2_hat_cone - true_alpha2) / true_alpha2)
+                        if np.isfinite(alpha2_hat_cone)
+                        else float("nan")
+                    ),
                     wnre=0.0,
                     runtime_seconds=0.0,
                     status="complete",

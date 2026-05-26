@@ -1,0 +1,7 @@
+run_id: F5_default
+seed: 5
+script: scripts/generate_F5_exp_eff_vs_amin.py
+threshold: 20.0
+n: 20000
+alpha_max: 5.0
+alpha_min_grid: [1.2, 1.5, 1.8, 2.2, 2.6, 3.0]

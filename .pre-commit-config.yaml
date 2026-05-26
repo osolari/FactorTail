@@ -34,7 +34,7 @@ repos:
     rev: v2.3.0
     hooks:
       - id: codespell
-        args: ["--ignore-words-list=brace,nd,cdmc,arange,inV,fo,hist,Mkt"]
+        args: ["--ignore-words-list=brace,nd,cdmc,arange,inV,fo,hist,Mkt,strat,iy"]
         exclude: ^docs/report/
 
   - repo: https://github.com/asottile/pyupgrade

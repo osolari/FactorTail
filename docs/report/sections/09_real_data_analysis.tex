@@ -43,7 +43,7 @@ specifications, vintage rules, and freezing protocol are in
 \begin{table}[p]
 \centering
 \input{tables/T_empirical_design_matrix.tex}
-\caption[Empirical design matrix (partial)]{\textbf{(PARTIAL.)} Planned
+\caption[Empirical design matrix]{Planned
 empirical design matrix. Universe, factor model, tail estimator, and
 estimator-candidate columns are populated; window and run-status columns
 remain \xx{} until populated by the experiment registry. See
@@ -73,7 +73,7 @@ reported as separate runs and never overwrite existing rows.
 \begin{table}[p]
 \centering
 \input{tables/T_data_panels.tex}
-\caption[Real-data panels (planned)]{\textbf{(PLANNED).} Real-data panels
+\caption[Real-data panels]{Real-data panels
 and data-vintage controls. All numerical entries are \xx{} until the data
 pull is executed. The final version will report date range, number of assets
 or portfolios, missingness, source vintage, and access timestamp.}
@@ -114,8 +114,7 @@ separately.
 \begin{table}[p]
 \centering
 \input{tables/T_tail_index_placeholder.tex}
-\caption[Real-data tail-index estimates (planned)]{\textbf{(PLANNED).}
-Tail-index estimates for signed factor and residual contributions. Values are
+\caption[Real-data tail-index estimates]{Tail-index estimates for signed factor and residual contributions. Values are
 \xx{} placeholders. The final table will report Hill, Pickands, and POT
 estimates, selected thresholds, standard errors or bootstrap intervals, and
 common-index diagnostic outcomes.}
@@ -125,7 +124,7 @@ common-index diagnostic outcomes.}
 \begin{figure}[p]
 \centering
 \input{figures/F18_hill_plots_placeholder.tex}
-\caption[Hill and POT stability (planned)]{\textbf{(PLANNED).} Hill and POT
+\caption[Hill and POT stability]{Hill and POT
 stability. The generated figure will show tail-index estimates across
 order-statistic thresholds for signed factors and residuals, with selected
 thresholds and bootstrap bands. Source schema:
@@ -145,8 +144,7 @@ and hidden cones.
 \begin{table}[p]
 \centering
 \input{tables/T_dependence_diagnostic_placeholder.tex}
-\caption[Tail-dependence diagnostics (planned)]{\textbf{(PLANNED).}
-Tail-dependence diagnostics for factor and residual loss contributions.
+\caption[Tail-dependence diagnostics]{Tail-dependence diagnostics for factor and residual loss contributions.
 Values are \xx{} placeholders. The final table will identify whether each
 pair is consistent with asymptotic dependence, tail dependence, common-shock
 behavior, or hidden-cone dependence.}
@@ -156,8 +154,7 @@ behavior, or hidden-cone dependence.}
 \begin{figure}[p]
 \centering
 \input{figures/F15_tail_dependence_heatmap_placeholder.tex}
-\caption[Tail-dependence heatmap (planned)]{\textbf{(PLANNED).}
-Tail-dependence heatmap. The generated figure will show pairwise \(\chi\),
+\caption[Tail-dependence heatmap]{Tail-dependence heatmap. The generated figure will show pairwise \(\chi\),
 \(\bar\chi\), or \(\eta\) estimates for signed factor and residual
 contributions, with clustering used to propose block structures. Source
 schema: \texttt{results/F15\_tail\_dependence\_heatmap.csv}.}
@@ -167,7 +164,7 @@ schema: \texttt{results/F15\_tail\_dependence\_heatmap.csv}.}
 \begin{figure}[p]
 \centering
 \input{figures/F17_spectral_by_period_placeholder.tex}
-\caption[Rolling spectral measure (planned)]{\textbf{(PLANNED).} Rolling
+\caption[Rolling spectral measure]{Rolling
 empirical spectral measure. The generated figure will compare angular mass
 before, during, and after stress windows, showing whether extremes are
 axis-dominated, common-shock dominated, or spread over a sector of the
@@ -200,7 +197,7 @@ ES exceedance residuals, and crisis-period decompositions.
 \begin{figure}[p]
 \centering
 \input{figures/F16_var_es_dashboard_placeholder.tex}
-\caption[VaR and ES forecast dashboard (planned)]{\textbf{(PLANNED).} VaR/ES
+\caption[VaR and ES forecast dashboard]{VaR/ES
 forecast dashboard. The generated figure will overlay realized portfolio
 losses, rolling VaR forecasts, ES forecasts, and exception markers for each
 estimator. Panels will include full sample and stress-window zooms. Source
@@ -220,7 +217,7 @@ ordinary periods.
 \begin{table}[p]
 \centering
 \input{tables/T_var_es_backtest_placeholder.tex}
-\caption[VaR and ES backtest (planned)]{\textbf{(PLANNED).} VaR and ES
+\caption[VaR and ES backtest]{VaR and ES
 backtest results. Values are \xx{} placeholders. The final table will compare
 independent, latent-shock, block, copula, spectral, historical, and
 parametric benchmarks across exception rate, independence, conditional
@@ -240,7 +237,7 @@ are fixed in the configuration file and reported in the data appendix.
 \begin{table}[p]
 \centering
 \input{tables/T_crisis_attribution_placeholder.tex}
-\caption[Crisis attribution (planned)]{\textbf{(PLANNED).} Crisis-window
+\caption[Crisis attribution]{Crisis-window
 tail attribution. Values are \xx{} placeholders. The final table will
 decompose forecast tail probability into marginal axes, latent common shocks,
 blocks, spectral sectors, and hidden cones by stress period.}
@@ -258,8 +255,7 @@ calendar, loss definition, threshold grid, and backtest protocol.
 \begin{table}[p]
 \centering
 \input{tables/T_realdata_experiments.tex}
-\caption[Real-data experiment registry (partial)]{\textbf{(PARTIAL.)}
-Planned real-data experiment registry. Experiment descriptors, estimator
+\caption[Real-data experiment registry]{Planned real-data experiment registry. Experiment descriptors, estimator
 candidates, forecast levels, and output identifiers are populated; the
 status/outcome column remains \xx{} until the run registry is populated.}
 \label{tab:realdata-experiments-current}
@@ -285,7 +281,7 @@ forecasting.
 \begin{table}[p]
 \centering
 \input{tables/T_runtime_placeholder.tex}
-\caption[Runtime (planned)]{\textbf{(PLANNED).} Runtime and
+\caption[Runtime]{Runtime and
 computational-cost placeholder. Values are \xx{} placeholders. The final
 table will report per-date forecast cost, per-replicate cost, total runtime,
 and work-normalized relative error for each estimator.}

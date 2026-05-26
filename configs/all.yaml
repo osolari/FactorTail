@@ -1,7 +1,15 @@
 run_id: all_master
 experiments:
   - configs/F1.yaml
+  - configs/F2.yaml
+  - configs/F3.yaml
+  - configs/F4.yaml
+  - configs/F5.yaml
+  - configs/F6.yaml
+  - configs/F7.yaml
   - configs/F8.yaml
+  - configs/F9.yaml
+  - configs/F10.yaml
   - configs/F11.yaml
   - configs/F12.yaml
   - configs/F13.yaml

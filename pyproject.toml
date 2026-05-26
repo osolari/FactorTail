@@ -138,7 +138,10 @@ ignore = [
   "N806",          # variable in function lowercase (math notation)
   "N802",          # function name lowercase (math notation)
   "C408",          # `dict(...)` calls are clearer for CSV row construction
+  "RUF001",        # math glyphs (α, ε, etc.) in strings are intentional
+  "RUF002",        # en-dashes in docstrings are intentional
   "RUF005",        # tuple concatenation is clearer than star-unpacking for the schema dicts
+  "SIM108",        # explicit if/else is clearer than ternary in numeric code
   "UP038",         # the isinstance tuple form is more legible
 ]
 

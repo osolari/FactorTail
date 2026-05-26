@@ -1,0 +1,11 @@
+run_id: F2_default
+seed: 2
+design: pareto_alpha_2_N_4
+script: scripts/generate_F2_max_vs_sum.py
+marginals:
+  - {type: pareto, alpha: 2.0, scale: 1.0}
+  - {type: pareto, alpha: 2.0, scale: 1.0}
+  - {type: pareto, alpha: 2.0, scale: 1.0}
+  - {type: pareto, alpha: 2.0, scale: 1.0}
+x_grid: [5.0, 10.0, 20.0, 40.0, 80.0]
+n: 200000

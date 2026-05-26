@@ -1,0 +1,10 @@
+run_id: F7_default
+seed: 7
+design: pareto_mixed_N_3
+script: scripts/generate_F7_stratified.py
+marginals:
+  - {type: pareto, alpha: 1.5, scale: 1.0}
+  - {type: pareto, alpha: 2.0, scale: 1.5}
+  - {type: pareto, alpha: 2.5, scale: 0.8}
+x: 20.0
+n: 30000

@@ -1,0 +1,9 @@
+run_id: F9_default
+seed: 9
+panel: FF3_daily
+offline: true
+n_synthetic: 1500
+portfolio: Mkt-RF
+window: 400
+n_inner: 3000
+script: scripts/generate_F9_var_path.py

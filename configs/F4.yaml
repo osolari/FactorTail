@@ -1,0 +1,10 @@
+run_id: F4_default
+seed: 4
+script: scripts/generate_F4_exp_eff_vs_alpha.py
+threshold: 20.0
+n: 20000
+common_alphas: [1.5, 2.0, 2.5, 3.0, 4.0]
+hetero_designs:
+  - {alphas: [1.5, 2.5, 3.5], tag: spread1}
+  - {alphas: [1.2, 2.0, 3.0], tag: spread2}
+  - {alphas: [1.8, 2.5, 2.7], tag: spread3}

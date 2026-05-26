@@ -1,0 +1,10 @@
+run_id: F3_default
+seed: 3
+design: pareto_alpha_2_N_3
+script: scripts/generate_F3_exp_eff_vs_x.py
+marginals:
+  - {type: pareto, alpha: 2.0, scale: 1.0}
+  - {type: pareto, alpha: 2.0, scale: 1.0}
+  - {type: pareto, alpha: 2.0, scale: 1.0}
+x_grid: [5.0, 10.0, 20.0, 40.0, 80.0, 160.0]
+n: 20000

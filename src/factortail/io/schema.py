@@ -53,6 +53,133 @@ _SCHEMAS: list[RequiredColumns] = [
         description="Independent tail-equivalence diagnostic (Family I).",
     ),
     RequiredColumns(
+        name="F2_max_vs_sum",
+        columns=(
+            "seed",
+            "design",
+            "N",
+            "alpha",
+            "x",
+            "n",
+            "p_max",
+            "p_sum",
+            "ratio",
+            "ci_low",
+            "ci_high",
+            "truth_method",
+        ),
+        description=(
+            "P(M_N > x) / P(S_N > x) under independent regular variation; "
+            "ratio -> 1 in deep tail (thm:catastrophe-exact)."
+        ),
+    ),
+    RequiredColumns(
+        name="F3_exp_eff_vs_x",
+        columns=(
+            "seed",
+            "design",
+            "N",
+            "alpha",
+            "x",
+            "n",
+            "kappa",
+            "rel_variance",
+            "lambda_n",
+            "rate_hat",
+            "rate_bound_finite",
+            "rate_bound_asymptotic",
+        ),
+        description=(
+            "Exponential efficiency rate of independent CdMC vs threshold x; "
+            "rate_hat = -log(rel_variance) / kappa_x for the LDP scaling."
+        ),
+    ),
+    RequiredColumns(
+        name="F4_exp_eff_vs_alpha",
+        columns=(
+            "seed",
+            "design",
+            "alpha_bar",
+            "alpha_min",
+            "n",
+            "kappa",
+            "lambda_n",
+            "rate_hat",
+            "common_alpha_flag",
+            "theory_tag",
+        ),
+        description=(
+            "Efficiency rate vs average tail index alpha_bar; "
+            "common_alpha_flag distinguishes equal-index from heterogeneous designs."
+        ),
+    ),
+    RequiredColumns(
+        name="F5_exp_eff_vs_amin",
+        columns=(
+            "seed",
+            "design",
+            "alpha_bar",
+            "alpha_min",
+            "n",
+            "kappa",
+            "lambda_n",
+            "rate_hat",
+            "common_alpha_flag",
+            "theory_tag",
+        ),
+        description=(
+            "Efficiency rate vs minimum tail index alpha_min in heterogeneous "
+            "Pareto sums; tests the alpha_min-dominated LDP regime."
+        ),
+    ),
+    RequiredColumns(
+        name="F6_relative_error",
+        columns=(
+            "seed",
+            "design",
+            "N",
+            "alpha",
+            "x",
+            "n",
+            "estimator",
+            "pilot_rule",
+            "mu_hat",
+            "variance",
+            "rel_sd",
+            "ci_low",
+            "ci_high",
+            "rho_squared",
+            "runtime_seconds",
+            "centering_status",
+        ),
+        description=(
+            "Oracle vs sample-split VRE benchmark (Proposition prop:vre); "
+            "compares pilot rules n0 in {sqrt(n), n/log(n), n^{2/3}} on Family I."
+        ),
+    ),
+    RequiredColumns(
+        name="F7_stratified",
+        columns=(
+            "seed",
+            "design",
+            "N",
+            "alpha",
+            "x",
+            "n",
+            "estimator",
+            "mu_hat",
+            "variance",
+            "work_norm_variance",
+            "tail_evals_per_rep",
+            "runtime_seconds",
+            "weight_rule",
+        ),
+        description=(
+            "Stratified CdMC variance and work-normalized variance vs unstratified "
+            "(Section 3 stratification)."
+        ),
+    ),
+    RequiredColumns(
         name="F8_second_order",
         columns=(
             "seed",
@@ -64,6 +191,42 @@ _SCHEMAS: list[RequiredColumns] = [
             "remainder_estimate",
         ),
         description="Second-order independent expansion diagnostic.",
+    ),
+    RequiredColumns(
+        name="F9_var_path",
+        columns=(
+            "date",
+            "loss",
+            "var_99",
+            "es_99",
+            "var_995",
+            "es_995",
+            "estimator",
+            "window",
+            "crisis_flag",
+        ),
+        metadata_required=("data_vintage",) + _METADATA_DEFAULT,
+        description=(
+            "Single-portfolio rolling VaR and ES path at 99% and 99.5%; "
+            "complements F16 dashboard with a per-portfolio breakout."
+        ),
+    ),
+    RequiredColumns(
+        name="F10_backtest",
+        columns=(
+            "date",
+            "level",
+            "loss",
+            "var",
+            "hit",
+            "rolling_violation_rate",
+            "model",
+            "window",
+        ),
+        metadata_required=("data_vintage",) + _METADATA_DEFAULT,
+        description=(
+            "Single-portfolio backtest exception time series with rolling " "violation rate."
+        ),
     ),
     RequiredColumns(
         name="F11_common_shock_geometry",
